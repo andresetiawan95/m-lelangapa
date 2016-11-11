@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lelangkita.android.R;
 import com.lelangkita.android.activities.RegisterActivity;
@@ -14,6 +16,7 @@ import com.lelangkita.android.activities.RegisterActivity;
 
 public class LoginFragment extends Fragment {
     private TextView txtRegister;
+    private Button btnLogin;
     public LoginFragment(){
 
     }
@@ -21,7 +24,9 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_login_layout, container, false);
 //        ((LoginActivity)getActivity()).getSupportActionBar().setTitle("Login");
+        btnLogin = (Button) view.findViewById(R.id.fragment_login_button);
         txtRegister = (TextView) view.findViewById(R.id.fragment_login_register_textview);
+
 //        ((LoginActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
         return view;
@@ -29,6 +34,11 @@ public class LoginFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view){
+                Toast.makeText(getActivity(), "Login ditekan", Toast.LENGTH_SHORT).show();
+            }
+        });
         txtRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view){
                 Intent intent = new Intent (getActivity(), RegisterActivity.class);
