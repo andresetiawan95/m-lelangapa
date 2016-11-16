@@ -5,4 +5,17 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Home Activity-->
+    <string name="HOME">Home</string>
+    <string name="TRENDING">Trending</string>
+    <string name="CATEGORY">Kategori</string>
+    <!--Session Manager-->0
+    <string name="SESSION_PREFERENCES">sessionPreference</string>
+    <string name="IS_LOGGED_IN">isLoggedIn</string>
+    <string name="KEY_USERNAME">username</string>
+    <string name="KEY_NAME">name</string>
+    <string name="KEY_EMAIL">email</string>
+    <string name="DUMMY_USERNAME">dummy</string>
+    <string name="DUMMY_NAME">Dummy</string>
+    <string name="DUMMY_EMAIL">dummy@lelangkita.com</string>
 </resources>

@@ -3,20 +3,34 @@ package com.lelangkita.android.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.lelangkita.android.R;
+import com.lelangkita.android.activities.MainActivity;
 import com.lelangkita.android.activities.RegisterActivity;
+import com.lelangkita.android.apicalls.LoginAPI;
+import com.lelangkita.android.preferences.SessionManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class LoginFragment extends Fragment {
     private TextView txtRegister;
     private Button btnLogin;
+    private EditText eUsername;
+    private EditText ePassword;
     public LoginFragment(){
 
     }
@@ -26,7 +40,8 @@ public class LoginFragment extends Fragment {
 //        ((LoginActivity)getActivity()).getSupportActionBar().setTitle("Login");
         btnLogin = (Button) view.findViewById(R.id.fragment_login_button);
         txtRegister = (TextView) view.findViewById(R.id.fragment_login_register_textview);
-
+        eUsername = (EditText) view.findViewById(R.id.fragment_login_username);
+        ePassword = (EditText) view.findViewById(R.id.fragment_login_password);
 //        ((LoginActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
         return view;
@@ -36,7 +51,38 @@ public class LoginFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view){
-                Toast.makeText(getActivity(), "Login ditekan", Toast.LENGTH_SHORT).show();
+                String username = eUsername.getText().toString();
+                String password = ePassword.getText().toString();
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Log.v("Masuk internet", "berhasil konek ke internet");
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String res = jsonResponse.getString("result");
+                            JSONArray userData = jsonResponse.getJSONArray("data");
+                            JSONObject userDataObject = userData.getJSONObject(0);
+                            if (res.equals("1")){
+                                SessionManager sessionManager = new SessionManager(getActivity());
+                                sessionManager.createSession(userDataObject.getString("username"),userDataObject.getString("name"),userDataObject.getString("email"));
+
+                                Intent loginIntent = new Intent(getActivity(), MainActivity.class);
+                                loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                getActivity().startActivity(loginIntent);
+                                getActivity().finish();
+                            }
+                            else {
+                                Toast.makeText(getActivity(), "login salah", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                LoginAPI loginAPI = new LoginAPI(username, password, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(getActivity());
+                queue.add(loginAPI);
             }
         });
         txtRegister.setOnClickListener(new View.OnClickListener() {

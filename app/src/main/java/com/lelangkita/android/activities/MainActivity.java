@@ -1,6 +1,7 @@
 package com.lelangkita.android.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -14,50 +15,37 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.lelangkita.android.R;
 import com.lelangkita.android.fragments.BerandaHomeFragment;
+import com.lelangkita.android.fragments.CategoryHomeFragment;
 import com.lelangkita.android.fragments.HomeFragment;
 import com.lelangkita.android.fragments.TrendingHomeFragment;
+import com.lelangkita.android.preferences.SessionManager;
+import com.lelangkita.android.viewpagers.HomeViewPagerAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static DrawerLayout drawer;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private SessionManager sessionManager;
     public static ActionBarDrawerToggle toggle;
-
-    private class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager){
-            super(manager);
-        }
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-    }
+    private NavigationView navigationView;
+    private final String headerPrefix = "Halo, ";
     private void setUpViewPager(ViewPager viewPager){
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new BerandaHomeFragment(), "BERANDA");
-        adapter.addFragment(new TrendingHomeFragment(), "TRENDING");
+        HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new BerandaHomeFragment(), getResources().getString(R.string.HOME));
+        adapter.addFragment(new TrendingHomeFragment(), getResources().getString(R.string.TRENDING));
+        adapter.addFragment(new CategoryHomeFragment(), getResources().getString(R.string.CATEGORY));
         viewPager.setAdapter(adapter);
     }
 
@@ -65,12 +53,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Log.v ("OnCreate", "oncreate started");
-        setContentView(R.layout.activity_main);
+
+        sessionManager = new SessionManager(MainActivity.this);
+        if (sessionManager.isLoggedIn()){
+            setContentView(R.layout.activity_main_loggedin);
+            drawer = (DrawerLayout) findViewById(R.id.activity_main_loggedin);
+            navigationView = (NavigationView) findViewById(R.id.nav_view_loggedin);
+            //Get header of navigation bar
+            View header = navigationView.getHeaderView(0);
+            TextView userInfoNameNavbar = (TextView) header.findViewById(R.id.user_info_name_navbar);
+            TextView userInfoEmailNavbar = (TextView) header.findViewById(R.id.user_info_email_navbar);
+            HashMap<String, String> userInfo = sessionManager.getSession();
+            userInfoNameNavbar.setText(headerPrefix + userInfo.get(sessionManager.getKEY_NAME()));
+            userInfoEmailNavbar.setText(userInfo.get(sessionManager.getKEY_EMAIL()));
+        }
+        else {
+            setContentView(R.layout.activity_main);
+            drawer = (DrawerLayout) findViewById(R.id.activity_main);
+            navigationView = (NavigationView) findViewById(R.id.nav_view);
+        }
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        drawer = (DrawerLayout) findViewById(R.id.activity_main);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -79,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tab_main);
         setUpViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -114,7 +120,13 @@ public class MainActivity extends AppCompatActivity {
                             .commit();*/
                 }
                 //Toast.makeText(getApplicationContext(), item.getItemId(), Toast.LENGTH_SHORT).show();
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+                else if (id==R.id.nav_logout){
+                    sessionManager.destroySession();
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
