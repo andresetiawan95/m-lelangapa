@@ -57,14 +57,13 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            Log.v("Masuk internet", "berhasil konek ke internet");
                             JSONObject jsonResponse = new JSONObject(response);
                             String res = jsonResponse.getString("result");
                             JSONArray userData = jsonResponse.getJSONArray("data");
                             JSONObject userDataObject = userData.getJSONObject(0);
                             if (res.equals("1")){
                                 SessionManager sessionManager = new SessionManager(getActivity());
-                                sessionManager.createSession(userDataObject.getString("username"),userDataObject.getString("name"),userDataObject.getString("email"));
+                                sessionManager.createSession(userDataObject.getString("id"), userDataObject.getString("username"),userDataObject.getString("name"),userDataObject.getString("email"));
 
                                 Intent loginIntent = new Intent(getActivity(), MainActivity.class);
                                 loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
