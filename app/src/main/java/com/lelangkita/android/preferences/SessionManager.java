@@ -21,6 +21,8 @@ public class SessionManager {
     private final String KEY_USERNAME = "username";
     private final String KEY_NAME = "name";
     private final String KEY_EMAIL = "email";
+    private final String KEY_ID ="id";
+    private final String DUMMY_ID = "0";
     private final String DUMMY_USERNAME = "dummy";
     private final String DUMMY_NAME = "Dummy";
     private final String DUMMY_EMAIL = "dummy@lelangkita.com";
@@ -29,8 +31,9 @@ public class SessionManager {
         sessionPreferences = this.context.getSharedPreferences(SESSION_PREFERENCES, Context.MODE_PRIVATE);
         editor = sessionPreferences.edit();
     }
-    public void createSession(String username, String name, String email){
+    public void createSession(String id, String username, String name, String email){
         editor.putBoolean(IS_LOGGED_IN, true);
+        editor.putString(KEY_ID, id);
         editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_NAME, name);
         editor.putString(KEY_EMAIL, email);
@@ -38,6 +41,7 @@ public class SessionManager {
     }
     public HashMap<String, String> getSession(){
         HashMap<String, String> userInfo = new HashMap<>();
+        userInfo.put(KEY_ID, sessionPreferences.getString(KEY_ID, DUMMY_ID));
         userInfo.put(KEY_USERNAME, sessionPreferences.getString(KEY_USERNAME, DUMMY_USERNAME));
         userInfo.put(KEY_NAME, sessionPreferences.getString(KEY_NAME, DUMMY_NAME));
         userInfo.put(KEY_EMAIL, sessionPreferences.getString(KEY_EMAIL, DUMMY_EMAIL));
@@ -58,4 +62,5 @@ public class SessionManager {
     public String getKEY_EMAIL(){
         return KEY_EMAIL;
     }
+    public String getKEY_ID() { return KEY_ID; }
 }
