@@ -119,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
                             .addToBackStack(null)
                             .commit();*/
                 }
+                else if (id==R.id.nav_profil){
+                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                }
                 //Toast.makeText(getApplicationContext(), item.getItemId(), Toast.LENGTH_SHORT).show();
                 else if (id==R.id.nav_logout){
                     sessionManager.destroySession();
@@ -140,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         /*
         * dibawah ini digunakan untuk mengubah hamburger icon dan back arrow icon
         * setDisplayHomeAsUpEnabled bernilai true jika ada fragment pada stack fragment
-        * dalam hal ini, akan mengeluarkan
+        * dalam hal ini, akan mengeluarkan backarrow
         *
         *
         * */
