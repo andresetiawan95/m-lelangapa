@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?android:attr/selectableItemBackground"
+    android:focusable="true"
+    android:clickable="true"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="10dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:id="@+id/userprofile_menu_list_maintitle"
+        android:text="Ini menu"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userprofile_menu_list_maintitle"
+        android:paddingTop="10dp"
+        android:textSize="12dp"
+        android:id="@+id/userprofile_menu_list_menudesc"
+        android:text ="Ini keterangan menu"/>
+</RelativeLayout>
