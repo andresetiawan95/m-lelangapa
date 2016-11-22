@@ -11,9 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lelangkita.android.R;
+import com.lelangkita.android.activities.profile.EditAlamatActivity;
+import com.lelangkita.android.activities.profile.EditPasswordActivity;
 import com.lelangkita.android.activities.profile.EditProfileActivity;
 import com.lelangkita.android.adapters.UserProfileAdapter;
 import com.lelangkita.android.decorations.DividerItemDecoration;
@@ -21,8 +22,6 @@ import com.lelangkita.android.interfaces.OnItemClickListener;
 import com.lelangkita.android.listeners.RecyclerItemClickListener;
 import com.lelangkita.android.preferences.SessionManager;
 import com.lelangkita.android.resources.UserProfile;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +68,14 @@ public class ProfileFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                     startActivity(intent);
                 }
+                if (position==3){
+                    Intent intent = new Intent(getActivity(), EditAlamatActivity.class);
+                    startActivity(intent);
+                }
+                if (position==4){
+                    Intent intent = new Intent(getActivity(), EditPasswordActivity.class);
+                    startActivity(intent);
+                }
             }
             @Override
             public void onLongItemClick(View view, int position) {
@@ -95,10 +102,17 @@ public class ProfileFragment extends Fragment {
         userProfileMenuData.setUserProfileMenuDesc("Perbaharui informasi alamat anda.");
         userProfileList.add(userProfileMenuData);
         userProfileMenuData = new UserProfile();
-        userProfileMenuData.setUserProfileMenu("Ubah Password");
+        userProfileMenuData.setUserProfileMenu("Update Password");
         userProfileMenuData.setUserProfileMenuDesc("Ubah kata sandi anda.");
         userProfileList.add(userProfileMenuData);
-
+        userProfileMenuData = new UserProfile();
+        userProfileMenuData.setUserProfileMenu("Tiket Bantuan");
+        userProfileMenuData.setUserProfileMenuDesc("Buka tiket bantuan anda.");
+        userProfileList.add(userProfileMenuData);
+        userProfileMenuData = new UserProfile();
+        userProfileMenuData.setUserProfileMenu("Logout");
+        userProfileMenuData.setUserProfileMenuDesc("Logout akun anda.");
+        userProfileList.add(userProfileMenuData);
         upAdapter.notifyDataSetChanged();
 
         return view;
