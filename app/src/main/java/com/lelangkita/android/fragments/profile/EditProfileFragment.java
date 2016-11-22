@@ -28,23 +28,27 @@ import java.util.HashMap;
  */
 
 public class EditProfileFragment extends Fragment {
-    private EditText editText_editProfile_Nama;
+    private EditText editText_editProfile_Nama, editText_editProfile_Email;
     private String editText_nama;
     private String editText_telepon;
     private EditText editText_editProfile_Telepon;
     private SessionManager sessionManager;
     private HashMap<String, String> session;
-    private ProgressBar progressBar;
+    private ProgressBar progressBar_infoakun, progressBar_infokontak;
     public EditProfileFragment(){}
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_userprofile_editprofile_layout, container, false);
         editText_editProfile_Nama = (EditText) view.findViewById(R.id.fragment_usereditprofile_name);
         editText_editProfile_Telepon = (EditText) view.findViewById(R.id.fragment_usereditprofile_phone);
-        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-        progressBar.setVisibility(View.VISIBLE);
+        editText_editProfile_Email = (EditText) view.findViewById(R.id.fragment_usereditprofile_email);
+        progressBar_infoakun = (ProgressBar) view.findViewById(R.id.fragment_userprofile_editprofile_progress_bar_informasiakun);
+        progressBar_infoakun.setVisibility(View.VISIBLE);
+        progressBar_infokontak = (ProgressBar) view.findViewById(R.id.fragment_userprofile_editprofile_progress_bar_informasikontak);
+        progressBar_infokontak.setVisibility(View.VISIBLE);
         editText_editProfile_Nama.setVisibility(View.INVISIBLE);
         editText_editProfile_Telepon.setVisibility(View.INVISIBLE);
+        editText_editProfile_Email.setVisibility(View.INVISIBLE);
         sessionManager = new SessionManager(getActivity());
         session = sessionManager.getSession();
         return view;
@@ -56,11 +60,13 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void dataReceived(Object output) {
                 String response = output.toString();
-                progressBar.setVisibility(View.GONE);
+                progressBar_infoakun.setVisibility(View.GONE);
+                progressBar_infokontak.setVisibility(View.GONE);
                 editText_editProfile_Nama.setVisibility(View.VISIBLE);
                 editText_editProfile_Nama.setEnabled(false);
                 editText_editProfile_Nama.setFocusable(false);
                 editText_editProfile_Telepon.setVisibility(View.VISIBLE);
+                editText_editProfile_Email.setVisibility(View.VISIBLE);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray responseData = jsonObject.getJSONArray("data");
@@ -70,6 +76,7 @@ public class EditProfileFragment extends Fragment {
                         editText_telepon = userDataObject.getString("phone");
                         editText_editProfile_Nama.setText(editText_nama);
                         editText_editProfile_Telepon.setText(editText_telepon);
+                        editText_editProfile_Email.setText(userDataObject.getString("email"));
                     }
                     else {
                         Toast.makeText(getActivity(), "Tidak ada data", Toast.LENGTH_SHORT).show();

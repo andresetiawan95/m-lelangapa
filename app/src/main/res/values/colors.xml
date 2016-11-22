@@ -6,4 +6,6 @@
     <!--<color name="colorPrimaryDark">#616897</color>-->
     <color name="colorAccent">#d6362d</color>
     <color name="tabIndicatorColor">#ffffff</color>
+    <color name="buttonWhiteColor">#ffffff</color>
+    <color name="buttonBackgroundColorUser">#ff4136</color>
 </resources>

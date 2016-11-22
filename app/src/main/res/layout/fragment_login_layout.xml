@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    android:layout_marginTop="20dp"
+    android:paddingTop="24dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
     tools:context="com.lelangkita.android.fragments.LoginFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -38,7 +40,9 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:id="@+id/fragment_login_button"
-        android:text="LOGIN"
+        android:background="@color/buttonBackgroundColorUser"
+        android:textColor="@color/buttonWhiteColor"
+        android:text="Login"
         android:layout_marginBottom="12dp"
         android:textAppearance="?android:textAppearanceMedium"/>
     <RelativeLayout
@@ -54,6 +58,8 @@
             android:layout_toRightOf="@id/fragment_login_register_keterangan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
             android:text="Daftar"/>
     </RelativeLayout>
 
