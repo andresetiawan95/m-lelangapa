@@ -21,7 +21,7 @@ public class EditProfileActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Edit Profil");
+        getSupportActionBar().setTitle("Update Profil");
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_userprofile_editprofile_layout, new EditProfileFragment())
                 .commit();

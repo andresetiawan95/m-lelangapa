@@ -20,7 +20,7 @@ public class EditPasswordActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Ubah Password");
+        getSupportActionBar().setTitle("Update Password");
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_userprofile_editpassword_layout, new EditPasswordFragment())
                 .commit();

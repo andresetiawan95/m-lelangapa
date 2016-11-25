@@ -20,7 +20,7 @@ public class EditAlamatActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Edit Alamat");
+        getSupportActionBar().setTitle("Update Alamat");
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_userprofile_editalamat_layout, new EditAlamatFragment())
                 .commit();
