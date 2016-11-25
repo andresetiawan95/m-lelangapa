@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:padding="8dp">
     <android.support.v7.widget.CardView
+        android:layout_marginBottom="12dp"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
         <LinearLayout
@@ -12,6 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:textAppearanceMedium"
@@ -22,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_marginBottom="20dp">
                 <EditText
+                    android:id="@+id/fragment_userprofile_editalamat_alamat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Alamat"
@@ -33,9 +36,12 @@
 
     </android.support.v7.widget.CardView>
     <Button
+        android:id="@+id/fragment_userprofile_editalamat_simpan"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:text="Simpan"
+        android:textColor="@color/buttonWhiteColor"
+        android:background="@color/buttonBackgroundColorUser"
         android:textAppearance="?android:textAppearanceMedium"
         />
 </LinearLayout>
