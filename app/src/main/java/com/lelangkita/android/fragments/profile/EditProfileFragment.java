@@ -9,12 +9,10 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.lelangkita.android.R;
-import com.lelangkita.android.apicalls.EditProfileAPI;
+import com.lelangkita.android.apicalls.GetUserProfileAPI;
 import com.lelangkita.android.interfaces.DataReceiver;
 import com.lelangkita.android.preferences.SessionManager;
 
@@ -87,8 +85,8 @@ public class EditProfileFragment extends Fragment {
                 }
             }
         };
-        EditProfileAPI editProfileAPI = new EditProfileAPI(session.get(sessionManager.getKEY_ID()), dataReceiver);
+        GetUserProfileAPI getUserProfileAPI = new GetUserProfileAPI(session.get(sessionManager.getKEY_ID()), dataReceiver);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        queue.add(editProfileAPI);
+        queue.add(getUserProfileAPI);
     }
 }
