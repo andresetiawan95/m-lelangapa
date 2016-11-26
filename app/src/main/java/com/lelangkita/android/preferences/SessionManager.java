@@ -3,9 +3,6 @@ package com.lelangkita.android.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.lelangkita.android.R;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -37,6 +34,11 @@ public class SessionManager {
         editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_NAME, name);
         editor.putString(KEY_EMAIL, email);
+        editor.commit();
+    }
+    public void editEmailSessionPreference(String email){
+        editor = sessionPreferences.edit();
+        editor.putString(KEY_EMAIL,email);
         editor.commit();
     }
     public HashMap<String, String> getSession(){

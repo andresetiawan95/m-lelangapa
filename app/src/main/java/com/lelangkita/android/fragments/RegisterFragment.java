@@ -24,7 +24,6 @@ import com.lelangkita.android.resources.GeoResources;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,7 +58,7 @@ public class RegisterFragment extends Fragment {
         address = (EditText) view.findViewById(R.id.fragment_register_address);
         telepon = (EditText) view.findViewById(R.id.fragment_register_telepon);
 
-        //btnRegister = (Button) view.findViewById(R.id.fragment_register_button);
+        btnRegister = (Button) view.findViewById(R.id.fragment_register_button);
 
         geoResources = new GeoResources();
         setSpinnerProvince();
@@ -70,7 +69,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        /*btnRegister.setOnClickListener(new View.OnClickListener() {
+        btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
                 String _namaLengkap = namaLengkap.getText().toString();
@@ -105,7 +104,7 @@ public class RegisterFragment extends Fragment {
                 RequestQueue queue = Volley.newRequestQueue(getActivity());
                 queue.add(registerAPI);
             }
-        });*/
+        });
     }
     // Province dan City masih di hardcode
     private void setSpinnerProvince(){
