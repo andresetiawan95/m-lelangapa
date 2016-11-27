@@ -9,6 +9,7 @@
         <item
             android:id="@+id/nav_trending"
             android:title="Trending" />
+
         <item
             android:id="@+id/nav_kategori"
             android:title="Kategori" />
@@ -18,10 +19,23 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_profil"
-            android:title="Profil" />
+            android:title="Profil">
+        </item>
+        <item
+            android:id="@+id/nav_chat"
+            android:title="Chat"
+            />
         <item
             android:id="@+id/nav_gerai"
             android:title="Gerai" />
+        <item
+            android:id="@+id/nav_review"
+            android:title="Review" />
+
+    </group>
+    <group
+        android:id="@+id/activity_main_drawer_loggedin_group_sessionmenu"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_logout"
             android:title="Logout" />

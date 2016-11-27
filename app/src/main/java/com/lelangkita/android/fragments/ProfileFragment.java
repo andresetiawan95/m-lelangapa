@@ -83,7 +83,7 @@ public class ProfileFragment extends Fragment {
             }
         }));
 
-        UserProfile userProfileMenuData = new UserProfile();
+        UserProfile userProfileMenuData;
 
         userProfileMenuData = new UserProfile();
         userProfileMenuData.setUserProfileMenu("Chat");
@@ -104,6 +104,10 @@ public class ProfileFragment extends Fragment {
         userProfileMenuData = new UserProfile();
         userProfileMenuData.setUserProfileMenu("Update Password");
         userProfileMenuData.setUserProfileMenuDesc("Ubah kata sandi anda.");
+        userProfileList.add(userProfileMenuData);
+        userProfileMenuData = new UserProfile();
+        userProfileMenuData.setUserProfileMenu("Review");
+        userProfileMenuData.setUserProfileMenuDesc("Periksa review mengenai anda.");
         userProfileList.add(userProfileMenuData);
         userProfileMenuData = new UserProfile();
         userProfileMenuData.setUserProfileMenu("Tiket Bantuan");
