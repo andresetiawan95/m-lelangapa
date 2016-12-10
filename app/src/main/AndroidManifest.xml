@@ -42,6 +42,18 @@
             android:screenOrientation="portrait"
             android:name=".activities.profile.EditPasswordActivity">
         </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".activities.profile.UserChatActivity">
+        </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".activities.UserGeraiActivity">
+        </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".activities.gerai.UserLelangBarangActivity">
+        </activity>
     </application>
 
 </manifest>

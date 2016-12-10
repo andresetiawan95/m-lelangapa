@@ -3,9 +3,8 @@ package com.lelangkita.android.activities.profile;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by andre on 27/11/16.
+ * Created by andre on 28/11/16.
  */
 
-public class UserGeraiActivity extends AppCompatActivity {
-
+public class UserReviewActivity extends AppCompatActivity {
 }

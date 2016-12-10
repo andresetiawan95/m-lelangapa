@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent" >
+    <include
+        layout="@layout/toolbar_user_chat"
+        />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_user_chat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
+
+    <FrameLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/fragment_user_chat_layout"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+    </FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,27 +1,23 @@
 package com.lelangkita.android.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.lelangkita.android.R;
+import com.lelangkita.android.activities.profile.UserChatActivity;
 import com.lelangkita.android.fragments.BerandaHomeFragment;
 import com.lelangkita.android.fragments.CategoryHomeFragment;
 import com.lelangkita.android.fragments.HomeFragment;
@@ -29,9 +25,7 @@ import com.lelangkita.android.fragments.TrendingHomeFragment;
 import com.lelangkita.android.preferences.SessionManager;
 import com.lelangkita.android.viewpagers.HomeViewPagerAdapter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static DrawerLayout drawer;
@@ -121,6 +115,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (id==R.id.nav_profil){
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                }
+                else if (id==R.id.nav_chat){
+                    Intent intent = new Intent(MainActivity.this, UserChatActivity.class);
+                    startActivity(intent);
+                }
+                else if (id==R.id.nav_gerai){
+                    Intent intent = new Intent(MainActivity.this, UserGeraiActivity.class);
                     startActivity(intent);
                 }
                 //Toast.makeText(getApplicationContext(), item.getItemId(), Toast.LENGTH_SHORT).show();
