@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lelangkita.android.R;
+import com.lelangkita.android.activities.UserGeraiActivity;
 import com.lelangkita.android.activities.profile.EditAlamatActivity;
 import com.lelangkita.android.activities.profile.EditPasswordActivity;
 import com.lelangkita.android.activities.profile.EditProfileActivity;
@@ -64,6 +65,10 @@ public class ProfileFragment extends Fragment {
         userProfileRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), userProfileRecyclerView, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                if(position==1){
+                    Intent intent = new Intent(getActivity(), UserGeraiActivity.class);
+                    startActivity(intent);
+                }
                 if(position==2){
                     Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                     startActivity(intent);
