@@ -12,12 +12,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.lelangkita.android.R;
 import com.lelangkita.android.activities.profile.UserChatActivity;
+import com.lelangkita.android.activities.search.MainSearchActivity;
 import com.lelangkita.android.fragments.BerandaHomeFragment;
 import com.lelangkita.android.fragments.CategoryHomeFragment;
 import com.lelangkita.android.fragments.HomeFragment;
@@ -194,6 +197,10 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home){
             onBackPressed();
         }
+        if (item.getItemId()==R.id.action_search){
+            Intent intent = new Intent(MainActivity.this, MainSearchActivity.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 //    @Override
@@ -232,5 +239,14 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
 //        Log.v("OnResunme", "on resume started");
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.activity_main_menu, menu);
+        /*SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));*/
+        return super.onCreateOptionsMenu(menu);
     }
 }
