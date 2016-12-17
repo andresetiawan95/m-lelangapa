@@ -54,8 +54,8 @@ public class MainSearchActivity extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        //searchView.onActionViewExpanded();
-        searchView.setIconifiedByDefault(false);
+        searchView.onActionViewExpanded();
+        //searchView.setIconifiedByDefault(false);
         return super.onCreateOptionsMenu(menu);
     }
 }
