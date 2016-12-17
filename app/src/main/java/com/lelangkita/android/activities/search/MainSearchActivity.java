@@ -2,7 +2,6 @@ package com.lelangkita.android.activities.search;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -20,6 +19,7 @@ import com.lelangkita.android.R;
 
 public class MainSearchActivity extends AppCompatActivity {
     private TextView textView;
+    private SearchView searchView;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -28,9 +28,9 @@ public class MainSearchActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.txtQuery);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        handleIntent(getIntent());
+//        handleIntent(getIntent());
     }
-    @Override
+    /*@Override
     protected void onNewIntent(Intent intent){
         setIntent(intent);
         handleIntent(intent);
@@ -39,7 +39,7 @@ public class MainSearchActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())){
             textView.setText(intent.getStringExtra(SearchManager.QUERY));
         }
-    }
+    }*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
@@ -52,9 +52,25 @@ public class MainSearchActivity extends AppCompatActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.activity_main_search_menu, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.onActionViewExpanded();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String done = query + " - submitted";
+                textView.setText(done);
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                textView.setText(newText);
+                //Toast.makeText(MainSearchActivity.this, newText, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
         //searchView.setIconifiedByDefault(false);
         return super.onCreateOptionsMenu(menu);
     }
