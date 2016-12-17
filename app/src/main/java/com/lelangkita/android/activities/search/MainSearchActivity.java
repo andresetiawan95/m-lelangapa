@@ -3,6 +3,7 @@ package com.lelangkita.android.activities.search;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.lelangkita.android.R;
+import com.lelangkita.android.fragments.search.MainSearchTextChangeFragment;
+import com.lelangkita.android.fragments.search.MainSearchTextSubmitFragment;
 
 /**
  * Created by andre on 15/12/16.
@@ -19,13 +22,19 @@ import com.lelangkita.android.R;
 
 public class MainSearchActivity extends AppCompatActivity {
     private TextView textView;
+    private MainSearchTextChangeFragment textChangeFragment;
+    private MainSearchTextSubmitFragment textSubmitFragment;
     private SearchView searchView;
+    private Fragment currentFragment = null;
+    private boolean switchToTextChangeFragment = false;
+    private boolean switchToTextQuerySubmitFragment = false;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        textView = (TextView) findViewById(R.id.txtQuery);
+        textChangeFragment = new MainSearchTextChangeFragment();
+        textSubmitFragment = new MainSearchTextSubmitFragment();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        handleIntent(getIntent());
@@ -58,15 +67,45 @@ public class MainSearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                String done = query + " - submitted";
-                textView.setText(done);
+                if (switchToTextQuerySubmitFragment==false){
+                    currentFragment = getFragmentManager().findFragmentByTag("FRAGMENT_TEXT_SUBMIT");
+                    if (currentFragment==null)
+                    {
+                        textSubmitFragment.submitQuery(query);
+                        textSubmitFragment.clearListBarang();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_main_search_textchange, textSubmitFragment, "FRAGMENT_TEXT_SUBMIT")
+                                .commit();
+                    }
+                    switchToTextQuerySubmitFragment=true;
+                    switchToTextChangeFragment=false;
+                }
+                else
+                {
+
+                }
+
+                /*String done = query + " - submitted";
+                textView.setText(done);*/
                 searchView.clearFocus();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                textView.setText(newText);
+                if (switchToTextChangeFragment==false){
+                    currentFragment = getFragmentManager().findFragmentByTag("FRAGMENT_TEXT_CHANGE");
+                    if (currentFragment==null)
+                    {
+                        textChangeFragment.setTextInit(newText);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_main_search_textchange, textChangeFragment, "FRAGMENT_TEXT_CHANGE")
+                                .commit();
+                    }
+                    switchToTextChangeFragment = true;
+                    switchToTextQuerySubmitFragment = false;
+                }
+                else {
+                    textChangeFragment.changeText(newText);
+                }
                 //Toast.makeText(MainSearchActivity.this, newText, Toast.LENGTH_SHORT).show();
                 return false;
             }

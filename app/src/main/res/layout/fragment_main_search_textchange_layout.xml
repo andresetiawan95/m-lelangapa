@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="12dp"
+    android:paddingRight="12dp"
+    android:paddingLeft="12dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearance"
+        android:text="Kata Kunci"
+        android:textSize="16dp"
+        android:layout_marginBottom="12dp" />
+    <TextView
+        android:id="@+id/fragment_main_search_textchange_query"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ini textchange"/>
+</LinearLayout>
