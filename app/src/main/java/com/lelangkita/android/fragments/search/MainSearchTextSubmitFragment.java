@@ -76,10 +76,16 @@ public class MainSearchTextSubmitFragment extends Fragment {
                         for (int i=0;i<searchArray.length();i++){
                             JSONObject searchResultObj = searchArray.getJSONObject(i);
                             SearchResultResources searchProperty = new SearchResultResources();
+                            searchProperty.setIdbarang(searchResultObj.getString("items_id"));
                             searchProperty.setNamabarang(searchResultObj.getString("items_name"));
                             searchProperty.setNamapengguna(searchResultObj.getString("user_name"));
                             searchProperty.setHargaawal(searchResultObj.getString("starting_price"));
                             searchProperty.setHargatarget(searchResultObj.getString("expected_price"));
+                            JSONArray searchPropertyImageArray = searchResultObj.getJSONArray("url");
+                            for (int x=0;x<searchPropertyImageArray.length();x++) {
+                                JSONObject searchPropertyImageObj = searchPropertyImageArray.getJSONObject(x);
+                                searchProperty.setUrlgambarbarang("http://es3.lelangkita.com/" + searchPropertyImageObj.getString("url"));
+                            }
                             searchResult.add(searchProperty);
                         }
                         resultReceived.dataReceived("done");

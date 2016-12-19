@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,7 +36,7 @@ public class UserGeraiNoEmptyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_gerai_layout_notempty, container, false);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_user_gerai_layout_recyclerview);
         barangAdapter = new UserGeraiBarangAdapter(getActivity(), dataBarang);
-        RecyclerView.LayoutManager upLayoutManager = new LinearLayoutManager(getActivity()) {
+        RecyclerView.LayoutManager upLayoutManager = new GridLayoutManager(getActivity(), 2) {
             @Override
             public boolean canScrollVertically(){
                 return false;

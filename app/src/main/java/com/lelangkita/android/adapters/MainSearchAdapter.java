@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.lelangkita.android.R;
 import com.lelangkita.android.resources.SearchResultResources;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -46,6 +47,10 @@ public class MainSearchAdapter extends RecyclerView.Adapter<MainSearchAdapter.My
     public void onBindViewHolder(MyViewHolder viewHolder, int position)
     {
         SearchResultResources result = searchResult.get(position);
+        if (result.getUrlgambarbarang() != null)
+        {
+            Picasso.with(context).load(result.getUrlgambarbarang()).into(viewHolder.gambarbarang);
+        }
         viewHolder.namabarang.setText(result.getNamabarang());
         viewHolder.user.setText(result.getNamapengguna());
         viewHolder.harga.setText(result.getHargaawal());
