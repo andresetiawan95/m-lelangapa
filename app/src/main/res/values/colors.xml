@@ -7,5 +7,7 @@
     <color name="colorAccent">#d6362d</color>
     <color name="tabIndicatorColor">#ffffff</color>
     <color name="buttonWhiteColor">#ffffff</color>
+    <color name="backgroundLayoutWhiteColor">#fffefe</color>
+    <color name="tabIndicatorColorForDetailBarang">#ff4136</color>
     <color name="buttonBackgroundColorUser">#ff4136</color>
 </resources>

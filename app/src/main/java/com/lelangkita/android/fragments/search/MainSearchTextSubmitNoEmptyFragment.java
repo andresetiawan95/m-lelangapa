@@ -1,5 +1,6 @@
 package com.lelangkita.android.fragments.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangkita.android.R;
+import com.lelangkita.android.activities.detail.DetailBarangActivity;
 import com.lelangkita.android.adapters.MainSearchAdapter;
 import com.lelangkita.android.interfaces.OnItemClickListener;
 import com.lelangkita.android.listeners.RecyclerItemClickListener;
@@ -45,9 +47,9 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
         searchResultRecycleView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), searchResultRecycleView, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                Intent intent = new Intent(getActivity(), DetailBarangActivity.class);
+                startActivity(intent);
             }
-
             @Override
             public void onLongItemClick(View view, int position) {
 
