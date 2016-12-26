@@ -16,24 +16,17 @@ import com.lelangkita.android.viewpagers.DetailBarangViewPagerAdapter;
  */
 
 public class DetailFragment extends Fragment {
-    private TabLayout detailTabLayout;
-    private ViewPager detailViewPager;
     public DetailFragment(){}
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_detail_barang_layout, container, false);
-        detailTabLayout = (TabLayout) view.findViewById(R.id.tab_detail_barang);
-        detailViewPager = (ViewPager) view.findViewById(R.id.viewpager_detail_barang);
-        setUpDetailViewPager(detailViewPager);
-        detailTabLayout.setupWithViewPager(detailViewPager);
+        //untuk menampilkan fragment submit bid
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_detail_barang_bidding_fragment, new DetailBiddingFragment())
+                .replace(R.id.fragment_detail_barang_waktubid_fragment, new DetailWaktuBidFragment())
+                .replace(R.id.fragment_detail_barang_deskripsi_fragment, new DetailDeskripsiFragment())
+                .commit();
         return view;
-    }
-    private void setUpDetailViewPager(ViewPager viewPager)
-    {
-        DetailBarangViewPagerAdapter detailBarangViewPagerAdapter = new DetailBarangViewPagerAdapter(getFragmentManager());
-        detailBarangViewPagerAdapter.addFragment(new BiddingFragment(), "Tawar");
-        detailBarangViewPagerAdapter.addFragment(new BiddingLogFragment(), "Peringkat");
-        viewPager.setAdapter(detailBarangViewPagerAdapter);
     }
 }

@@ -9,15 +9,15 @@ import android.view.ViewGroup;
 import com.lelangkita.android.R;
 
 /**
- * Created by Andre on 12/24/2016.
+ * Created by Andre on 12/25/2016.
  */
 
-public class BiddingFragment extends Fragment {
-    public BiddingFragment(){}
+public class DetailWaktuBidFragment extends Fragment {
+    public DetailWaktuBidFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_submitbid_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_barang_waktubid_layout, container, false);
         return view;
     }
 }
