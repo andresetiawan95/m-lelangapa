@@ -19,6 +19,7 @@
             android:textAppearance="?android:textAppearance"
             android:textSize="18dp"/>
         <TextView
+            android:id="@+id/fragment_detail_barang_deskripsi_isideskripsi"
             android:layout_margin="8dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

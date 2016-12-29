@@ -2,7 +2,6 @@ package com.lelangkita.android.fragments.search;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 import com.lelangkita.android.R;
 import com.lelangkita.android.apicalls.search.MainSearchAPI;
 import com.lelangkita.android.interfaces.DataReceiver;
-import com.lelangkita.android.resources.SearchResultResources;
+import com.lelangkita.android.resources.DetailItemResources;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +27,7 @@ public class MainSearchTextSubmitFragment extends Fragment {
     private String query;
     private DataReceiver queryReceiver;
     private DataReceiver resultReceived;
-    private ArrayList<SearchResultResources> searchResult = new ArrayList<>();
+    private ArrayList<DetailItemResources> searchResult = new ArrayList<>();
     public MainSearchTextSubmitFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -75,7 +74,7 @@ public class MainSearchTextSubmitFragment extends Fragment {
                         JSONArray searchArray = searchJSON.getJSONArray("data");
                         for (int i=0;i<searchArray.length();i++){
                             JSONObject searchResultObj = searchArray.getJSONObject(i);
-                            SearchResultResources searchProperty = new SearchResultResources();
+                            DetailItemResources searchProperty = new DetailItemResources();
                             searchProperty.setIdbarang(searchResultObj.getString("items_id"));
                             searchProperty.setNamabarang(searchResultObj.getString("items_name"));
                             searchProperty.setNamapengguna(searchResultObj.getString("user_name"));

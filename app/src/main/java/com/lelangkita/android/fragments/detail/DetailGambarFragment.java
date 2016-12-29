@@ -10,15 +10,20 @@ import com.lelangkita.android.R;
 import com.lelangkita.android.resources.DetailItemResources;
 
 /**
- * Created by Andre on 12/26/2016.
+ * Created by Andre on 12/29/2016.
  */
 
-public class DetailKomentarFragment extends Fragment {
-    public DetailKomentarFragment(){}
+public class DetailGambarFragment extends Fragment {
+    private DetailItemResources detailItem;
+    public DetailGambarFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_detail_barang_komentar_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_barang_gambar_layout, container, false);
         return view;
+    }
+    public void setDetailItem(DetailItemResources detailItem)
+    {
+        this.detailItem = detailItem;
     }
 }

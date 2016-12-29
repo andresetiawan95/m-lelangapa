@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangkita.android.R;
-import com.lelangkita.android.resources.SearchResultResources;
+import com.lelangkita.android.resources.DetailItemResources;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -19,9 +19,9 @@ import java.util.ArrayList;
  */
 
 public class MainSearchAdapter extends RecyclerView.Adapter<MainSearchAdapter.MyViewHolder> {
-    private ArrayList<SearchResultResources> searchResult;
+    private ArrayList<DetailItemResources> searchResult;
     private Context context;
-    public MainSearchAdapter(Context context, ArrayList<SearchResultResources> searchResult){
+    public MainSearchAdapter(Context context, ArrayList<DetailItemResources> searchResult){
         this.searchResult = searchResult;
         this.context = context;
     }
@@ -46,7 +46,7 @@ public class MainSearchAdapter extends RecyclerView.Adapter<MainSearchAdapter.My
     @Override
     public void onBindViewHolder(MyViewHolder viewHolder, int position)
     {
-        SearchResultResources result = searchResult.get(position);
+        DetailItemResources result = searchResult.get(position);
         if (result.getUrlgambarbarang() != null)
         {
             Picasso.with(context).load(result.getUrlgambarbarang()).into(viewHolder.gambarbarang);
@@ -54,6 +54,7 @@ public class MainSearchAdapter extends RecyclerView.Adapter<MainSearchAdapter.My
         viewHolder.namabarang.setText(result.getNamabarang());
         viewHolder.user.setText(result.getNamapengguna());
         viewHolder.harga.setText(result.getHargaawal());
+        //logic not yet implemented
         viewHolder.status.setText("active");
     }
     @Override

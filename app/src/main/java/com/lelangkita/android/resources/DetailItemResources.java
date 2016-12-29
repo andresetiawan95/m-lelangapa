@@ -4,9 +4,9 @@ package com.lelangkita.android.resources;
  * Created by Andre on 12/17/2016.
  */
 
-public class SearchResultResources {
+public class DetailItemResources {
     private String namabarang, namapengguna, hargaawal, hargatarget, statuslelang, urlgambarbarang, idbarang, deskripsibarang, tanggalmulai, tanggalselesai, jammulai, jamselesai;
-    public SearchResultResources(){}
+    public DetailItemResources(){}
     public void setIdbarang(String id){
         idbarang = id;
     }

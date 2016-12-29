@@ -2,5 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/linear_horizontal_divider"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@color/backgroundLayoutWhiteColor">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Komentar"
+            android:textSize="18dp"
+            android:textAppearance="?android:textAppearance"
+            android:layout_margin="8dp"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/userprofile_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/linear_horizontal_divider"/>
 </LinearLayout>

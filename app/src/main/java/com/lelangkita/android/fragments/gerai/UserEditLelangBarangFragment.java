@@ -36,7 +36,6 @@ public class UserEditLelangBarangFragment extends Fragment {
         //Toast.makeText(getActivity(), getActivity().getIntent().getStringExtra("items_id"), Toast.LENGTH_SHORT).show();
         itemID = getActivity().getIntent().getStringExtra("items_id");
         btnEditBarang.setVisibility(View.INVISIBLE);
-        getDataBarangFromServer(itemID);
         allDataBarangReceived = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
@@ -49,6 +48,7 @@ public class UserEditLelangBarangFragment extends Fragment {
                 }
             }
         };
+        getDataBarangFromServer(itemID);
         return view;
     }
     private void getDataBarangFromServer(String itemID){

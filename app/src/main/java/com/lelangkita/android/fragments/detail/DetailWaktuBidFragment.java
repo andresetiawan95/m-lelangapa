@@ -7,17 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangkita.android.R;
+import com.lelangkita.android.resources.DetailItemResources;
 
 /**
  * Created by Andre on 12/25/2016.
  */
 
 public class DetailWaktuBidFragment extends Fragment {
+    private DetailItemResources detailItem;
     public DetailWaktuBidFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_detail_barang_waktubid_layout, container, false);
         return view;
+    }
+    public void setDetailItem(DetailItemResources detailItem)
+    {
+        this.detailItem = detailItem;
     }
 }
