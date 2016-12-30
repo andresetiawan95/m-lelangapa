@@ -12,6 +12,7 @@ import com.android.volley.toolbox.Volley;
 import com.lelangkita.android.R;
 import com.lelangkita.android.apicalls.gerai.GetItemEditLelangBarangAPI;
 import com.lelangkita.android.interfaces.DataReceiver;
+import com.lelangkita.android.resources.DateTimeConverter;
 import com.lelangkita.android.resources.UserGeraiResources;
 
 import org.json.JSONArray;
@@ -57,6 +58,7 @@ public class UserEditLelangBarangFragment extends Fragment {
             public void dataReceived(Object output) {
                 String response = output.toString();
                 try {
+                    DateTimeConverter dateTimeConverter = new DateTimeConverter();
                     JSONObject jsonResponse = new JSONObject(response);
                     JSONArray respArray = jsonResponse.getJSONArray("data");
                     JSONObject respArrayObject = respArray.getJSONObject(0);
@@ -66,8 +68,8 @@ public class UserEditLelangBarangFragment extends Fragment {
                     geraiResources.setDeskripsibarang(respArrayObject.getString("item_description"));
                     geraiResources.setHargaawal(respArrayObject.getString("starting_price"));
                     geraiResources.setHargatarget(respArrayObject.getString("expected_price"));
-                    String startTimeBeforeSplit = respArrayObject.getString("start_time");
-                    String endTimeBeforeSplit = respArrayObject.getString("end_time");
+                    String startTimeBeforeSplit = dateTimeConverter.convertUTCToLocalTime(respArrayObject.getString("start_time"));
+                    String endTimeBeforeSplit = dateTimeConverter.convertUTCToLocalTime(respArrayObject.getString("end_time"));
                     String[] startTimePart = startTimeBeforeSplit.split("T");
                     String[] endTimePart = endTimeBeforeSplit.split("T");
                     String startDate = startTimePart[0];

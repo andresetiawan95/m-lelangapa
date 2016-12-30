@@ -11,6 +11,7 @@
             android:orientation="vertical"
             android:padding="8dp">
             <ImageView
+                android:id="@+id/fragment_detail_barang_gambar_gambaritem"
                 android:scaleType="center"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"

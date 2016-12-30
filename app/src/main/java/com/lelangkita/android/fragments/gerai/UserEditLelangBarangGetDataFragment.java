@@ -17,6 +17,7 @@ import com.lelangkita.android.R;
 import com.lelangkita.android.activities.UserGeraiActivity;
 import com.lelangkita.android.apicalls.gerai.UpdateItemEditLelangBarangAPI;
 import com.lelangkita.android.interfaces.DataReceiver;
+import com.lelangkita.android.resources.DateTimeConverter;
 import com.lelangkita.android.resources.UserGeraiResources;
 
 import org.json.JSONException;
@@ -97,13 +98,14 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         editText_jamselesai.setText(jamselesai);
     }
     private void putFilledData(){
+        DateTimeConverter dateTimeConverter = new DateTimeConverter();
         data.put(KEY_IDBARANGUPDATE, dataBarangReceived.get(0).getIdbarang());
         data.put(KEY_NAMABARANG, editText_namabarang.getText().toString());
         data.put(KEY_DESCBARANG, editText_deskripsibarang.getText().toString());
         data.put(KEY_STARTINGPRICE, editText_hargabarang_awal.getText().toString());
         data.put(KEY_EXPECTEDPRICE, editText_hargabarang_target.getText().toString());
-        data.put(KEY_STARTTIME, editText_tanggalmulai.getText().toString() + " "+ editText_jammulai.getText().toString());
-        data.put(KEY_ENDTIME, editText_tanggalselesai.getText().toString() + " "+ editText_jamselesai.getText().toString());
+        data.put(KEY_STARTTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalmulai.getText().toString() + " "+ editText_jammulai.getText().toString()));
+        data.put(KEY_ENDTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalselesai.getText().toString() + " "+ editText_jamselesai.getText().toString()));
     }
     private void sendUpdatedDataToServer(){
         DataReceiver updatedData = new DataReceiver() {

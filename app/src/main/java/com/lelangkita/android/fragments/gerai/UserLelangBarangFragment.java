@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 
 import com.lelangkita.android.R;
 import com.lelangkita.android.interfaces.InputReceiver;
+import com.lelangkita.android.resources.DateTimeConverter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -135,14 +136,14 @@ public class UserLelangBarangFragment extends Fragment {
         tanggalselesai = editText_tanggalselesai.getText().toString().trim();
         jamselesai = editText_jamselesai.getText().toString().trim();
         */
-
+        DateTimeConverter dateTimeConverter = new DateTimeConverter();
         HashMap<String, String> data = new HashMap<>();
         data.put(KEY_NAMABARANG, editText_namabarang.getText().toString());
         data.put(KEY_DESCBARANG, editText_deskripsibarang.getText().toString());
         data.put(KEY_STARTINGPRICE, editText_hargabarang_awal.getText().toString());
         data.put(KEY_EXPECTEDPRICE, editText_hargabarang_target.getText().toString());
-        data.put(KEY_STARTTIME, editText_tanggalmulai.getText().toString() + " " + editText_jammulai.getText().toString() + ":00");
-        data.put(KEY_ENDTIME, editText_tanggalselesai.getText().toString() + " " + editText_jamselesai.getText().toString() + ":00");
+        data.put(KEY_STARTTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalmulai.getText().toString() + " " + editText_jammulai.getText().toString() + ":00"));
+        data.put(KEY_ENDTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalselesai.getText().toString() + " " + editText_jamselesai.getText().toString() + ":00"));
         data.put(KEY_IMAGE, getStringImage(bitmap));
         //Log.v("Data nama", editText_namabarang.getText().toString());
         //Log.v("Data endtime", editText_tanggalselesai.getText().toString() + " " + editText_jamselesai.getText().toString() + ":00");
