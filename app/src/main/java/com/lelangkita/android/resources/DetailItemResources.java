@@ -6,6 +6,9 @@ package com.lelangkita.android.resources;
 
 public class DetailItemResources {
     private String namabarang, namapengguna, hargaawal, hargatarget, statuslelang, urlgambarbarang, idbarang, deskripsibarang, tanggalmulai, tanggalselesai, jammulai, jamselesai;
+    private String tanggaljammulai, tanggaljamselesai;
+    private Long tanggaljammulai_ms, tanggaljamselesai_ms;
+    private Integer itembidstatus;
     public DetailItemResources(){}
     public void setIdbarang(String id){
         idbarang = id;
@@ -39,8 +42,28 @@ public class DetailItemResources {
     public void setJamselesai(String jam){
         jamselesai = jam;
     }
+    public void setTanggaljammulai(String waktu)
+    {
+        tanggaljammulai = waktu;
+    }
+    public void setTanggaljamselesai(String waktu)
+    {
+        tanggaljamselesai = waktu;
+    }
     public String getIdbarang() {
         return idbarang;
+    }
+    public void setTanggaljammulai_ms(Long waktu_ms)
+    {
+        tanggaljammulai_ms = waktu_ms;
+    }
+    public void setTanggaljamselesai_ms(Long waktu_ms)
+    {
+        tanggaljamselesai_ms = waktu_ms;
+    }
+    public void setItembidstatus(Integer bidstatus)
+    {
+        itembidstatus = bidstatus;
     }
     public String getUrlgambarbarang(){
         return urlgambarbarang;
@@ -72,5 +95,21 @@ public class DetailItemResources {
     }
     public String getJamselesai(){
         return jamselesai;
+    }
+    public Long getTanggaljammulai_ms(){
+        return tanggaljammulai_ms;
+    }
+    public Long getTanggaljamselesai_ms(){
+        return tanggaljamselesai_ms;
+    }
+    public String getTanggaljammulai() {
+        return tanggaljammulai;
+    }
+    public String getTanggaljamselesai() {
+        return tanggaljamselesai;
+    }
+    public Integer getItembidstatus()
+    {
+        return itembidstatus;
     }
 }

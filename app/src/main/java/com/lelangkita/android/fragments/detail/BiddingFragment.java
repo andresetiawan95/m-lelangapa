@@ -13,11 +13,16 @@ import com.lelangkita.android.R;
  */
 
 public class BiddingFragment extends Fragment {
+    private String itemID;
     public BiddingFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_submitbid_layout, container, false);
         return view;
+    }
+    public void setItemID(String itemID)
+    {
+        this.itemID = itemID;
     }
 }

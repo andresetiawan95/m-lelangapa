@@ -83,7 +83,6 @@ public class UserLelangBarangActivity extends AppCompatActivity implements Input
         object.show();*/
         imageString = data.get("image");
         this.data.remove("image");
-
         HashMap<String, String> userInfo = sessionManager.getSession();
         this.data.put("id_user", userInfo.get(sessionManager.getKEY_ID()));
         loading = ProgressDialog.show(UserLelangBarangActivity.this,"Sedang diproses..","Harap tunggu...",false,false);

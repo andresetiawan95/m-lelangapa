@@ -26,12 +26,16 @@ public class DetailFragment extends Fragment {
     private DataReceiver detailReceived;
     private DetailHeaderFragment detailHeaderFragment;
     private DetailGambarFragment detailGambarFragment;
+    private DetailBiddingNotStartedFragment detailBiddingNotStartedFragment;
     private DetailBiddingFragment detailBiddingFragment;
     private DetailWaktuBidFragment detailWaktuBidFragment;
     private DetailDeskripsiFragment detailDeskripsiFragment;
     private DetailKomentarFragment detailKomentarFragment;
     private DetailAuctioneerFragment detailAuctioneerFragment;
     private DetailItemResources detailItem;
+
+    private Long serverDateTimeMillisecond;
+
     public DetailFragment(){}
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -41,6 +45,7 @@ public class DetailFragment extends Fragment {
         detailHeaderFragment = new DetailHeaderFragment();
         detailGambarFragment = new DetailGambarFragment();
         detailBiddingFragment = new DetailBiddingFragment();
+        detailBiddingNotStartedFragment = new DetailBiddingNotStartedFragment();
         detailWaktuBidFragment = new DetailWaktuBidFragment();
         detailDeskripsiFragment = new DetailDeskripsiFragment();
         detailKomentarFragment = new DetailKomentarFragment();
@@ -61,22 +66,53 @@ public class DetailFragment extends Fragment {
     }
     private void setDataToChildFragments(DetailItemResources detailItem)
     {
+        if (detailItem.getItembidstatus() == 0)
+        {
+            detailBiddingNotStartedFragment.setStartTimeAndServerTime(detailItem.getTanggaljammulai_ms(),serverDateTimeMillisecond);
+        }
         detailHeaderFragment.setDetailItem(detailItem);
         detailGambarFragment.setDetailItem(detailItem);
         detailDeskripsiFragment.setDetailItem(detailItem);
-        detailWaktuBidFragment.setDetailItem(detailItem);
+        detailWaktuBidFragment.setDetailItem(detailItem, serverDateTimeMillisecond);
     }
     private void setChildFragments()
     {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
-                .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
-                .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFragment)
-                .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFragment)
-                .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
-                .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
-                .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
-                .commit();
+        if (detailItem.getItembidstatus() == 0)
+        {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
+                    .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
+                    .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingNotStartedFragment)
+                    .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFragment)
+                    .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
+                    .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
+                    .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
+                    .commit();
+        }
+        else if (detailItem.getItembidstatus()==1)
+        {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
+                    .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
+                    .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFragment)
+                    .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFragment)
+                    .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
+                    .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
+                    .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
+                    .commit();
+        }
+        else
+        {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
+                    .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
+                    .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFragment)
+                    .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFragment)
+                    .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
+                    .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
+                    .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
+                    .commit();
+        }
     }
     private void getDetailItem(String itemID)
     {
@@ -89,6 +125,7 @@ public class DetailFragment extends Fragment {
                     String status = jsonResponse.getString("status");
                     if (status.equals("success"))
                     {
+                        serverDateTimeMillisecond = jsonResponse.getLong("server_time_in_millisecond");
                         JSONArray responseData = jsonResponse.getJSONArray("data");
                         for (int i=0;i<responseData.length();i++)
                         {
@@ -101,6 +138,11 @@ public class DetailFragment extends Fragment {
                             detailItem.setHargatarget(itemDataObject.getString("expected_price"));
                             String startTimeBeforeSplit = itemDataObject.getString("start_time");
                             String endTimeBeforeSplit = itemDataObject.getString("end_time");
+                            detailItem.setTanggaljammulai(startTimeBeforeSplit);
+                            detailItem.setTanggaljamselesai(endTimeBeforeSplit);
+                            detailItem.setTanggaljammulai_ms(itemDataObject.getLong("start_time_millisecond"));
+                            detailItem.setTanggaljamselesai_ms(itemDataObject.getLong("end_time_millisecond"));
+                            detailItem.setItembidstatus(itemDataObject.getInt("item_bid_status"));
                             String[] startTimePart = startTimeBeforeSplit.split("T");
                             String[] endTimePart = endTimeBeforeSplit.split("T");
                             String startDate = startTimePart[0];

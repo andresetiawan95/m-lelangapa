@@ -1,6 +1,12 @@
 package com.lelangkita.android.resources;
 
 import android.util.Log;
+import android.widget.TextView;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,9 +21,11 @@ import java.util.TimeZone;
 public class DateTimeConverter {
     private String inputDateFormat = "yyyy-MM-dd HH:mm:ss";
     private String dateFormatForServer = "yyyy-MM-dd'T'HH:mm:ss";
-    private String outputDateFormatFromServer = "yyyy-MM-dd'T'HH:mm:ss'.000Z'";
-    private String outputDateFormatPreprocessUTC = "yyyy-MM-dd HH:mm:ss '+0000'";
-    private String outputDateFormatPreprocess = "yyyy-MM-dd HH:mm:ss Z";
+    private String outputServerFormat = "yyyy-MM-dd'T'HH:mm.SSS'Z'";
+    private String outputIndonesiaFormat = "dd-MM-yyyy HH:mm";
+//    private String outputDateFormatFromServer = "yyyy-MM-dd'T'HH:mm:ss'.000Z'";
+//    private String outputDateFormatPreprocessUTC = "yyyy-MM-dd HH:mm:ss '+0000'";
+//    private String outputDateFormatPreprocess = "yyyy-MM-dd HH:mm:ss Z";
     public String convertInputLocalTime (String time)
     {
         SimpleDateFormat sdf = new SimpleDateFormat(inputDateFormat);
@@ -25,9 +33,10 @@ public class DateTimeConverter {
             Date date = sdf.parse(time);
             sdf.applyPattern(dateFormatForServer);
             String output = sdf.format(date);
+            //memisahkan GMT+0700 menjadi 'GMT' dan '+0700'
             String[] timezone = TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT).split("T");
             output = output + timezone[1];
-            Log.v("Time yang dikirim", output);
+            //Log.v("Time yang dikirim", output);
             return output;
         } catch (ParseException e) {
             e.printStackTrace();
@@ -36,6 +45,40 @@ public class DateTimeConverter {
     }
     public String convertUTCToLocalTime (String time)
     {
+        //menggunakan joda time
+        DateTime now = new DateTime(time, DateTimeZone.UTC);
+        DateTime toLocalTime = now.withZone(DateTimeZone.getDefault());
+        DateTimeFormatter dmf = DateTimeFormat.forPattern(outputServerFormat);
+        return dmf.print(toLocalTime);
+    }
+    public String convertUTCToLocalTimeIndonesiaFormat (String time)
+    {
+        //menggunakan joda time
+        DateTime now = new DateTime(time, DateTimeZone.UTC);
+        DateTime toIndonesiaTime = now.withZone(DateTimeZone.getDefault());
+        DateTimeFormatter dmf = DateTimeFormat.forPattern(outputIndonesiaFormat);
+        return dmf.print(toIndonesiaTime);
+    }
+    public boolean compareUTCTimeWithStartAndEndTime(String startTime, String endTime, String nowTime)
+    {
+        DateTime nowDateTime = new DateTime(nowTime, DateTimeZone.UTC);
+        DateTime startDateTime = new DateTime(startTime, DateTimeZone.UTC);
+        DateTime endDateTime = new DateTime(endTime, DateTimeZone.UTC);
+        if (startDateTime.isBefore(nowDateTime) && endDateTime.isAfter(nowDateTime))
+        {
+            return true;
+        }
+        return false;
+    }
+    public long getUTCTimeInMillisecond(String time)
+    {
+        DateTime dateTime = new DateTime(time, DateTimeZone.UTC);
+        return dateTime.getMillis();
+    }
+    /*
+    public void convertUTCToLocalTimeOld (String time)
+    {
+
         SimpleDateFormat sdf = new SimpleDateFormat(outputDateFormatFromServer);
         SimpleDateFormat sdfToLocal = new SimpleDateFormat(outputDateFormatPreprocess);
         try {
@@ -55,5 +98,5 @@ public class DateTimeConverter {
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 }
