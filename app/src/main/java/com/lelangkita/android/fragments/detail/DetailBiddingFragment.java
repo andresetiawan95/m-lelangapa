@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangkita.android.R;
+import com.lelangkita.android.interfaces.BidReceiver;
+import com.lelangkita.android.interfaces.InputReceiver;
+import com.lelangkita.android.resources.DetailItemResources;
 import com.lelangkita.android.viewpagers.DetailBarangViewPagerAdapter;
 
 /**
@@ -18,6 +21,8 @@ import com.lelangkita.android.viewpagers.DetailBarangViewPagerAdapter;
 public class DetailBiddingFragment extends Fragment {
     private TabLayout detailTabLayout;
     private ViewPager detailViewPager;
+    private BiddingFragment biddingFragment = new BiddingFragment();;
+    private BiddingPeringkatFragment biddingPeringkatFragment;
     public DetailBiddingFragment(){}
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -25,6 +30,7 @@ public class DetailBiddingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_layout, container, false);
         detailTabLayout = (TabLayout) view.findViewById(R.id.tab_detail_barang);
         detailViewPager = (ViewPager) view.findViewById(R.id.viewpager_detail_barang);
+        biddingPeringkatFragment = new BiddingPeringkatFragment();
         setUpDetailViewPager(detailViewPager);
         detailTabLayout.setupWithViewPager(detailViewPager);
         return view;
@@ -32,8 +38,20 @@ public class DetailBiddingFragment extends Fragment {
     private void setUpDetailViewPager(ViewPager viewPager)
     {
         DetailBarangViewPagerAdapter detailBarangViewPagerAdapter = new DetailBarangViewPagerAdapter(getFragmentManager());
-        detailBarangViewPagerAdapter.addFragment(new BiddingFragment(), "Tawar");
-        detailBarangViewPagerAdapter.addFragment(new BiddingPeringkatFragment(), "Peringkat");
+        detailBarangViewPagerAdapter.addFragment(biddingFragment, "Tawar");
+        detailBarangViewPagerAdapter.addFragment(biddingPeringkatFragment, "Peringkat");
         viewPager.setAdapter(detailBarangViewPagerAdapter);
+    }
+    public void setDetailItemToBiddingFragment(DetailItemResources detailItem)
+    {
+        biddingFragment.setDetailItem(detailItem);
+    }
+    public void setBidReceiverToBiddingFragment(BidReceiver inputReceiver)
+    {
+        biddingFragment.setInputReceiverToSubmitBidding(inputReceiver);
+    }
+    public void updateBidderInformation(DetailItemResources detailItem)
+    {
+        biddingFragment.changeNamaBidderAndHargaBid(detailItem);
     }
 }

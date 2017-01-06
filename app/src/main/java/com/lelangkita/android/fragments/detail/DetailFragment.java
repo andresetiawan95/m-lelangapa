@@ -13,14 +13,21 @@ import com.android.volley.toolbox.Volley;
 import com.lelangkita.android.R;
 import com.lelangkita.android.apicalls.detail.DetailItemAPI;
 import com.lelangkita.android.apicalls.socket.BiddingSocket;
+import com.lelangkita.android.interfaces.BidReceiver;
 import com.lelangkita.android.interfaces.DataReceiver;
+import com.lelangkita.android.interfaces.InputReceiver;
+import com.lelangkita.android.interfaces.SocketReceiver;
+import com.lelangkita.android.preferences.SessionManager;
 import com.lelangkita.android.resources.DetailItemResources;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 /**
  * Created by Andre on 12/24/2016.
@@ -29,6 +36,7 @@ import io.socket.client.Socket;
 public class DetailFragment extends Fragment {
     private DataReceiver detailReceived;
     private DataReceiver triggerReceived;
+    private BidReceiver inputBidReceiver;
     private DetailHeaderFragment detailHeaderFragment;
     private DetailGambarFragment detailGambarFragment;
     private DetailBiddingNotStartedFragment detailBiddingNotStartedFragment;
@@ -41,19 +49,28 @@ public class DetailFragment extends Fragment {
     private DetailAuctioneerFragment detailAuctioneerFragment;
     private DetailItemResources detailItem;
 
+    private SessionManager sessionManager;
+    private HashMap<String, String> session;
+
     private SwipeRefreshLayout swipeRefreshLayout;
     private Long serverDateTimeMillisecond;
     private String itemID, biddingInformation;
-    private Socket biddingSocket;
+    private BiddingSocket biddingSocket;
+    private Socket socketBinder;
+    private SocketReceiver socketReceiver;
     public DetailFragment(){}
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         detailItem = new DetailItemResources();
-        biddingSocket = new BiddingSocket().getSocket();
-        biddingInformation = "opened";
+        sessionManager = new SessionManager(getActivity());
+        session = sessionManager.getSession();
         itemID = getActivity().getIntent().getStringExtra("items_id");
+        setInputBidReceiver();
+        setSocketReceiver();
+        setInitialSocketBinding();
+        biddingInformation = "opened";
         detailHeaderFragment = new DetailHeaderFragment();
         detailGambarFragment = new DetailGambarFragment();
         detailBiddingFragment = new DetailBiddingFragment();
@@ -138,10 +155,63 @@ public class DetailFragment extends Fragment {
     public void onDestroy()
     {
         super.onDestroy();
+        //free socket
+        socketBinder.emit("leave-room", itemID);
+        socketBinder.disconnect();
+        socketBinder.off("bidsuccess", onSubmitBidSuccess);
     }
+    private void setInitialSocketBinding()
+    {
+        biddingSocket = new BiddingSocket(getActivity(), socketReceiver);
+        socketBinder = biddingSocket.getSocket();
+        socketBinder.connect();
+        //just receive success bid
+        socketBinder.on("bidsuccess", onSubmitBidSuccess);
+        //joining room named "item_ID"
+        socketBinder.emit("join-room", itemID);
+    }
+    private void setSocketReceiver()
+    {
+        socketReceiver = new SocketReceiver() {
+            @Override
+            public void socketReceived(Object status, Object response) {
+                if (status.toString().equals("bidsuccess"))
+                {
+                    JSONObject socketResponse = (JSONObject) response;
+                    try {
+                        detailItem.setHargabid(socketResponse.getString("bid_price_return"));
+                        detailItem.setNamabidder(socketResponse.getString("bidder_name_return"));
+                        detailBiddingFragment.updateBidderInformation(detailItem);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if (status.toString().equals("bidfailed"))
+                {
+                    //implemented later
+                }
+            }
+        };
+    }
+    private void setInputBidReceiver()
+    {
+        inputBidReceiver = new BidReceiver() {
+            @Override
+            public void bidReceived(String price) {
+                JSONObject sendBidObject = new JSONObject();
+                try {
+                    sendBidObject.put("id_bidder", session.get(sessionManager.getKEY_ID()));
+                    sendBidObject.put("id_item", itemID);
+                    sendBidObject.put("harga_bid", price);
 
-
-
+                    //send json to server socket
+                    socketBinder.emit("submitbid", sendBidObject.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
     private void setUpSwipeRefreshLayout()
     {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -172,6 +242,8 @@ public class DetailFragment extends Fragment {
         else if (detailItem.getItembidstatus() == 1)
         {
             Log.v("Bid sudah dimulai", "Bid sudah dimulai--setdatatochildfragment");
+            detailBiddingFragment.setDetailItemToBiddingFragment(detailItem);
+            detailBiddingFragment.setBidReceiverToBiddingFragment(inputBidReceiver);
             detailWaktuBidStartedFragment.setDetailItem(detailItem);
             detailWaktuBidStartedFragment.setTriggerBiddingDone(triggerReceived);
             detailWaktuBidStartedFragment.setServerTime(serverDateTimeMillisecond);
@@ -269,6 +341,8 @@ public class DetailFragment extends Fragment {
                             detailItem.setTanggalselesai(endDate);
                             detailItem.setJamselesai(endHour);
                             detailItem.setNamapengguna(itemDataObject.getString("user_name"));
+                            detailItem.setNamabidder(itemDataObject.getString("bidder_name"));
+                            detailItem.setHargabid(itemDataObject.getString("item_bid_price"));
                             JSONArray detailUrlGambarItemArray = itemDataObject.getJSONArray("url");
                             for (int j=0;j<detailUrlGambarItemArray.length();j++)
                             {
@@ -287,4 +361,26 @@ public class DetailFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(detailItemAPI);
     }
+
+    public Emitter.Listener onSubmitBidSuccess = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.v("Socket Received", "YEAY SOCKET RESPONSE IS RECEIVED");
+
+                    JSONObject socketResponse = (JSONObject) args[0];
+                    try {
+                        detailItem.setHargabid(socketResponse.getString("bid_price_return"));
+                        detailItem.setNamabidder(socketResponse.getString("bidder_name_return"));
+                        detailBiddingFragment.updateBidderInformation(detailItem);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //dataReceivedFromSocket.socketReceived("bidsuccess", args[0]);
+                }
+            });
+        }
+    };
 }

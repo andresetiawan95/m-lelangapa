@@ -5,7 +5,7 @@ package com.lelangkita.android.resources;
  */
 
 public class DetailItemResources {
-    private String namabarang, namapengguna, hargaawal, hargatarget, statuslelang, urlgambarbarang, idbarang, deskripsibarang, tanggalmulai, tanggalselesai, jammulai, jamselesai;
+    private String namabarang, namapengguna, hargaawal, hargatarget, statuslelang, namabidder, hargabid, urlgambarbarang, idbarang, deskripsibarang, tanggalmulai, tanggalselesai, jammulai, jamselesai;
     private String tanggaljammulai, tanggaljamselesai;
     private Long tanggaljammulai_ms, tanggaljamselesai_ms;
     private Integer itembidstatus;
@@ -49,6 +49,14 @@ public class DetailItemResources {
     public void setTanggaljamselesai(String waktu)
     {
         tanggaljamselesai = waktu;
+    }
+    public void setNamabidder(String nama)
+    {
+        this.namabidder = nama;
+    }
+    public void setHargabid(String harga)
+    {
+        this.hargabid = harga;
     }
     public String getIdbarang() {
         return idbarang;
@@ -111,5 +119,13 @@ public class DetailItemResources {
     public Integer getItembidstatus()
     {
         return itembidstatus;
+    }
+    public String getNamabidder()
+    {
+        return namabidder;
+    }
+    public String getHargabid()
+    {
+        return hargabid;
     }
 }
