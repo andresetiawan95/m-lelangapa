@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/linear_horizontal_divider"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/fragment_detail_barang_waktubid_finished_waktumulai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01-01-2016 00:00"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="25dp"
+                android:text=" - "/>
+            <TextView
+                android:id="@+id/fragment_detail_barang_waktubid_finished_waktuselesai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01-01-2016 00:00"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/fragment_detail_barang_waktubid_finished_information"
+                android:textSize="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selesai"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

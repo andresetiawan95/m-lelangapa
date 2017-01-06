@@ -104,8 +104,8 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         data.put(KEY_DESCBARANG, editText_deskripsibarang.getText().toString());
         data.put(KEY_STARTINGPRICE, editText_hargabarang_awal.getText().toString());
         data.put(KEY_EXPECTEDPRICE, editText_hargabarang_target.getText().toString());
-        data.put(KEY_STARTTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalmulai.getText().toString() + " "+ editText_jammulai.getText().toString()));
-        data.put(KEY_ENDTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalselesai.getText().toString() + " "+ editText_jamselesai.getText().toString()));
+        data.put(KEY_STARTTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalmulai.getText().toString() + " "+ editText_jammulai.getText().toString()+ ":00"));
+        data.put(KEY_ENDTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalselesai.getText().toString() + " "+ editText_jamselesai.getText().toString()+ ":00"));
     }
     private void sendUpdatedDataToServer(){
         DataReceiver updatedData = new DataReceiver() {

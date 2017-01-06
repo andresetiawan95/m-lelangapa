@@ -2,6 +2,7 @@ package com.lelangkita.android.fragments.detail;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.lelangkita.android.R;
 import com.lelangkita.android.apicalls.detail.DetailItemAPI;
+import com.lelangkita.android.apicalls.socket.BiddingSocket;
 import com.lelangkita.android.interfaces.DataReceiver;
 import com.lelangkita.android.resources.DetailItemResources;
 
@@ -18,62 +20,170 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import io.socket.client.Socket;
+
 /**
  * Created by Andre on 12/24/2016.
  */
 
 public class DetailFragment extends Fragment {
     private DataReceiver detailReceived;
+    private DataReceiver triggerReceived;
     private DetailHeaderFragment detailHeaderFragment;
     private DetailGambarFragment detailGambarFragment;
     private DetailBiddingNotStartedFragment detailBiddingNotStartedFragment;
     private DetailBiddingFragment detailBiddingFragment;
-    private DetailWaktuBidFragment detailWaktuBidFragment;
+    private DetailWaktuBidNotStartedFragment detailWaktuBidNotStartedFragment;
+    private DetailWaktuBidStartedFragment detailWaktuBidStartedFragment;
+    private DetailWaktuBidFinishedFragment detailWaktuBidFinishedFragment;
     private DetailDeskripsiFragment detailDeskripsiFragment;
     private DetailKomentarFragment detailKomentarFragment;
     private DetailAuctioneerFragment detailAuctioneerFragment;
     private DetailItemResources detailItem;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private Long serverDateTimeMillisecond;
-
+    private String itemID, biddingInformation;
+    private Socket biddingSocket;
     public DetailFragment(){}
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_detail_barang_layout, container, false);
-        String itemID = getActivity().getIntent().getStringExtra("items_id");
+        super.onCreate(savedInstanceState);
+        detailItem = new DetailItemResources();
+        biddingSocket = new BiddingSocket().getSocket();
+        biddingInformation = "opened";
+        itemID = getActivity().getIntent().getStringExtra("items_id");
         detailHeaderFragment = new DetailHeaderFragment();
         detailGambarFragment = new DetailGambarFragment();
         detailBiddingFragment = new DetailBiddingFragment();
         detailBiddingNotStartedFragment = new DetailBiddingNotStartedFragment();
-        detailWaktuBidFragment = new DetailWaktuBidFragment();
+        detailWaktuBidNotStartedFragment = new DetailWaktuBidNotStartedFragment();
+        detailWaktuBidStartedFragment = new DetailWaktuBidStartedFragment();
+        detailWaktuBidFinishedFragment = new DetailWaktuBidFinishedFragment();
         detailDeskripsiFragment = new DetailDeskripsiFragment();
         detailKomentarFragment = new DetailKomentarFragment();
         detailAuctioneerFragment = new DetailAuctioneerFragment();
+    }
+    @Override
+    public View onCreateView (final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View view = inflater.inflate(R.layout.fragment_detail_barang_layout, container, false);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_detail_barang_swipe_refreshLayout);
+        setUpSwipeRefreshLayout();
         detailReceived = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
                 if (output.toString().equals("done"))
                 {
-                    setDataToChildFragments(detailItem);
-                    //untuk menampilkan fragment submit bid
-                    setChildFragments();
+                    if (biddingInformation.equals("start"))
+                    {
+                        if (detailItem.getItembidstatus()==1)
+                        {
+                            Log.v("Selesai", "Request Selesai");
+                            swipeRefreshLayout.setRefreshing(false);
+                            setDataToChildFragments(detailItem);
+                            //untuk menampilkan fragment submit bid
+                            setChildFragments();
+                        }
+                        else
+                        {
+                            getDetailItem(itemID);
+                        }
+                    }
+                    else if (biddingInformation.equals("finish"))
+                    {
+                        if (detailItem.getItembidstatus()==-1)
+                        {
+                            Log.v("Selesai", "Request Selesai");
+                            swipeRefreshLayout.setRefreshing(false);
+                            setDataToChildFragments(detailItem);
+                            //untuk menampilkan fragment submit bid
+                            setChildFragments();
+                        }
+                        else
+                        {
+                            getDetailItem(itemID);
+                        }
+                    }
+                    else
+                    {
+                        Log.v("Selesai", "Request Selesai");
+                        swipeRefreshLayout.setRefreshing(false);
+                        setDataToChildFragments(detailItem);
+                        //untuk menampilkan fragment submit bid
+                        setChildFragments();
+                    }
                 }
             }
         };
-        getDetailItem(itemID);
+        triggerReceived = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                if (output.toString().equals("start"))
+                {
+                    biddingInformation = "start";
+                    getDetailItem(itemID);
+                }
+                if (output.toString().equals("finish"))
+                {
+                    biddingInformation = "finish";
+                    getDetailItem(itemID);
+                }
+            }
+        };
         return view;
+    }
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+    }
+
+
+
+    private void setUpSwipeRefreshLayout()
+    {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.v("Refresh status", "Refresh jalan");
+                getDetailItem(itemID);
+            }
+        });
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.v("Refresh post status", "Refresh post jalan");
+                swipeRefreshLayout.setRefreshing(true);
+                getDetailItem(itemID);
+            }
+        });
     }
     private void setDataToChildFragments(DetailItemResources detailItem)
     {
         if (detailItem.getItembidstatus() == 0)
         {
             detailBiddingNotStartedFragment.setStartTimeAndServerTime(detailItem.getTanggaljammulai_ms(),serverDateTimeMillisecond);
+            detailBiddingNotStartedFragment.setTriggerSender(triggerReceived);
+            detailWaktuBidNotStartedFragment.setDetailItem(detailItem);
+        }
+        else if (detailItem.getItembidstatus() == 1)
+        {
+            Log.v("Bid sudah dimulai", "Bid sudah dimulai--setdatatochildfragment");
+            detailWaktuBidStartedFragment.setDetailItem(detailItem);
+            detailWaktuBidStartedFragment.setTriggerBiddingDone(triggerReceived);
+            detailWaktuBidStartedFragment.setServerTime(serverDateTimeMillisecond);
+        }
+        else
+        {
+            Log.v("Bid sudah selesai", "Bid sudah selesai--setdatatochildfragment");
+            detailWaktuBidFinishedFragment.setDetailItem(detailItem);
         }
         detailHeaderFragment.setDetailItem(detailItem);
         detailGambarFragment.setDetailItem(detailItem);
         detailDeskripsiFragment.setDetailItem(detailItem);
-        detailWaktuBidFragment.setDetailItem(detailItem, serverDateTimeMillisecond);
     }
     private void setChildFragments()
     {
@@ -83,7 +193,7 @@ public class DetailFragment extends Fragment {
                     .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
                     .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
                     .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingNotStartedFragment)
-                    .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFragment)
+                    .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidNotStartedFragment)
                     .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
                     .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
                     .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
@@ -91,11 +201,12 @@ public class DetailFragment extends Fragment {
         }
         else if (detailItem.getItembidstatus()==1)
         {
+            Log.v("Bid sudah dimulai", "Bid sudah dimulai--setchildfragment");
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
                     .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
                     .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFragment)
-                    .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFragment)
+                    .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidStartedFragment)
                     .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
                     .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
                     .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
@@ -103,11 +214,12 @@ public class DetailFragment extends Fragment {
         }
         else
         {
+            Log.v("Bid sudah selesai", "Bid sudah selesai--setchildfragment");
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
                     .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
                     .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFragment)
-                    .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFragment)
+                    .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFinishedFragment)
                     .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
                     .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
                     .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
@@ -116,6 +228,8 @@ public class DetailFragment extends Fragment {
     }
     private void getDetailItem(String itemID)
     {
+        Log.v("Dipanggil", "Called");
+        swipeRefreshLayout.setRefreshing(true);
         DataReceiver dataReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
@@ -129,7 +243,6 @@ public class DetailFragment extends Fragment {
                         JSONArray responseData = jsonResponse.getJSONArray("data");
                         for (int i=0;i<responseData.length();i++)
                         {
-                            detailItem = new DetailItemResources();
                             JSONObject itemDataObject = responseData.getJSONObject(i);
                             detailItem.setIdbarang(itemDataObject.getString("item_id"));
                             detailItem.setNamabarang(itemDataObject.getString("item_name"));

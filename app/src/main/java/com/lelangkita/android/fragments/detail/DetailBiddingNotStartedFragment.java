@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lelangkita.android.R;
+import com.lelangkita.android.interfaces.DataReceiver;
 
 /**
  * Created by Andre on 1/4/2017.
  */
 
 public class DetailBiddingNotStartedFragment extends Fragment {
+    private DataReceiver triggerSender;
     private TextView textView_countdown;
     private Long serverTimeNow_milisecond;
     private Long startTime_milisecond;
@@ -34,6 +36,10 @@ public class DetailBiddingNotStartedFragment extends Fragment {
     {
         serverTimeNow_milisecond = serverTime;
         startTime_milisecond = startTime;
+    }
+    public void setTriggerSender(DataReceiver triggerSender)
+    {
+        this.triggerSender = triggerSender;
     }
     private void setCountDownTimer()
     {
@@ -100,7 +106,8 @@ public class DetailBiddingNotStartedFragment extends Fragment {
             }
             @Override
             public void onFinish() {
-
+                textView_countdown.setText("00:00:00");
+                triggerSender.dataReceived("start");
             }
         }.start();
     }

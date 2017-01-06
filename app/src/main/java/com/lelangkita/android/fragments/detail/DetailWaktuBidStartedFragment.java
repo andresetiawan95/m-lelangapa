@@ -3,25 +3,22 @@ package com.lelangkita.android.fragments.detail;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lelangkita.android.R;
+import com.lelangkita.android.interfaces.DataReceiver;
 import com.lelangkita.android.resources.DateTimeConverter;
 import com.lelangkita.android.resources.DetailItemResources;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by Andre on 12/25/2016.
  */
 
-public class DetailWaktuBidFragment extends Fragment {
+public class DetailWaktuBidStartedFragment extends Fragment {
+    private DataReceiver triggerBiddingDone;
     private String oldDateFormat = "yyyy-MM-dd";
     private String newDateFormat = "dd-MM-yyyy";
     private DetailItemResources detailItem;
@@ -32,12 +29,12 @@ public class DetailWaktuBidFragment extends Fragment {
     private Long serverTime, timeCountDown, hoursLeftLong, minutesLeftLong, secondsLeftLong;
     private String hoursLeftString, minutesLeftString, secondsLeftString;
     private long HOURS_MAX = 3600000, MINUTES_MAX = 60000, SECONDS_MAX = 1000;
-    public DetailWaktuBidFragment(){}
+    public DetailWaktuBidStartedFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         dateTimeConverter = new DateTimeConverter();
-        View view = inflater.inflate(R.layout.fragment_detail_barang_waktubid_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_barang_waktubid_started_layout, container, false);
         String waktuMulai = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(detailItem.getTanggaljammulai());
         String waktuSelesai = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(detailItem.getTanggaljamselesai());
         textView_waktuMulai = (TextView) view.findViewById(R.id.fragment_detail_barang_waktubid_waktumulai);
@@ -115,14 +112,22 @@ public class DetailWaktuBidFragment extends Fragment {
                 }
                 @Override
                 public void onFinish() {
-
+                    textView_countdown.setText("00:00:00");
+                    triggerBiddingDone.dataReceived("finish");
                 }
             }.start();
         }
     }
-    public void setDetailItem(DetailItemResources detailItem, Long serverTime)
+    public void setDetailItem(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
+    }
+    public void setServerTime(Long serverTime)
+    {
         this.serverTime = serverTime;
+    }
+    public void setTriggerBiddingDone(DataReceiver triggerBiddingDone)
+    {
+        this.triggerBiddingDone = triggerBiddingDone;
     }
 }
