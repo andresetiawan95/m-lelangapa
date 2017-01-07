@@ -23,4 +23,9 @@
     <!--Gerai Activity-->
     <string name="GERAI_EMPTY_MSGHEAD">Ups! Sepertinya anda belum melelang apapun</string>
     <string name="GERAI_EMPTY_MSGSUBHEAD">Tekan tombol plus dibawah untuk memulai lelang</string>
+
+    <!--Detail Activity and Fragment-->
+    <string name="DETAILFRAGMENT_BIDFAILED_ALERTDIALOGTITLE">Whoops! Tawaran tidak valid</string>
+    <string name="DETAILFRAGMENT_BIDFAILED_ALERTDIALOGMSG">Jumlah tawaran yang dimasukkan lebih kecil dari tawaran tertinggi! Ayo tawar lebih tinggi!</string>
+    <string name="DETAILFRAGMENT_BIDFAILED_ALERTDIALOGOKBUTTON">TAWAR LAGI</string>
 </resources>

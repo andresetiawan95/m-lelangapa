@@ -1,8 +1,10 @@
 package com.lelangkita.android.fragments.detail;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +50,8 @@ public class DetailFragment extends Fragment {
     private DetailKomentarFragment detailKomentarFragment;
     private DetailAuctioneerFragment detailAuctioneerFragment;
     private DetailItemResources detailItem;
-
+    private AlertDialog.Builder bidFailedAlertDialogBuilder;
+    private DialogInterface.OnClickListener buttonDialogClickListener;
     private SessionManager sessionManager;
     private HashMap<String, String> session;
 
@@ -67,6 +70,7 @@ public class DetailFragment extends Fragment {
         sessionManager = new SessionManager(getActivity());
         session = sessionManager.getSession();
         itemID = getActivity().getIntent().getStringExtra("items_id");
+        bidFailedAlertDialogBuilder = new AlertDialog.Builder(getActivity());
         setInputBidReceiver();
         setSocketReceiver();
         setInitialSocketBinding();
@@ -159,6 +163,7 @@ public class DetailFragment extends Fragment {
         socketBinder.emit("leave-room", itemID);
         socketBinder.disconnect();
         socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
+        socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
     }
     private void setInitialSocketBinding()
     {
@@ -167,6 +172,7 @@ public class DetailFragment extends Fragment {
         socketBinder.connect();
         //just receive success bid
         socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
+        socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
         //joining room named "item_ID"
         socketBinder.emit("join-room", itemID);
     }
@@ -188,7 +194,13 @@ public class DetailFragment extends Fragment {
                 }
                 else if (status.toString().equals("bidfailed"))
                 {
-                    //implemented later
+                    //implemented with alert dialog showing that bid is not valid
+                    //have one cancel button at alert dialog
+                    setAlertDialogBidFailed();
+                }
+                else if (status.toString().equals("submitting"))
+                {
+                    //implemented with showing text
                 }
             }
         };
@@ -361,7 +373,14 @@ public class DetailFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(detailItemAPI);
     }
-
+    private void setAlertDialogBidFailed()
+    {
+        bidFailedAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_BIDFAILED_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_BIDFAILED_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_BIDFAILED_ALERTDIALOGOKBUTTON, null);
+        AlertDialog bidFailedAlertDialog = bidFailedAlertDialogBuilder.create();
+        bidFailedAlertDialog.show();
+    }
     /*public Emitter.Listener onSubmitBidSuccess = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
