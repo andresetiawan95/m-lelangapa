@@ -64,7 +64,7 @@ public class BiddingSocket {
                 @Override
                 public void run() {
                     Log.v("Socket Received", "YEAY SOCKET RESPONSE IS RECEIVED");
-                    //dataReceivedFromSocket.socketReceived("bidsuccess", args[0]);
+                    dataReceivedFromSocket.socketReceived("bidsuccess", args[0]);
                 }
             });
         }

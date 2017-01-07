@@ -158,7 +158,7 @@ public class DetailFragment extends Fragment {
         //free socket
         socketBinder.emit("leave-room", itemID);
         socketBinder.disconnect();
-        socketBinder.off("bidsuccess", onSubmitBidSuccess);
+        socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
     }
     private void setInitialSocketBinding()
     {
@@ -166,7 +166,7 @@ public class DetailFragment extends Fragment {
         socketBinder = biddingSocket.getSocket();
         socketBinder.connect();
         //just receive success bid
-        socketBinder.on("bidsuccess", onSubmitBidSuccess);
+        socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
         //joining room named "item_ID"
         socketBinder.emit("join-room", itemID);
     }
@@ -362,7 +362,7 @@ public class DetailFragment extends Fragment {
         queue.add(detailItemAPI);
     }
 
-    public Emitter.Listener onSubmitBidSuccess = new Emitter.Listener() {
+    /*public Emitter.Listener onSubmitBidSuccess = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             getActivity().runOnUiThread(new Runnable() {
@@ -382,5 +382,5 @@ public class DetailFragment extends Fragment {
                 }
             });
         }
-    };
+    };*/
 }
