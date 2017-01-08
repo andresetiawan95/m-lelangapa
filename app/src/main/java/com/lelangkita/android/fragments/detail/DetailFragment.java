@@ -49,9 +49,10 @@ public class DetailFragment extends Fragment {
     private DetailDeskripsiFragment detailDeskripsiFragment;
     private DetailKomentarFragment detailKomentarFragment;
     private DetailAuctioneerFragment detailAuctioneerFragment;
+    private DetailBiddingFinishedWithWinnerFragment detailBiddingFinishedWithWinnerFragment;
+    private DetailBiddingFinishedNoBidFragment detailBiddingFinishedNoBidFragment;
     private DetailItemResources detailItem;
     private AlertDialog.Builder bidFailedAlertDialogBuilder;
-    private DialogInterface.OnClickListener buttonDialogClickListener;
     private SessionManager sessionManager;
     private HashMap<String, String> session;
 
@@ -60,7 +61,7 @@ public class DetailFragment extends Fragment {
     private String itemID, biddingInformation;
     private BiddingSocket biddingSocket;
     private Socket socketBinder;
-    private SocketReceiver socketReceiver;
+    private SocketReceiver socketBidSuccessReceiver, socketBidFailedReceiver, socketBidSubmittingReceiver;
     public DetailFragment(){}
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -85,6 +86,8 @@ public class DetailFragment extends Fragment {
         detailDeskripsiFragment = new DetailDeskripsiFragment();
         detailKomentarFragment = new DetailKomentarFragment();
         detailAuctioneerFragment = new DetailAuctioneerFragment();
+        detailBiddingFinishedWithWinnerFragment = new DetailBiddingFinishedWithWinnerFragment();
+        detailBiddingFinishedNoBidFragment = new DetailBiddingFinishedNoBidFragment();
     }
     @Override
     public View onCreateView (final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -160,48 +163,52 @@ public class DetailFragment extends Fragment {
     {
         super.onDestroy();
         //free socket
-        socketBinder.emit("leave-room", itemID);
         socketBinder.disconnect();
         socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
         socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
     }
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        socketBinder.emit("join-room", itemID);
+        Log.v("Joining room", "Joining room now");
+    }
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        socketBinder.emit("leave-room", itemID);
+        Log.v("Leaving room", "Leaving room now");
+    }
     private void setInitialSocketBinding()
     {
-        biddingSocket = new BiddingSocket(getActivity(), socketReceiver);
+        biddingSocket = new BiddingSocket(getActivity(), socketBidSuccessReceiver, socketBidFailedReceiver);
         socketBinder = biddingSocket.getSocket();
         socketBinder.connect();
         //just receive success bid
         socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
         socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
-        //joining room named "item_ID"
-        socketBinder.emit("join-room", itemID);
     }
     private void setSocketReceiver()
     {
-        socketReceiver = new SocketReceiver() {
+        socketBidSuccessReceiver = new SocketReceiver() {
             @Override
             public void socketReceived(Object status, Object response) {
-                if (status.toString().equals("bidsuccess"))
-                {
-                    JSONObject socketResponse = (JSONObject) response;
-                    try {
-                        detailItem.setHargabid(socketResponse.getString("bid_price_return"));
-                        detailItem.setNamabidder(socketResponse.getString("bidder_name_return"));
-                        detailBiddingFragment.updateBidderInformation(detailItem);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                JSONObject socketResponse = (JSONObject) response;
+                try {
+                    detailItem.setHargabid(socketResponse.getString("bid_price_return"));
+                    detailItem.setNamabidder(socketResponse.getString("bidder_name_return"));
+                    detailBiddingFragment.updateBidderInformation(detailItem);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                else if (status.toString().equals("bidfailed"))
-                {
-                    //implemented with alert dialog showing that bid is not valid
-                    //have one cancel button at alert dialog
-                    setAlertDialogBidFailed();
-                }
-                else if (status.toString().equals("submitting"))
-                {
-                    //implemented with showing text
-                }
+            }
+        };
+        socketBidFailedReceiver = new SocketReceiver() {
+            @Override
+            public void socketReceived(Object status, Object response) {
+                setAlertDialogBidFailed();
             }
         };
     }
@@ -238,6 +245,7 @@ public class DetailFragment extends Fragment {
             @Override
             public void run() {
                 Log.v("Refresh post status", "Refresh post jalan");
+                //akan dieksekusi sesaat ketika fragment DetailFragment aktif
                 swipeRefreshLayout.setRefreshing(true);
                 getDetailItem(itemID);
             }
@@ -264,6 +272,10 @@ public class DetailFragment extends Fragment {
         {
             Log.v("Bid sudah selesai", "Bid sudah selesai--setdatatochildfragment");
             detailWaktuBidFinishedFragment.setDetailItem(detailItem);
+            if (!detailItem.getNamabidder().equals("nouser"))
+            {
+                detailBiddingFinishedWithWinnerFragment.setDetailItem(detailItem);
+            }
         }
         detailHeaderFragment.setDetailItem(detailItem);
         detailGambarFragment.setDetailItem(detailItem);
@@ -283,7 +295,7 @@ public class DetailFragment extends Fragment {
                     .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
                     .commit();
         }
-        else if (detailItem.getItembidstatus()==1)
+        else if (detailItem.getItembidstatus() == 1)
         {
             Log.v("Bid sudah dimulai", "Bid sudah dimulai--setchildfragment");
             getFragmentManager().beginTransaction()
@@ -296,18 +308,35 @@ public class DetailFragment extends Fragment {
                     .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
                     .commit();
         }
-        else
+        else if (detailItem.getItembidstatus() == -1)
         {
             Log.v("Bid sudah selesai", "Bid sudah selesai--setchildfragment");
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
-                    .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
-                    .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFragment)
-                    .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFinishedFragment)
-                    .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
-                    .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
-                    .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
-                    .commit();
+            if (!detailItem.getNamabidder().equals("nouser"))
+            {
+                //jika nama bidder bukan "nouser"
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
+                        .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
+                        .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFinishedWithWinnerFragment)
+                        .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFinishedFragment)
+                        .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
+                        .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
+                        .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
+                        .commit();
+            }
+            else
+            {
+                //jika nama bidder adalah "nouser"
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
+                        .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
+                        .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFinishedNoBidFragment)
+                        .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFinishedFragment)
+                        .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
+                        .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
+                        .replace(R.id.fragment_detail_barang_auctioneer_fragment, detailAuctioneerFragment)
+                        .commit();
+            }
         }
     }
     private void getDetailItem(String itemID)

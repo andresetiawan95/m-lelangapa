@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/linear_horizontal_divider"/>
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@color/backgroundLayoutWhiteColor"
+        android:layout_width="match_parent"
+        android:layout_height="188dp">
+        <ImageView
+            android:id="@+id/fragment_detail_barang_bidding_finished_avatar_winner"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_no_bidder_64dp"/>
+        <TextView
+            android:id="@+id/fragment_detail_barang_bidding_finished_name_winner"
+            android:textAppearance="?android:textAppearance"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tidak ada penawaran"
+            android:layout_marginBottom="8dp"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/linear_horizontal_divider"/>
+</LinearLayout>

@@ -19,10 +19,12 @@ import io.socket.emitter.Emitter;
 public class BiddingSocket {
     private Socket mSocket;
     private Activity activity;
-    private SocketReceiver dataReceivedFromSocket;
-    public BiddingSocket(Activity activity, SocketReceiver socketReceiver)
+    private SocketReceiver socketBidSuccessReceiver;
+    private SocketReceiver socketBidFailedReceiver;
+    public BiddingSocket(Activity activity, SocketReceiver socketReceiverSuccess, SocketReceiver socketReceiverFailed)
     {
-        this.dataReceivedFromSocket = socketReceiver;
+        this.socketBidSuccessReceiver = socketReceiverSuccess;
+        this.socketBidFailedReceiver = socketReceiverFailed;
         this.activity = activity;
         try {
             mSocket = IO.socket("http://bid.alphav1.lelangkita.com");
@@ -52,7 +54,7 @@ public class BiddingSocket {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    dataReceivedFromSocket.socketReceived("submitting", args[0]);
+                    socketBidSuccessReceiver.socketReceived("submitting", args[0]);
                 }
             });
         }
@@ -63,7 +65,7 @@ public class BiddingSocket {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    dataReceivedFromSocket.socketReceived("bidsuccess", args[0]);
+                    socketBidSuccessReceiver.socketReceived("bidsuccess", args[0]);
                 }
             });
         }
@@ -74,7 +76,7 @@ public class BiddingSocket {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    dataReceivedFromSocket.socketReceived("bidfailed", args[0]);
+                    socketBidFailedReceiver.socketReceived("bidfailed", args[0]);
                 }
             });
         }

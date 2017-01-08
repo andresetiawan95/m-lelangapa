@@ -32,7 +32,6 @@ public class MainSearchTextSubmitFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_main_search_textsubmit_layout, container, false);
-        getItemSearchResultOnQuery(query);
         resultReceived = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
@@ -49,11 +48,13 @@ public class MainSearchTextSubmitFragment extends Fragment {
                     }
                     else
                     {
-
+                        //implement later
+                        //jika hasil pencarian tidak ada
                     }
                 }
             }
         };
+        getItemSearchResultOnQuery(query);
         return view;
     }
     public void submitQuery(String query){
