@@ -10,4 +10,9 @@
     <color name="backgroundLayoutWhiteColor">#fffefe</color>
     <color name="tabIndicatorColorForDetailBarang">#ff4136</color>
     <color name="buttonBackgroundColorUser">#ff4136</color>
+
+    <color name="detailItemStatusTextColor">#ffffff</color>
+    <color name="detailItemStatusBidSoon">#ff9736</color>
+    <color name="detailItemStatusBidLive">#5fbf44</color>
+    <color name="detailItemStatusBidDone">#808080</color>
 </resources>
