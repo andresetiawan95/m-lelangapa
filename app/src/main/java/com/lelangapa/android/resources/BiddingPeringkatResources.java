@@ -5,7 +5,11 @@ package com.lelangapa.android.resources;
  */
 
 public class BiddingPeringkatResources {
-    private String namaBidder, hargaBid, avatarBidderUrl;
+    private String idBidder, namaBidder, hargaBid, avatarBidderUrl;
+    public void setIdBidder(String idBidder)
+    {
+        this.idBidder = idBidder;
+    }
     public void setNamaBidder(String namaBidder)
     {
         this.namaBidder = namaBidder;
@@ -17,6 +21,10 @@ public class BiddingPeringkatResources {
     public void setAvatarBidderUrl(String url)
     {
         this.avatarBidderUrl = url;
+    }
+    public String getIdBidder()
+    {
+        return idBidder;
     }
     public String getNamaBidder()
     {

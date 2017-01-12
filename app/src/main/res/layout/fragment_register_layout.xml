@@ -57,6 +57,26 @@
                 android:textAppearance="?android:textAppearanceSmall" />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_register_layout_domain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp">
+            <EditText
+                android:id="@+id/fragment_register_domain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Domain"
+                android:inputType="text"
+                android:textAppearance="?android:textAppearanceSmall" />
+            <TextView
+                android:id="@+id/fragment_register_domain_textview"
+                android:layout_marginLeft="5dp"
+                android:textSize="11dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="https://www.lelangapa.com/"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
             android:id="@+id/input_register_layout_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

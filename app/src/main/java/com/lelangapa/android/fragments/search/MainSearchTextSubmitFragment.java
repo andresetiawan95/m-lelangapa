@@ -38,6 +38,7 @@ public class MainSearchTextSubmitFragment extends Fragment {
                 String res = output.toString();
                 if (res.equals("done"))
                 {
+                    //MASIH NGEBUG DISINI. MENGHASILKAN NULL POINTER EXCEPTION WAKTU KONEKSI INTERNET TIDAK STABIL
                     if(!searchResult.isEmpty())
                     {
                         MainSearchTextSubmitNoEmptyFragment noEmptyFragment = new MainSearchTextSubmitNoEmptyFragment();

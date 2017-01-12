@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class BiddingPeringkatFragment extends Fragment {
     private ArrayList<BiddingPeringkatResources> biddingPeringkatList;
     private RecyclerView biddingPeringkatRecyclerView;
-    private BiddingPeringkatAdapter biddingPeringkatAdapter;
+    private BiddingPeringkatAdapter biddingPeringkatAdapter = null;
     public BiddingPeringkatFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -38,7 +38,10 @@ public class BiddingPeringkatFragment extends Fragment {
     public void setBiddingPeringkatList(ArrayList<BiddingPeringkatResources> biddingPeringkatList)
     {
         this.biddingPeringkatList = biddingPeringkatList;
-
+        if (biddingPeringkatAdapter != null)
+        {
+            biddingPeringkatAdapter.updateDataSet(this.biddingPeringkatList);
+        }
     }
     public void updateBiddingPeringkatList(ArrayList<BiddingPeringkatResources> biddingPeringkatList)
     {

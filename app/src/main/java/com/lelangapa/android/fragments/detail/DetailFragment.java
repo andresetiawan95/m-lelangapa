@@ -199,9 +199,43 @@ public class DetailFragment extends Fragment {
             public void socketReceived(Object status, Object response) {
                 JSONObject socketResponse = (JSONObject) response;
                 try {
+                    //Log.v("Response JSON", socketResponse.toString());
                     detailItem.setHargabid(socketResponse.getString("bid_price_return"));
                     detailItem.setNamabidder(socketResponse.getString("bidder_name_return"));
+
+                    int indexBidderBeforeUpdate = getIndexOfElementInBiddingPeringkatList(socketResponse.getString("bidder_id_return"));
+                    if (indexBidderBeforeUpdate != -1)
+                    {
+                        //jika pengguna yang melakukan bidding telah melakukan bid sebelumnya
+                        //mendapatkan object BiddingPeringkatResource dari user yang sudah melakukan bid sebelumnya
+                        BiddingPeringkatResources newBiddingFromExistUser = biddingPeringkatList.get(indexBidderBeforeUpdate);
+                        //menghapus object tersebut dari list
+                        biddingPeringkatList.remove(indexBidderBeforeUpdate);
+                        //merubah harga pada object
+                        newBiddingFromExistUser.setHargaBid(socketResponse.getString("bid_price_return"));
+                        //push kembali ke list
+                        biddingPeringkatList.add(0, newBiddingFromExistUser);
+                    }
+                    else
+                    {
+                        //jika pengguna belum pernah melakukan bid sebelumnya
+                        BiddingPeringkatResources newBiddingFromNewUser = new BiddingPeringkatResources();
+                        newBiddingFromNewUser.setIdBidder(socketResponse.getString("bidder_id_return"));
+                        newBiddingFromNewUser.setNamaBidder(socketResponse.getString("bidder_name_return"));
+                        newBiddingFromNewUser.setHargaBid(socketResponse.getString("bid_price_return"));
+                        biddingPeringkatList.add(0, newBiddingFromNewUser);
+
+                        //jika setelah ditambah size dari list lebih dari tiga, maka object ke-3 akan dihapus.
+                        if (biddingPeringkatList.size()>3)
+                        {
+                            //menghapus object pada index ke-3
+                            Log.v("Yang dihapus", biddingPeringkatList.get(3).getNamaBidder());
+                            biddingPeringkatList.remove(3);
+                        }
+                    }
                     detailBiddingFragment.updateBidderInformation(detailItem);
+                    detailBiddingFragment.updateBiddingPeringkatList(biddingPeringkatList);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -232,6 +266,19 @@ public class DetailFragment extends Fragment {
                 }
             }
         };
+    }
+    private int getIndexOfElementInBiddingPeringkatList(String idBidder)
+    {
+        int idx = -1;
+        for (int x=0;x<biddingPeringkatList.size();x++)
+        {
+            if (biddingPeringkatList.get(x).getIdBidder().equals(idBidder))
+            {
+                idx = x;
+                break;
+            }
+        }
+        return idx;
     }
     private void setUpSwipeRefreshLayout()
     {
@@ -390,10 +437,14 @@ public class DetailFragment extends Fragment {
                             detailItem.setHargabid(itemDataObject.getString("item_bid_price"));
                             JSONArray detailUrlGambarItemArray = itemDataObject.getJSONArray("url");
                             JSONArray biddingPeringkatArray = itemDataObject.getJSONArray("peringkat");
+
+                            //clear list when load data from server
+                            biddingPeringkatList.clear();
                             for (int j=0;j<biddingPeringkatArray.length();j++)
                             {
                                 BiddingPeringkatResources bidPeringkat = new BiddingPeringkatResources();
                                 JSONObject biddingPeringkatObject = biddingPeringkatArray.getJSONObject(j);
+                                bidPeringkat.setIdBidder(biddingPeringkatObject.getString("user_id"));
                                 bidPeringkat.setNamaBidder(biddingPeringkatObject.getString("user_name"));
                                 bidPeringkat.setHargaBid(biddingPeringkatObject.getString("bid_price"));
                                 biddingPeringkatList.add(bidPeringkat);

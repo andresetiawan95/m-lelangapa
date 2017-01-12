@@ -3,6 +3,8 @@ package com.lelangapa.android.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -39,10 +42,13 @@ public class RegisterFragment extends Fragment {
     private EditText namaLengkap;
     private EditText username;
     private EditText password;
+    private EditText domain;
     private EditText email;
     private EditText address;
     private EditText telepon;
+    private TextView domain_textview;
     private Button btnRegister;
+    private String CONST_LELANGAPA_URL = "https://www.lelangapa.com/";
     public RegisterFragment(){
 
     }
@@ -54,10 +60,11 @@ public class RegisterFragment extends Fragment {
         namaLengkap = (EditText) view.findViewById(R.id.fragment_register_name);
         username = (EditText) view.findViewById(R.id.fragment_register_username);
         password = (EditText) view.findViewById(R.id.fragment_register_password);
+        domain = (EditText) view.findViewById(R.id.fragment_register_domain);
         email = (EditText) view.findViewById(R.id.fragment_register_email);
         address = (EditText) view.findViewById(R.id.fragment_register_address);
         telepon = (EditText) view.findViewById(R.id.fragment_register_telepon);
-
+        domain_textview = (TextView) view.findViewById(R.id.fragment_register_domain_textview);
         btnRegister = (Button) view.findViewById(R.id.fragment_register_button);
 
         geoResources = new GeoResources();
@@ -69,12 +76,26 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        domain.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String domain_view = CONST_LELANGAPA_URL + domain.getText().toString().trim();
+                domain_textview.setText(domain_view);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
                 String _namaLengkap = namaLengkap.getText().toString();
                 String _username = username.getText().toString();
                 String _password = password.getText().toString();
+                String _domain = domain.getText().toString();
                 String _email = email.getText().toString();
                 String _address = address.getText().toString();
                 String _city = CityID.toString();
@@ -100,7 +121,7 @@ public class RegisterFragment extends Fragment {
                         }
                     }
                 };
-                RegisterAPI registerAPI = new RegisterAPI(_username, _namaLengkap, _password, _address,_email, _city, _province, _telepon, responseListener);
+                RegisterAPI registerAPI = new RegisterAPI(_username, _domain,_namaLengkap, _password, _address,_email, _city, _province, _telepon, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(getActivity());
                 queue.add(registerAPI);
             }

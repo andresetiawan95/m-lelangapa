@@ -1,6 +1,7 @@
 package com.lelangapa.android.apicalls.socket;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.lelangapa.android.interfaces.SocketReceiver;
 
@@ -63,6 +64,7 @@ public class BiddingSocket {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.v("Bid success", "Bid success");
                     socketBidSuccessReceiver.socketReceived("bidsuccess", args[0]);
                 }
             });
