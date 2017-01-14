@@ -52,7 +52,7 @@ public class MainSearchAdapter extends RecyclerView.Adapter<MainSearchAdapter.My
             Picasso.with(context).load(result.getUrlgambarbarang()).into(viewHolder.gambarbarang);
         }
         viewHolder.namabarang.setText(result.getNamabarang());
-        viewHolder.user.setText(result.getNamapengguna());
+        viewHolder.user.setText(result.getNamaauctioneer());
         viewHolder.harga.setText(result.getHargaawal());
         //logic not yet implemented
         viewHolder.status.setText("active");

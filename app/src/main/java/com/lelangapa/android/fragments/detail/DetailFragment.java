@@ -134,7 +134,6 @@ public class DetailFragment extends Fragment {
                     }
                     else
                     {
-                        Log.v("Selesai", "Request Selesai");
                         swipeRefreshLayout.setRefreshing(false);
                         setDataToChildFragments(detailItem);
                         //untuk menampilkan fragment submit bid
@@ -331,6 +330,7 @@ public class DetailFragment extends Fragment {
         detailHeaderFragment.setDetailItem(detailItem);
         detailGambarFragment.setDetailItem(detailItem);
         detailDeskripsiFragment.setDetailItem(detailItem);
+        detailAuctioneerFragment.setAuctioneerInfo(detailItem.getIdauctioneer(), detailItem.getNamaauctioneer());
     }
     private void setChildFragments()
     {
@@ -432,7 +432,8 @@ public class DetailFragment extends Fragment {
                             detailItem.setJammulai(startHour);
                             detailItem.setTanggalselesai(endDate);
                             detailItem.setJamselesai(endHour);
-                            detailItem.setNamapengguna(itemDataObject.getString("user_name"));
+                            detailItem.setIdauctioneer(itemDataObject.getString("user_id"));
+                            detailItem.setNamaauctioneer(itemDataObject.getString("user_name"));
                             detailItem.setNamabidder(itemDataObject.getString("bidder_name"));
                             detailItem.setHargabid(itemDataObject.getString("item_bid_price"));
                             JSONArray detailUrlGambarItemArray = itemDataObject.getJSONArray("url");

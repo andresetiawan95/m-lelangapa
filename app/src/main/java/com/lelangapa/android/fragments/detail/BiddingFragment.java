@@ -13,6 +13,7 @@ import com.lelangapa.android.R;
 import com.lelangapa.android.interfaces.BidReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.resources.DetailItemResources;
+import com.lelangapa.android.resources.NumberTextWatcher;
 
 /**
  * Created by Andre on 12/24/2016.
@@ -36,11 +37,13 @@ public class BiddingFragment extends Fragment {
         editText_inputPriceBid = (EditText) view.findViewById(R.id.fragment_detail_barang_bid_pricetextbox);
         button_submitBid = (Button) view.findViewById(R.id.fragment_detail_barang_bid_submitbutton);
         setInitialNamaBidderAndHargaBid();
+        editText_inputPriceBid.addTextChangedListener(new NumberTextWatcher(editText_inputPriceBid));
         button_submitBid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //belum dilakukan pengecekan inputan, langsung coba submit
-                inputBidReceiver.bidReceived(editText_inputPriceBid.getText().toString().trim());
+                String bidPriceFromUserInput = editText_inputPriceBid.getText().toString().trim().replaceAll("[^0-9]","");
+                inputBidReceiver.bidReceived(bidPriceFromUserInput);
             }
         });
         return view;

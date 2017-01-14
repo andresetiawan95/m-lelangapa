@@ -33,7 +33,7 @@ public class DetailHeaderFragment extends Fragment {
         textView_judulBarang = (TextView) view.findViewById(R.id.fragment_detail_barang_header_judul);
         textView_namaAuctioneer = (TextView) view.findViewById(R.id.fragment_detail_barang_header_auctioneername);
         textView_judulBarang.setText(detailItem.getNamabarang());
-        textView_namaAuctioneer.setText(detailItem.getNamapengguna());
+        textView_namaAuctioneer.setText(detailItem.getNamaauctioneer());
         setStatusBiddingFragment();
         return view;
     }

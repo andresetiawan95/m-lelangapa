@@ -5,7 +5,7 @@ package com.lelangapa.android.resources;
  */
 
 public class DetailItemResources {
-    private String namabarang, namapengguna, hargaawal, hargatarget, statuslelang, namabidder, hargabid, urlgambarbarang, idbarang, deskripsibarang, tanggalmulai, tanggalselesai, jammulai, jamselesai;
+    private String namabarang, namaauctioneer, idauctioneer, hargaawal, hargatarget, statuslelang, namabidder, hargabid, urlgambarbarang, idbarang, deskripsibarang, tanggalmulai, tanggalselesai, jammulai, jamselesai;
     private String tanggaljammulai, tanggaljamselesai;
     private Long tanggaljammulai_ms, tanggaljamselesai_ms;
     private Integer itembidstatus;
@@ -19,8 +19,11 @@ public class DetailItemResources {
     public void setNamabarang(String nama){
         namabarang = nama;
     }
-    public void setNamapengguna(String nama){
-        namapengguna = nama;
+    public void setNamaauctioneer(String nama){
+        namaauctioneer = nama;
+    }
+    public void setIdauctioneer (String id){
+        this.idauctioneer = id;
     }
     public void setHargaawal(String harga){
         hargaawal = harga;
@@ -79,8 +82,11 @@ public class DetailItemResources {
     public String getNamabarang(){
         return namabarang;
     }
-    public String getNamapengguna(){
-        return namapengguna;
+    public String getNamaauctioneer(){
+        return namaauctioneer;
+    }
+    public String getIdauctioneer(){
+        return idauctioneer;
     }
     public String getHargaawal(){
         return hargaawal;

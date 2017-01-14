@@ -79,7 +79,7 @@ public class MainSearchTextSubmitFragment extends Fragment {
                             DetailItemResources searchProperty = new DetailItemResources();
                             searchProperty.setIdbarang(searchResultObj.getString("items_id"));
                             searchProperty.setNamabarang(searchResultObj.getString("items_name"));
-                            searchProperty.setNamapengguna(searchResultObj.getString("user_name"));
+                            searchProperty.setNamaauctioneer(searchResultObj.getString("user_name"));
                             searchProperty.setHargaawal(searchResultObj.getString("starting_price"));
                             searchProperty.setHargatarget(searchResultObj.getString("expected_price"));
                             JSONArray searchPropertyImageArray = searchResultObj.getJSONArray("url");
