@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.lelangapa.android.R;
-import com.lelangapa.android.fragments.detail.DetailFragment;
+import com.lelangapa.android.fragments.detail.detailitemuser.DetailFragment;
 
 /**
  * Created by Andre on 12/24/2016.

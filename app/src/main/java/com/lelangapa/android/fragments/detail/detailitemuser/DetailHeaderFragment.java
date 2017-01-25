@@ -1,4 +1,4 @@
-package com.lelangapa.android.fragments.detail;
+package com.lelangapa.android.fragments.detail.detailitemuser;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,26 +34,25 @@ public class DetailHeaderFragment extends Fragment {
         textView_namaAuctioneer = (TextView) view.findViewById(R.id.fragment_detail_barang_header_auctioneername);
         textView_judulBarang.setText(detailItem.getNamabarang());
         textView_namaAuctioneer.setText(detailItem.getNamaauctioneer());
-        setStatusBiddingFragment();
         return view;
     }
-    private void setStatusBiddingFragment()
+    private void setStatusBiddingFragment(int status)
     {
-        if (detailItem.getItembidstatus() == 0)
+        if (status == 0)
         {
             DetailHeaderStatusSoonFragment detailHeaderStatusSoon = new DetailHeaderStatusSoonFragment();
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_barang_header_status_fragment, detailHeaderStatusSoon)
                     .commit();
         }
-        else if (detailItem.getItembidstatus() == 1)
+        else if (status == 1)
         {
             DetailHeaderStatusLiveFragment detailHeaderStatusLive = new DetailHeaderStatusLiveFragment();
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_barang_header_status_fragment, detailHeaderStatusLive)
                     .commit();
         }
-        else if (detailItem.getItembidstatus() == -1)
+        else if (status == -1)
         {
             DetailHeaderStatusDoneFragment detailHeaderStatusDone = new DetailHeaderStatusDoneFragment();
             getFragmentManager().beginTransaction()
@@ -64,5 +63,9 @@ public class DetailHeaderFragment extends Fragment {
     public void setDetailItem(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
+    }
+    public void setStatusBiddingItem(Integer status)
+    {
+        setStatusBiddingFragment(status);
     }
 }

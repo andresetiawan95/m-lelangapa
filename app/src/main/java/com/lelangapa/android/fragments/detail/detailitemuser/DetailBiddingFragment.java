@@ -1,4 +1,4 @@
-package com.lelangapa.android.fragments.detail;
+package com.lelangapa.android.fragments.detail.detailitemuser;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;

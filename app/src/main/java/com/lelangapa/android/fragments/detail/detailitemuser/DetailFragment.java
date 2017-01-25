@@ -1,4 +1,4 @@
-package com.lelangapa.android.fragments.detail;
+package com.lelangapa.android.fragments.detail.detailitemuser;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -309,7 +309,7 @@ public class DetailFragment extends Fragment {
         }
         else if (detailItem.getItembidstatus() == 1)
         {
-            Log.v("Bid sudah dimulai", "Bid sudah dimulai--setdatatochildfragment");
+            //Log.v("Bid sudah dimulai", "Bid sudah dimulai--setdatatochildfragment");
             detailBiddingFragment.setDetailItemToBiddingFragment(detailItem);
             detailBiddingFragment.setBiddingPeringkatList(biddingPeringkatList);
             detailBiddingFragment.setBidReceiverToBiddingFragment(inputBidReceiver);
@@ -319,7 +319,7 @@ public class DetailFragment extends Fragment {
         }
         else
         {
-            Log.v("Bid sudah selesai", "Bid sudah selesai--setdatatochildfragment");
+            //Log.v("Bid sudah selesai", "Bid sudah selesai--setdatatochildfragment");
             detailWaktuBidFinishedFragment.setDetailItem(detailItem);
             detailBiddingFragment.setBiddingPeringkatList(biddingPeringkatList);
             if (!detailItem.getNamabidder().equals("nouser"))
@@ -389,6 +389,7 @@ public class DetailFragment extends Fragment {
                         .commit();
             }
         }
+        detailHeaderFragment.setStatusBiddingItem(detailItem.getItembidstatus());
     }
     private void getDetailItem(String itemID)
     {

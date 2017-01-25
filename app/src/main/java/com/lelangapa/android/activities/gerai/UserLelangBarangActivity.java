@@ -22,7 +22,6 @@ import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.InputReceiver;
 import com.lelangapa.android.preferences.SessionManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -97,9 +96,7 @@ public class UserLelangBarangActivity extends AppCompatActivity implements Input
                     JSONObject jsonResponse = new JSONObject(response);
                     String successResp = jsonResponse.getString("status");
                     if (successResp.equals("success")){
-                        JSONArray respArray = jsonResponse.getJSONArray("id_item");
-                        JSONObject resObject = respArray.getJSONObject(0);
-                        String result = resObject.getString("id");
+                        String result = jsonResponse.getString("id_item");
                         //data.put("itemid", result);
                         dataImage.put("image", imageString);
                         //Log.v("Imagestring", imageString);
