@@ -28,4 +28,12 @@
     <string name="DETAILFRAGMENT_BIDFAILED_ALERTDIALOGTITLE">Whoops! Tawaran tidak valid</string>
     <string name="DETAILFRAGMENT_BIDFAILED_ALERTDIALOGMSG">Jumlah tawaran yang dimasukkan lebih kecil dari tawaran tertinggi! Ayo tawar lebih tinggi!</string>
     <string name="DETAILFRAGMENT_BIDFAILED_ALERTDIALOGOKBUTTON">TAWAR LAGI</string>
+
+    <string name="DETAILFRAGMENT_BIDSTARTED_ALERTDIALOGTITLE">Lelang sudah dimulai!</string>
+    <string name="DETAILFRAGMENT_BIDSTARTED_ALERTDIALOGMSG">Lelang sudah dimulai. Klik "OK" untuk memuat ulang laman</string>
+    <string name="DETAILFRAGMENT_BIDSTARTED_ALERTDIALOGBUTTON">OK</string>
+
+    <string name="DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGTITLE">Lelang telah usai</string>
+    <string name="DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGMSG">Terimakasih sudah berpartisipasi dalam lelang ini. Klik "OK" untuk memuat ulang laman</string>
+    <string name="DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGBUTTON">OK</string>
 </resources>

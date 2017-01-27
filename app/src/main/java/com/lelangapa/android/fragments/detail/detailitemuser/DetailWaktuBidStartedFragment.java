@@ -13,6 +13,9 @@ import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.resources.DateTimeConverter;
 import com.lelangapa.android.resources.DetailItemResources;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 /**
  * Created by Andre on 12/25/2016.
  */
@@ -29,6 +32,7 @@ public class DetailWaktuBidStartedFragment extends Fragment {
     private Long serverTime, timeCountDown, hoursLeftLong, minutesLeftLong, secondsLeftLong;
     private String hoursLeftString, minutesLeftString, secondsLeftString;
     private long HOURS_MAX = 3600000, MINUTES_MAX = 60000, SECONDS_MAX = 1000;
+    private NumberFormat format;
     public DetailWaktuBidStartedFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -42,6 +46,7 @@ public class DetailWaktuBidStartedFragment extends Fragment {
         textView_countdown = (TextView) view.findViewById(R.id.fragment_detail_barang_waktubid_countdown);
         textView_waktuMulai.setText(waktuMulai);
         textView_waktuSelesai.setText(waktuSelesai);
+        format = new DecimalFormat("00");
         setCountDownTimer();
         return view;
     }
@@ -54,68 +59,23 @@ public class DetailWaktuBidStartedFragment extends Fragment {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     timeCountDown = millisUntilFinished;
-                    if (timeCountDown/HOURS_MAX > 0)
-                    {
-                        hoursLeftLong = timeCountDown/HOURS_MAX;
-                        if (hoursLeftLong >=10)
-                        {
-                            hoursLeftString = hoursLeftLong.toString();
-                        }
-                        else
-                        {
-                            hoursLeftString = "0"+hoursLeftLong.toString();
-                        }
-                        timeCountDown=timeCountDown%HOURS_MAX;
-                    }
-                    else
-                    {
-                        hoursLeftString = "00";
-                        timeCountDown=timeCountDown%HOURS_MAX;
-                    }
-                    if (timeCountDown/MINUTES_MAX > 0)
-                    {
-                        minutesLeftLong = timeCountDown/MINUTES_MAX;
-                        if (minutesLeftLong >=10)
-                        {
-                            minutesLeftString = minutesLeftLong.toString();
-                        }
-                        else
-                        {
-                            minutesLeftString = "0"+minutesLeftLong.toString();
-                        }
-                        timeCountDown=timeCountDown%MINUTES_MAX;
-                    }
-                    else
-                    {
-                        minutesLeftString = "00";
-                        timeCountDown = timeCountDown%MINUTES_MAX;
-                    }
-                    if (timeCountDown/SECONDS_MAX > 0)
-                    {
-                        secondsLeftLong = timeCountDown/SECONDS_MAX;
-                        if (secondsLeftLong >=10)
-                        {
-                            secondsLeftString = secondsLeftLong.toString();
-                        }
-                        else
-                        {
-                            secondsLeftString = "0"+secondsLeftLong.toString();
-                        }
-                        timeCountDown=timeCountDown%SECONDS_MAX;
-                    }
-                    else
-                    {
-                        secondsLeftString = "00";
-                        timeCountDown = timeCountDown%SECONDS_MAX;
-                    }
-                    textView_countdown.setText(hoursLeftString + ":" + minutesLeftString + ":" + secondsLeftString);
+                    if (millisUntilFinished <= 1000) onFinish();
+                    long hour = (timeCountDown / HOURS_MAX);
+                    timeCountDown %= HOURS_MAX;
+                    long min = (timeCountDown / MINUTES_MAX);
+                    timeCountDown %= MINUTES_MAX;
+                    long secs = (timeCountDown/ SECONDS_MAX);
+                    timeCountDown %= SECONDS_MAX;
+
+                    textView_countdown.setText(format.format(hour) + ":" + format.format(min) + ":" + format.format(secs));
                 }
                 @Override
                 public void onFinish() {
                     textView_countdown.setText("00:00:00");
                     triggerBiddingDone.dataReceived("finish");
                 }
-            }.start();
+            };
+            countDownTimer.start();
         }
     }
     public void setDetailItem(DetailItemResources detailItem)

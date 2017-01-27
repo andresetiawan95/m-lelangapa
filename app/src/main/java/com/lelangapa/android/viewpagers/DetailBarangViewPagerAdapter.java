@@ -33,5 +33,4 @@ public class DetailBarangViewPagerAdapter extends FragmentPagerAdapter {
             mDetailBarangFragmentList.add(fragment);
             mDetailBarangFragmentTitleList.add(title);
         }
-
 }

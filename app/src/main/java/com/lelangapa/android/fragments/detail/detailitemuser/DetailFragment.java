@@ -1,5 +1,7 @@
 package com.lelangapa.android.fragments.detail.detailitemuser;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -52,6 +54,7 @@ public class DetailFragment extends Fragment {
     private DetailBiddingFinishedNoBidFragment detailBiddingFinishedNoBidFragment;
     private DetailItemResources detailItem;
     private AlertDialog.Builder bidFailedAlertDialogBuilder;
+    private Context activityContext;
     private SessionManager sessionManager;
     private HashMap<String, String> session;
 
@@ -90,6 +93,7 @@ public class DetailFragment extends Fragment {
         detailAuctioneerFragment = new DetailAuctioneerFragment();
         detailBiddingFinishedWithWinnerFragment = new DetailBiddingFinishedWithWinnerFragment();
         detailBiddingFinishedNoBidFragment = new DetailBiddingFinishedNoBidFragment();
+        activityContext = getActivity();
     }
     @Override
     public View onCreateView (final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -148,12 +152,12 @@ public class DetailFragment extends Fragment {
                 if (output.toString().equals("start"))
                 {
                     biddingInformation = "start";
-                    getDetailItem(itemID);
+                    setAlertDialogBidStarted();
                 }
                 if (output.toString().equals("finish"))
                 {
                     biddingInformation = "finish";
-                    getDetailItem(itemID);
+                    setAlertDialogBidFinished();
                 }
             }
         };
@@ -475,6 +479,34 @@ public class DetailFragment extends Fragment {
                 .setPositiveButton(R.string.DETAILFRAGMENT_BIDFAILED_ALERTDIALOGOKBUTTON, null);
         AlertDialog bidFailedAlertDialog = bidFailedAlertDialogBuilder.create();
         bidFailedAlertDialog.show();
+    }
+    private void setAlertDialogBidStarted()
+    {
+        AlertDialog.Builder bidStartedAlertDialogBuilder = new AlertDialog.Builder(activityContext);
+        bidStartedAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_BIDSTARTED_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_BIDSTARTED_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_BIDSTARTED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getDetailItem(itemID);
+                    }
+                });
+        AlertDialog bidFinishedDialog = bidStartedAlertDialogBuilder.create();
+        bidFinishedDialog.show();
+    }
+    private void setAlertDialogBidFinished()
+    {
+        AlertDialog.Builder bidFinishedAlertDialogBuilder = new AlertDialog.Builder(activityContext);
+        bidFinishedAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getDetailItem(itemID);
+                    }
+                });
+        AlertDialog bidFinishedDialog = bidFinishedAlertDialogBuilder.create();
+        bidFinishedDialog.show();
     }
     /*public Emitter.Listener onSubmitBidSuccess = new Emitter.Listener() {
         @Override

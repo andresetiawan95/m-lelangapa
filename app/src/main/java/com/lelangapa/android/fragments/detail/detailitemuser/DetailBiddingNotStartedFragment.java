@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.lelangapa.android.R;
 import com.lelangapa.android.interfaces.DataReceiver;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 /**
  * Created by Andre on 1/4/2017.
  */
@@ -23,12 +26,14 @@ public class DetailBiddingNotStartedFragment extends Fragment {
     private Long serverTime, timeCountDown, hoursLeftLong, minutesLeftLong, secondsLeftLong;
     private String hoursLeftString, minutesLeftString, secondsLeftString;
     private long HOURS_MAX = 3600000, MINUTES_MAX = 60000, SECONDS_MAX = 1000;
+    private NumberFormat format;
     public DetailBiddingNotStartedFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_notstarted_layout, container, false);
         textView_countdown = (TextView) view.findViewById(R.id.fragment_detail_barang_bidding_notstarted_countdown);
+        format = new DecimalFormat("00");
         setCountDownTimer();
         return view;
     }
@@ -47,6 +52,17 @@ public class DetailBiddingNotStartedFragment extends Fragment {
         CountDownTimer countDownTimer = new CountDownTimer(timeLeft, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                timeCountDown = millisUntilFinished;
+                if (millisUntilFinished <= 1000) onFinish();
+                long hour = (timeCountDown / HOURS_MAX);
+                timeCountDown %= HOURS_MAX;
+                long min = (timeCountDown / MINUTES_MAX);
+                timeCountDown %= MINUTES_MAX;
+                long secs = (timeCountDown/ SECONDS_MAX);
+                timeCountDown %= SECONDS_MAX;
+
+                textView_countdown.setText(format.format(hour) + ":" + format.format(min) + ":" + format.format(secs));
+                /*if(millisUntilFinished <= 1000) onFinish();
                 timeCountDown = millisUntilFinished;
                 if (timeCountDown/HOURS_MAX > 0)
                 {
@@ -102,13 +118,22 @@ public class DetailBiddingNotStartedFragment extends Fragment {
                     secondsLeftString = "00";
                     timeCountDown = timeCountDown%SECONDS_MAX;
                 }
-                textView_countdown.setText(hoursLeftString + ":" + minutesLeftString + ":" + secondsLeftString);
+                if (hoursLeftString.equals("00") && minutesLeftString.equals("00") && secondsLeftString.equals("00"))
+                {
+                    //textView_countdown.setText("00:00:00");
+                    onFinish();
+                }
+                else
+                {
+                    textView_countdown.setText(hoursLeftString + ":" + minutesLeftString + ":" + secondsLeftString);
+                }*/
             }
             @Override
             public void onFinish() {
                 textView_countdown.setText("00:00:00");
                 triggerSender.dataReceived("start");
             }
-        }.start();
+        };
+        countDownTimer.start();
     }
 }
