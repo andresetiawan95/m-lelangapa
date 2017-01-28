@@ -101,6 +101,35 @@ public class DetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_barang_layout, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_detail_barang_swipe_refreshLayout);
         setUpSwipeRefreshLayout();
+        setDetailReceived();
+        setTriggerReceived();
+        return view;
+    }
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        socketBinder.emit("join-room", itemID);
+        Log.v("Joining room", "Joining room now");
+    }
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        socketBinder.emit("leave-room", itemID);
+        Log.v("Leaving room", "Leaving room now");
+    }
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        //free socket
+        socketBinder.disconnect();
+        socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
+        socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
+    }
+    private void setDetailReceived()
+    {
         detailReceived = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
@@ -146,6 +175,9 @@ public class DetailFragment extends Fragment {
                 }
             }
         };
+    }
+    private void setTriggerReceived()
+    {
         triggerReceived = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
@@ -161,30 +193,6 @@ public class DetailFragment extends Fragment {
                 }
             }
         };
-        return view;
-    }
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        //free socket
-        socketBinder.disconnect();
-        socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
-        socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
-    }
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        socketBinder.emit("join-room", itemID);
-        Log.v("Joining room", "Joining room now");
-    }
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        socketBinder.emit("leave-room", itemID);
-        Log.v("Leaving room", "Leaving room now");
     }
     private void setInitialSocketBinding()
     {
@@ -317,9 +325,9 @@ public class DetailFragment extends Fragment {
             detailBiddingFragment.setDetailItemToBiddingFragment(detailItem);
             detailBiddingFragment.setBiddingPeringkatList(biddingPeringkatList);
             detailBiddingFragment.setBidReceiverToBiddingFragment(inputBidReceiver);
-            detailWaktuBidStartedFragment.setDetailItem(detailItem);
+            detailWaktuBidStartedFragment.setInitialDetailItem(detailItem);
             detailWaktuBidStartedFragment.setTriggerBiddingDone(triggerReceived);
-            detailWaktuBidStartedFragment.setServerTime(serverDateTimeMillisecond);
+            detailWaktuBidStartedFragment.setInitialServerTime(serverDateTimeMillisecond);
         }
         else
         {

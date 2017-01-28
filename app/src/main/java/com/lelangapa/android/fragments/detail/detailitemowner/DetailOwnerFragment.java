@@ -325,9 +325,9 @@ public class DetailOwnerFragment extends Fragment {
             detailBiddingFragment.setDetailItemToBiddingFragment(detailItem);
             detailBiddingFragment.setBiddingPeringkatList(biddingPeringkatList);
             detailBiddingFragment.setBidReceiverToBiddingFragment(inputBidReceiver);
-            detailWaktuBidStartedFragment.setDetailItem(detailItem);
+            detailWaktuBidStartedFragment.setInitialDetailItem(detailItem);
             detailWaktuBidStartedFragment.setTriggerBiddingDone(triggerReceived);
-            detailWaktuBidStartedFragment.setServerTime(serverDateTimeMillisecond);
+            detailWaktuBidStartedFragment.setInitialServerTime(serverDateTimeMillisecond);
         }
         else
         {

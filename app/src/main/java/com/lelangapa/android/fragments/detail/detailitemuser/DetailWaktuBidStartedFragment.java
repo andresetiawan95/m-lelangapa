@@ -33,6 +33,7 @@ public class DetailWaktuBidStartedFragment extends Fragment {
     private String hoursLeftString, minutesLeftString, secondsLeftString;
     private long HOURS_MAX = 3600000, MINUTES_MAX = 60000, SECONDS_MAX = 1000;
     private NumberFormat format;
+    private CountDownTimer countDownTimer;
     public DetailWaktuBidStartedFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -55,7 +56,7 @@ public class DetailWaktuBidStartedFragment extends Fragment {
         if (detailItem.getItembidstatus()==1)
         {
             final long timeLeft = detailItem.getTanggaljamselesai_ms() - serverTime;
-            CountDownTimer countDownTimer = new CountDownTimer(timeLeft, 1000) {
+            countDownTimer = new CountDownTimer(timeLeft, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     timeCountDown = millisUntilFinished;
@@ -78,16 +79,36 @@ public class DetailWaktuBidStartedFragment extends Fragment {
             countDownTimer.start();
         }
     }
-    public void setDetailItem(DetailItemResources detailItem)
+    public void setInitialDetailItem(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
     }
-    public void setServerTime(Long serverTime)
+    public void setInitialServerTime(Long serverTime)
     {
         this.serverTime = serverTime;
     }
     public void setTriggerBiddingDone(DataReceiver triggerBiddingDone)
     {
         this.triggerBiddingDone = triggerBiddingDone;
+    }
+
+    /*
+    *   Ini untuk menambah durasi waktu ketika ada tawaran yang masuk
+    *   saat lelang menyisakan waktu kurang dari 10 menit lagi
+    *
+    *
+     */
+    public void setDetailItemWhenTimeExtended(DetailItemResources detailItem)
+    {
+        this.detailItem = detailItem;
+    }
+    public void setServerTimeWhenTimeExtended(Long serverTime)
+    {
+        this.serverTime = serverTime;
+    }
+    public void cancelAndStartNewTimerWhenTimeExtended()
+    {
+        countDownTimer.cancel();
+        setCountDownTimer();
     }
 }
