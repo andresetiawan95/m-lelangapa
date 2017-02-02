@@ -6,10 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.lelangapa.android.R;
 import com.lelangapa.android.apicalls.search.MainSearchAPI;
+import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.resources.DetailItemResources;
 
@@ -78,6 +77,7 @@ public class MainSearchTextSubmitFragment extends Fragment {
                             JSONObject searchResultObj = searchArray.getJSONObject(i);
                             DetailItemResources searchProperty = new DetailItemResources();
                             searchProperty.setIdbarang(searchResultObj.getString("items_id"));
+                            searchProperty.setIdauctioneer(searchResultObj.getString("auctioneer_id"));
                             searchProperty.setNamabarang(searchResultObj.getString("items_name"));
                             searchProperty.setNamaauctioneer(searchResultObj.getString("user_name"));
                             searchProperty.setHargaawal(searchResultObj.getString("starting_price"));
@@ -97,7 +97,8 @@ public class MainSearchTextSubmitFragment extends Fragment {
             }
         };
         MainSearchAPI mainSearchAPI = new MainSearchAPI(query, queryReceiver);
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        queue.add(mainSearchAPI);
+        RequestController.getInstance(getActivity()).addToRequestQueue(mainSearchAPI);
+        //RequestQueue queue = Volley.newRequestQueue(getActivity());
+        //queue.add(mainSearchAPI);
     }
 }

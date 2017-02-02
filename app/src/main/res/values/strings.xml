@@ -36,4 +36,12 @@
     <string name="DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGTITLE">Lelang telah usai</string>
     <string name="DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGMSG">Terimakasih sudah berpartisipasi dalam lelang ini. Klik "OK" untuk memuat ulang laman</string>
     <string name="DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGBUTTON">OK</string>
+
+    <string name="DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGTITLE">Lelang telah dibatalkan</string>
+    <string name="DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGMSG">Lelang telah dibatalkan oleh pelelang. Seluruh penawaran telah dibatalkan</string>
+    <string name="DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGBUTTON">OK</string>
+
+    <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGTITLE">Pemenang telah dipilih!</string>
+    <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGMSG">Pelelang telah memilih pemenang lelang. Dengan ini maka lelang dihentikan.</string>
+    <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGBUTTON">OK</string>
 </resources>

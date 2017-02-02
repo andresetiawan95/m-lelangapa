@@ -18,23 +18,81 @@ import io.socket.emitter.Emitter;
 public class BiddingSocket {
     private Socket mSocket;
     private Activity activity;
+    private SocketReceiver socketConnected;
+    private SocketReceiver socketDisconnected;
     private SocketReceiver socketBidSuccessReceiver;
     private SocketReceiver socketBidFailedReceiver;
-    public BiddingSocket(Activity activity, SocketReceiver socketReceiverSuccess, SocketReceiver socketReceiverFailed)
+    private SocketReceiver socketBidCancelled;
+    private SocketReceiver socketWinnerSelected;
+
+    private boolean isConnected = false;
+    public BiddingSocket(Activity activity)
+    {
+        this.activity = activity;
+        this.mSocket = createServerSocket();
+    }
+    public void setSocketConnected(SocketReceiver socketConnected)
+    {
+        this.socketConnected = socketConnected;
+    }
+    public void setSocketDisconnected(SocketReceiver socketDisconnected)
+    {
+        this.socketDisconnected = socketDisconnected;
+    }
+    public void setSocketBidSuccessReceiver(SocketReceiver socketReceiverSuccess)
     {
         this.socketBidSuccessReceiver = socketReceiverSuccess;
+    }
+    public void setSocketBidFailedReceiver(SocketReceiver socketReceiverFailed)
+    {
         this.socketBidFailedReceiver = socketReceiverFailed;
-        this.activity = activity;
-        try {
-            mSocket = IO.socket("http://bid.alphav1.lelangapa.com");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+    }
+    public void setSocketBidCancelled(SocketReceiver socketBidCancelled)
+    {
+        this.socketBidCancelled = socketBidCancelled;
+    }
+    public void setSocketWinnerSelected(SocketReceiver socketWinnerSelected)
+    {
+        this.socketWinnerSelected = socketWinnerSelected;
     }
     public Socket getSocket()
     {
         return mSocket;
     }
+
+    private Socket createServerSocket()
+    {
+        try {
+            IO.Options options = new IO.Options();
+            options.reconnection = true;
+            mSocket = IO.socket("http://188.166.179.2:8083", options);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return mSocket;
+    }
+    public Emitter.Listener onConnected = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    socketConnected.socketReceived("connected", args[0]);
+                }
+            });
+        }
+    };
+    public Emitter.Listener onDisconnected = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    socketDisconnected.socketReceived("disconnected", args[0]);
+                }
+            });
+        }
+    };
     public Emitter.Listener onJoinBid = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -64,6 +122,7 @@ public class BiddingSocket {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (!getSocket().connected())getSocket().connect();
                     Log.v("Bid success", "Bid success");
                     socketBidSuccessReceiver.socketReceived("bidsuccess", args[0]);
                 }
@@ -76,7 +135,30 @@ public class BiddingSocket {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (!getSocket().connected())getSocket().connect();
                     socketBidFailedReceiver.socketReceived("bidfailed", args[0]);
+                }
+            });
+        }
+    };
+    public Emitter.Listener onBidCancelled = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    socketBidCancelled.socketReceived("cancelauction", args[0]);
+                }
+            });
+        }
+    };
+    public Emitter.Listener onWinnerSelected = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    socketWinnerSelected.socketReceived("winnerselected", args[0]);
                 }
             });
         }

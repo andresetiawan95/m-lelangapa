@@ -10,11 +10,11 @@ import java.util.ArrayList;
  * Created by andre on 26/01/17.
  */
 
-public class DetailBarangOwnerViewPagerAdapter extends FragmentPagerAdapter {
+public class DetailBarangAuctioneerViewPagerAdapter extends FragmentPagerAdapter {
     private ArrayList<Fragment> mFragmentList = new ArrayList<>();
     private ArrayList<String> mTitleList = new ArrayList<>();
 
-    public DetailBarangOwnerViewPagerAdapter(FragmentManager fragmentmanager)
+    public DetailBarangAuctioneerViewPagerAdapter(FragmentManager fragmentmanager)
     {
         super(fragmentmanager);
     }

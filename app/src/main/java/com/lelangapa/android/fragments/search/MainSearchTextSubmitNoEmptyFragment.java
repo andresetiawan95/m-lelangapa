@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +47,11 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getActivity(), DetailBarangActivity.class);
-                intent.putExtra("items_id", searchResult.get(position).getIdbarang());
-                Log.v("id item", searchResult.get(position).getIdbarang());
+                Bundle bundleExtras = new Bundle();
+                bundleExtras.putString("auctioneer_id", searchResult.get(position).getIdauctioneer());
+                bundleExtras.putString("items_id", searchResult.get(position).getIdbarang());
+                intent.putExtras(bundleExtras);
+                //intent.putExtra("items_id", searchResult.get(position).getIdbarang());
                 startActivity(intent);
             }
             @Override

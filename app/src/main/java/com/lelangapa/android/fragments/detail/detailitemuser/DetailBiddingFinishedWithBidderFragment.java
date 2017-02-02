@@ -14,11 +14,11 @@ import com.lelangapa.android.resources.DetailItemResources;
  * Created by Andre on 1/8/2017.
  */
 
-public class DetailBiddingFinishedWithWinnerFragment extends Fragment {
+public class DetailBiddingFinishedWithBidderFragment extends Fragment {
     private DetailItemResources detailItem;
     private TextView textView_namaBidderWinner;
     private TextView textView_hargaBidderWinner;
-    public DetailBiddingFinishedWithWinnerFragment(){}
+    public DetailBiddingFinishedWithBidderFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {

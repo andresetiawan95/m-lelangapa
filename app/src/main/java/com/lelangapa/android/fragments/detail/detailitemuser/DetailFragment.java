@@ -11,10 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.lelangapa.android.R;
 import com.lelangapa.android.apicalls.detail.DetailItemAPI;
+import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.apicalls.socket.BiddingSocket;
 import com.lelangapa.android.interfaces.BidReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
@@ -50,7 +49,7 @@ public class DetailFragment extends Fragment {
     private DetailDeskripsiFragment detailDeskripsiFragment;
     private DetailKomentarFragment detailKomentarFragment;
     private DetailAuctioneerFragment detailAuctioneerFragment;
-    private DetailBiddingFinishedWithWinnerFragment detailBiddingFinishedWithWinnerFragment;
+    private DetailBiddingFinishedWithBidderFragment detailBiddingFinishedWithBidderFragment;
     private DetailBiddingFinishedNoBidFragment detailBiddingFinishedNoBidFragment;
     private DetailItemResources detailItem;
     private AlertDialog.Builder bidFailedAlertDialogBuilder;
@@ -63,9 +62,11 @@ public class DetailFragment extends Fragment {
     private String itemID, biddingInformation;
     private BiddingSocket biddingSocket;
     private Socket socketBinder;
-    private SocketReceiver socketBidSuccessReceiver, socketBidFailedReceiver, socketBidSubmittingReceiver;
+    private SocketReceiver socketConnected, socketDisconnected, socketBidSuccessReceiver, socketBidFailedReceiver, socketBidCancelledReceiver, socketWinnerSelectedReceiver;
 
     private ArrayList<BiddingPeringkatResources> biddingPeringkatList;
+
+    private boolean onPauseFlag = false;
     public DetailFragment(){}
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -74,7 +75,7 @@ public class DetailFragment extends Fragment {
         detailItem = new DetailItemResources();
         sessionManager = new SessionManager(getActivity());
         session = sessionManager.getSession();
-        itemID = getActivity().getIntent().getStringExtra("items_id");
+        itemID = getActivity().getIntent().getExtras().getString("items_id");
         bidFailedAlertDialogBuilder = new AlertDialog.Builder(getActivity());
         setInputBidReceiver();
         setSocketReceiver();
@@ -91,7 +92,7 @@ public class DetailFragment extends Fragment {
         detailDeskripsiFragment = new DetailDeskripsiFragment();
         detailKomentarFragment = new DetailKomentarFragment();
         detailAuctioneerFragment = new DetailAuctioneerFragment();
-        detailBiddingFinishedWithWinnerFragment = new DetailBiddingFinishedWithWinnerFragment();
+        detailBiddingFinishedWithBidderFragment = new DetailBiddingFinishedWithBidderFragment();
         detailBiddingFinishedNoBidFragment = new DetailBiddingFinishedNoBidFragment();
         activityContext = getActivity();
     }
@@ -111,6 +112,22 @@ public class DetailFragment extends Fragment {
         super.onResume();
         socketBinder.emit("join-room", itemID);
         Log.v("Joining room", "Joining room now");
+        if (onPauseFlag)
+        {
+            getDetailItem(itemID);
+            onPauseFlag = false;
+            //TESTING PHASE===============================================
+            if (!socketBinder.connected())
+            {
+                Log.v("SOCKET SEKARANG", "false");
+                socketBinder.connect();
+                //just receive success bid
+                socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
+                socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
+                socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
+                socketBinder.on("cancelauction", biddingSocket.onBidCancelled);
+            }
+        }
     }
     @Override
     public void onPause()
@@ -118,15 +135,17 @@ public class DetailFragment extends Fragment {
         super.onPause();
         socketBinder.emit("leave-room", itemID);
         Log.v("Leaving room", "Leaving room now");
+        onPauseFlag = true;
     }
     @Override
     public void onDestroy()
     {
         super.onDestroy();
-        //free socket
         socketBinder.disconnect();
         socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
         socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
+        socketBinder.off("winnerselected", biddingSocket.onWinnerSelected);
+        socketBinder.off("cancelauction", biddingSocket.onBidCancelled);
     }
     private void setDetailReceived()
     {
@@ -196,12 +215,26 @@ public class DetailFragment extends Fragment {
     }
     private void setInitialSocketBinding()
     {
-        biddingSocket = new BiddingSocket(getActivity(), socketBidSuccessReceiver, socketBidFailedReceiver);
-        socketBinder = biddingSocket.getSocket();
-        socketBinder.connect();
-        //just receive success bid
-        socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
-        socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
+        if (biddingSocket == null)
+        {
+            biddingSocket = new BiddingSocket(getActivity());
+            biddingSocket.setSocketConnected(socketConnected);
+            biddingSocket.setSocketBidSuccessReceiver(socketBidSuccessReceiver);
+            biddingSocket.setSocketBidFailedReceiver(socketBidFailedReceiver);
+            biddingSocket.setSocketBidCancelled(socketBidCancelledReceiver);
+            biddingSocket.setSocketWinnerSelected(socketWinnerSelectedReceiver);
+            socketBinder = biddingSocket.getSocket();
+            if (!socketBinder.connected())
+            {
+                Log.v("SOCKET INITIAL SEKARANG", "false");
+                socketBinder.connect();
+                //just receive success bid
+                socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
+                socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
+                socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
+                socketBinder.on("cancelauction", biddingSocket.onBidCancelled);
+            }
+        }
     }
     private void setSocketReceiver()
     {
@@ -244,6 +277,24 @@ public class DetailFragment extends Fragment {
                             biddingPeringkatList.remove(3);
                         }
                     }
+                    /*
+                    * =====================================================================================
+                    * Jika bidding yang dimasukkan men-trigger terjadinya penambahan waktu sebesar 10 menit
+                    * */
+                    boolean isExtendTriggerActive = socketResponse.getBoolean("extend_trigger");
+                    if (isExtendTriggerActive)
+                    {
+                        detailItem.setTanggaljamselesai("end_time_item_return");
+                        detailItem.setTanggaljamselesai_ms(socketResponse.getLong("end_time_item_return_milisecond"));
+                        serverDateTimeMillisecond = socketResponse.getLong("server_time_in_millisecond");
+                        detailWaktuBidStartedFragment.setDetailItemWhenTimeExtended(detailItem);
+                        detailWaktuBidStartedFragment.setServerTimeWhenTimeExtended(serverDateTimeMillisecond);
+                        detailWaktuBidStartedFragment.cancelAndStartNewTimerWhenTimeExtended();
+                    }
+                    /*
+                    * TESTED, need improvement in UX
+                    * ======================================================================================
+                    * */
                     detailBiddingFragment.updateBidderInformation(detailItem);
                     detailBiddingFragment.updateBiddingPeringkatList(biddingPeringkatList);
 
@@ -258,6 +309,24 @@ public class DetailFragment extends Fragment {
                 setAlertDialogBidFailed();
             }
         };
+        /*
+        * Untuk sementara, bid cancelled dan winner selected akan mengeluarkan alert dialog dulu
+        * */
+        socketBidCancelledReceiver = new SocketReceiver() {
+            @Override
+            public void socketReceived(Object status, Object response) {
+                setAlertDialogBidCancelled();
+            }
+        };
+        socketWinnerSelectedReceiver = new SocketReceiver() {
+            @Override
+            public void socketReceived(Object status, Object response) {
+                setAlertDialogWinnerSelected();
+            }
+        };
+        /*
+        * =========================================================================================
+        * */
     }
     private void setInputBidReceiver()
     {
@@ -271,6 +340,7 @@ public class DetailFragment extends Fragment {
                     sendBidObject.put("harga_bid", price);
 
                     //send json to server socket
+                    if (!socketBinder.connected()) socketBinder.connect();
                     socketBinder.emit("submitbid", sendBidObject.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -336,7 +406,7 @@ public class DetailFragment extends Fragment {
             detailBiddingFragment.setBiddingPeringkatList(biddingPeringkatList);
             if (!detailItem.getNamabidder().equals("nouser"))
             {
-                detailBiddingFinishedWithWinnerFragment.setDetailItem(detailItem);
+                detailBiddingFinishedWithBidderFragment.setDetailItem(detailItem);
             }
         }
         detailHeaderFragment.setDetailItem(detailItem);
@@ -380,7 +450,7 @@ public class DetailFragment extends Fragment {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
                         .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
-                        .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFinishedWithWinnerFragment)
+                        .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFinishedWithBidderFragment)
                         .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFinishedFragment)
                         .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
                         .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)
@@ -477,8 +547,10 @@ public class DetailFragment extends Fragment {
             }
         };
         DetailItemAPI detailItemAPI = new DetailItemAPI(itemID, dataReceiver);
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        queue.add(detailItemAPI);
+        RequestController.getInstance(getActivity()).addToRequestQueue(detailItemAPI);
+        //detailItemAPI.setShouldCache(false);
+        //RequestQueue queue = Volley.newRequestQueue(getActivity());
+        //queue.add(detailItemAPI);
     }
     private void setAlertDialogBidFailed()
     {
@@ -516,25 +588,32 @@ public class DetailFragment extends Fragment {
         AlertDialog bidFinishedDialog = bidFinishedAlertDialogBuilder.create();
         bidFinishedDialog.show();
     }
-    /*public Emitter.Listener onSubmitBidSuccess = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.v("Socket Received", "YEAY SOCKET RESPONSE IS RECEIVED");
-
-                    JSONObject socketResponse = (JSONObject) args[0];
-                    try {
-                        detailItem.setHargabid(socketResponse.getString("bid_price_return"));
-                        detailItem.setNamabidder(socketResponse.getString("bidder_name_return"));
-                        detailBiddingFragment.updateBidderInformation(detailItem);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+    private void setAlertDialogBidCancelled()
+    {
+        AlertDialog.Builder bidCancelledAlertDialogBuilder = new AlertDialog.Builder(activityContext);
+        bidCancelledAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getDetailItem(itemID);
                     }
-                    //dataReceivedFromSocket.socketReceived("bidsuccess", args[0]);
-                }
-            });
-        }
-    };*/
+                });
+        AlertDialog bidCancelledDialog = bidCancelledAlertDialogBuilder.create();
+        bidCancelledDialog.show();
+    }
+    private void setAlertDialogWinnerSelected()
+    {
+        AlertDialog.Builder winnerSelectedAlertDialogBuilder = new AlertDialog.Builder(activityContext);
+        winnerSelectedAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getDetailItem(itemID);
+                    }
+                });
+        AlertDialog winnerSelectedDialog = winnerSelectedAlertDialogBuilder.create();
+        winnerSelectedDialog.show();
+    }
 }

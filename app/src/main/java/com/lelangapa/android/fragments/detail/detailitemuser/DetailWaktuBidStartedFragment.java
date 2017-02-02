@@ -82,6 +82,17 @@ public class DetailWaktuBidStartedFragment extends Fragment {
     public void setInitialDetailItem(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
+        /*
+        * Untuk merubah nilai textView Waktu Mulai dan textView Waktu Selesai ketika
+        * refresh di trigger dan waktu berubah
+        * */
+        if (textView_waktuMulai != null && textView_waktuSelesai!= null)
+        {
+            String waktuMulaiNew = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(detailItem.getTanggaljammulai());
+            String waktuSelesaiNew = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(detailItem.getTanggaljamselesai());
+            textView_waktuMulai.setText(waktuMulaiNew);
+            textView_waktuSelesai.setText(waktuSelesaiNew);
+        }
     }
     public void setInitialServerTime(Long serverTime)
     {

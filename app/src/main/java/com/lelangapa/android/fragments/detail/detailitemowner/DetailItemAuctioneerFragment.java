@@ -16,7 +16,7 @@ import com.lelangapa.android.apicalls.detail.DetailItemAPI;
 import com.lelangapa.android.apicalls.socket.BiddingSocket;
 import com.lelangapa.android.fragments.detail.detailitemuser.DetailAuctioneerFragment;
 import com.lelangapa.android.fragments.detail.detailitemuser.DetailBiddingFinishedNoBidFragment;
-import com.lelangapa.android.fragments.detail.detailitemuser.DetailBiddingFinishedWithWinnerFragment;
+import com.lelangapa.android.fragments.detail.detailitemuser.DetailBiddingFinishedWithBidderFragment;
 import com.lelangapa.android.fragments.detail.detailitemuser.DetailBiddingFragment;
 import com.lelangapa.android.fragments.detail.detailitemuser.DetailBiddingNotStartedFragment;
 import com.lelangapa.android.fragments.detail.detailitemuser.DetailDeskripsiFragment;
@@ -46,7 +46,7 @@ import io.socket.client.Socket;
  * Created by andre on 25/01/17.
  */
 
-public class DetailOwnerFragment extends Fragment {
+public class DetailItemAuctioneerFragment extends Fragment {
     private DataReceiver detailReceived;
     private DataReceiver triggerReceived;
     private BidReceiver inputBidReceiver;
@@ -60,7 +60,7 @@ public class DetailOwnerFragment extends Fragment {
     private DetailDeskripsiFragment detailDeskripsiFragment;
     private DetailKomentarFragment detailKomentarFragment;
     private DetailAuctioneerFragment detailAuctioneerFragment;
-    private DetailBiddingFinishedWithWinnerFragment detailBiddingFinishedWithWinnerFragment;
+    private DetailBiddingFinishedWithBidderFragment detailBiddingFinishedWithBidderFragment;
     private DetailBiddingFinishedNoBidFragment detailBiddingFinishedNoBidFragment;
     private DetailItemResources detailItem;
     private AlertDialog.Builder bidFailedAlertDialogBuilder;
@@ -75,7 +75,7 @@ public class DetailOwnerFragment extends Fragment {
     private SocketReceiver socketBidSuccessReceiver, socketBidFailedReceiver, socketBidSubmittingReceiver;
 
     private ArrayList<BiddingPeringkatResources> biddingPeringkatList;
-    public DetailOwnerFragment(){}
+    public DetailItemAuctioneerFragment(){}
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -100,7 +100,7 @@ public class DetailOwnerFragment extends Fragment {
         detailDeskripsiFragment = new DetailDeskripsiFragment();
         detailKomentarFragment = new DetailKomentarFragment();
         detailAuctioneerFragment = new DetailAuctioneerFragment();
-        detailBiddingFinishedWithWinnerFragment = new DetailBiddingFinishedWithWinnerFragment();
+        detailBiddingFinishedWithBidderFragment = new DetailBiddingFinishedWithBidderFragment();
         detailBiddingFinishedNoBidFragment = new DetailBiddingFinishedNoBidFragment();
     }
     @Override
@@ -196,12 +196,22 @@ public class DetailOwnerFragment extends Fragment {
     }
     private void setInitialSocketBinding()
     {
-        biddingSocket = new BiddingSocket(getActivity(), socketBidSuccessReceiver, socketBidFailedReceiver);
-        socketBinder = biddingSocket.getSocket();
-        socketBinder.connect();
-        //just receive success bid
-        socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
-        socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
+        if (biddingSocket == null)
+        {
+            biddingSocket = new BiddingSocket(getActivity());
+            biddingSocket.setSocketBidSuccessReceiver(socketBidSuccessReceiver);
+            biddingSocket.setSocketBidFailedReceiver(socketBidFailedReceiver);
+            socketBinder = biddingSocket.getSocket();
+            if (!socketBinder.connected())
+            {
+                socketBinder.connect();
+                //just receive success bid
+                socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
+                socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
+                socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
+                socketBinder.on("cancelauction", biddingSocket.onBidCancelled);
+            }
+        }
     }
     private void setSocketReceiver()
     {
@@ -336,7 +346,7 @@ public class DetailOwnerFragment extends Fragment {
             detailBiddingFragment.setBiddingPeringkatList(biddingPeringkatList);
             if (!detailItem.getNamabidder().equals("nouser"))
             {
-                detailBiddingFinishedWithWinnerFragment.setDetailItem(detailItem);
+                detailBiddingFinishedWithBidderFragment.setDetailItem(detailItem);
             }
         }
         detailHeaderFragment.setDetailItem(detailItem);
@@ -380,7 +390,7 @@ public class DetailOwnerFragment extends Fragment {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fragment_detail_barang_header_fragment, detailHeaderFragment)
                         .replace(R.id.fragment_detail_barang_gambar_fragment, detailGambarFragment)
-                        .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFinishedWithWinnerFragment)
+                        .replace(R.id.fragment_detail_barang_bidding_fragment, detailBiddingFinishedWithBidderFragment)
                         .replace(R.id.fragment_detail_barang_waktubid_fragment, detailWaktuBidFinishedFragment)
                         .replace(R.id.fragment_detail_barang_deskripsi_fragment, detailDeskripsiFragment)
                         .replace(R.id.fragment_detail_barang_komentar_fragment, detailKomentarFragment)

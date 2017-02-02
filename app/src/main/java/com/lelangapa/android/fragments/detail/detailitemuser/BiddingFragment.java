@@ -51,6 +51,10 @@ public class BiddingFragment extends Fragment {
     public void setDetailItem(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
+        if (textView_namaBidder != null && textView_hargaBid != null)
+        {
+            setInitialNamaBidderAndHargaBid();
+        }
     }
     public void setInputReceiverToSubmitBidding(BidReceiver inputBidReceiver)
     {
