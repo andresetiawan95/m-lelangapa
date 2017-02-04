@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 import com.lelangapa.android.R;
 
 /**
- * Created by andre on 25/01/17.
+ * Created by andre on 31/01/17.
  */
 
-public class AuctioneerMenuPagerStatisticFragment extends Fragment {
+public class MenuPagerBiddingFinishedNoBidFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_statistic_auctioneer_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_finished_nobidder_auctioneer_layout, container, false);
         return view;
     }
 }

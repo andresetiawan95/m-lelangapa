@@ -14,10 +14,10 @@ import com.lelangapa.android.resources.DetailItemResources;
  * Created by Andre on 12/26/2016.
  */
 
-public class DetailDeskripsiFragment extends Fragment {
+public class DetailDescriptionFragment extends Fragment {
     private DetailItemResources detailItem;
     private TextView textView_isiDeskripsi;
-    public DetailDeskripsiFragment(){}
+    public DetailDescriptionFragment(){}
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {

@@ -1,4 +1,4 @@
-package com.lelangapa.android.fragments.detail.detailitemuser;
+package com.lelangapa.android.fragments.detail.detailitemowner;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,13 +12,12 @@ import com.lelangapa.android.resources.DetailItemResources;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by Andre on 12/29/2016.
+ * Created by andre on 04/02/17.
  */
 
-public class DetailGambarFragment extends Fragment {
+public class ImageFragment extends Fragment {
     private DetailItemResources detailItem;
     private ImageView imageView_gambaritem;
-    public DetailGambarFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {

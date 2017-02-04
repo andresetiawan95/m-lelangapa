@@ -12,7 +12,7 @@ import com.lelangapa.android.R;
  * Created by andre on 31/01/17.
  */
 
-public class AuctioneerMenuPagerBiddingFinishedWithBidderFragment extends Fragment {
+public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {

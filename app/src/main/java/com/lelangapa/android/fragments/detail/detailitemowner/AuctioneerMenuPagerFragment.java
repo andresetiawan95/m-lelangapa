@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Created by andre on 25/01/17.
  */
 
-public class DetailItemAuctioneerMenuPagerFragment extends Fragment {
+public class AuctioneerMenuPagerFragment extends Fragment {
     private TabLayout detailAuctioneerTabLayout;
     private ViewPager detailAuctioneerViewPager;
     private DetailBarangAuctioneerViewPagerAdapter auctioneerViewPagerAdapter;
