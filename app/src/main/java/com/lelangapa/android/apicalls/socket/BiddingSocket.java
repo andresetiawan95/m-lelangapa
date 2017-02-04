@@ -25,7 +25,8 @@ public class BiddingSocket {
     private SocketReceiver socketBidCancelled;
     private SocketReceiver socketWinnerSelected;
 
-    private boolean isConnected = false;
+    public boolean IS_CONNECTED_STATUS = false;
+    public boolean IS_JOINED_STATUS = false;
     public BiddingSocket(Activity activity)
     {
         this.activity = activity;
@@ -64,8 +65,9 @@ public class BiddingSocket {
     {
         try {
             IO.Options options = new IO.Options();
+            options.forceNew = false;
             options.reconnection = true;
-            mSocket = IO.socket("http://188.166.179.2:8083", options);
+            mSocket = IO.socket("http://188.166.179.2:11000", options);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -77,6 +79,7 @@ public class BiddingSocket {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    IS_JOINED_STATUS = false;
                     socketConnected.socketReceived("connected", args[0]);
                 }
             });
