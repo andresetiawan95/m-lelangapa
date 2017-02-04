@@ -21,9 +21,9 @@ public class AuctioneerMenuPagerFragment extends Fragment {
     private TabLayout detailAuctioneerTabLayout;
     private ViewPager detailAuctioneerViewPager;
     private DetailBarangAuctioneerViewPagerAdapter auctioneerViewPagerAdapter;
-    private AuctioneerMenuPagerBiddingNotStartedFragment biddingNotStartedFragment;
-    private AuctioneerMenuPagerBiddingStartedFragment biddingStartedFragment;
-    private AuctioneerMenuPagerStatisticFragment statisticFragment;
+    private MenuPagerBiddingNotStartedFragment biddingNotStartedFragment;
+    private MenuPagerBiddingStartedFragment biddingStartedFragment;
+    private MenuPagerStatisticFragment statisticFragment;
     private ArrayList<Fragment> fragmentViewPagerList = null;
     private ArrayList<String> titleViewPagerList = null;
     private boolean adapterAlreadyExist = false;
@@ -33,9 +33,9 @@ public class AuctioneerMenuPagerFragment extends Fragment {
     {
         super.onCreate(savedInstanceState);
         auctioneerViewPagerAdapter = new DetailBarangAuctioneerViewPagerAdapter(getFragmentManager());
-        biddingNotStartedFragment = new AuctioneerMenuPagerBiddingNotStartedFragment();
-        biddingStartedFragment = new AuctioneerMenuPagerBiddingStartedFragment();
-        statisticFragment = new AuctioneerMenuPagerStatisticFragment();
+        biddingNotStartedFragment = new MenuPagerBiddingNotStartedFragment();
+        biddingStartedFragment = new MenuPagerBiddingStartedFragment();
+        statisticFragment = new MenuPagerStatisticFragment();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
