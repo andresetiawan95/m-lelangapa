@@ -79,6 +79,8 @@ public class DetailWaktuBidStartedFragment extends Fragment {
             countDownTimer.start();
         }
     }
+
+    //DARI SINI KE BAWAH AKAN DIJADIKAN SATU METHOD SAJA NANTI
     public void setInitialDetailItem(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
@@ -106,8 +108,6 @@ public class DetailWaktuBidStartedFragment extends Fragment {
     /*
     *   Ini untuk menambah durasi waktu ketika ada tawaran yang masuk
     *   saat lelang menyisakan waktu kurang dari 10 menit lagi
-    *
-    *
      */
     public void setDetailItemWhenTimeExtended(DetailItemResources detailItem)
     {

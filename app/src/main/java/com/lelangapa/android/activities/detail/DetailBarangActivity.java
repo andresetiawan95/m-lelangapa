@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.fragments.detail.detailitemowner.DetailItemAuctioneerFragment;
 import com.lelangapa.android.fragments.detail.detailitemuser.DetailFragment;
 import com.lelangapa.android.preferences.SessionManager;
 
@@ -34,7 +35,7 @@ public class DetailBarangActivity extends AppCompatActivity {
     }
     private void setDetailItemFragmentTransaction()
     {
-        /*if (sessionManager.isLoggedIn())
+        if (sessionManager.isLoggedIn())
         {
             userInfo = sessionManager.getSession();
             auctioneerLoginID = userInfo.get(sessionManager.getKEY_ID());
@@ -57,10 +58,10 @@ public class DetailBarangActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_barang_layout, new DetailFragment())
                     .commit();
-        }*/
-        getSupportFragmentManager().beginTransaction()
+        }
+        /*getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_detail_barang_layout, detailFragment)
-                .commit();
+                .commit();*/
     }
     @Override
     public void onResume()

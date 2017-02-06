@@ -80,6 +80,8 @@ public class DetailFragment extends Fragment {
         setInputBidReceiver();
         setSocketReceiver();
         setInitialSocketBinding();
+        setDetailReceived();
+        setTriggerReceived();
         biddingInformation = "opened";
         biddingPeringkatList = new ArrayList<>();
         detailHeaderFragment = new DetailHeaderFragment();
@@ -102,8 +104,6 @@ public class DetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_barang_layout, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_detail_barang_swipe_refreshLayout);
         setUpSwipeRefreshLayout();
-        setDetailReceived();
-        setTriggerReceived();
         return view;
     }
     @Override
@@ -114,7 +114,6 @@ public class DetailFragment extends Fragment {
         {
             getDetailItem(itemID);
             onPauseFlag = false;
-            //TESTING PHASE===============================================
             if (!socketBinder.connected() && biddingSocket != null)
             {
                 Log.v("SOCKET SEKARANG", "false");
@@ -128,34 +127,40 @@ public class DetailFragment extends Fragment {
                 socketBinder.on("cancelauction", biddingSocket.onBidCancelled);
             }
         }
-        if (socketBinder.connected() && !biddingSocket.IS_JOINED_STATUS && biddingSocket != null)
+        if (biddingSocket != null && !biddingSocket.IS_JOINED_STATUS)
         {
-            socketBinder.emit("join-room", itemID);
-            Log.v("Joining room resume", "Joining room resume");
-            biddingSocket.IS_JOINED_STATUS = true;
+            if (socketBinder.connected())
+            {
+                socketBinder.emit("join-room", itemID);
+                Log.v("Joining room resume", "Joining room resume");
+                biddingSocket.IS_JOINED_STATUS = true;
+            }
         }
     }
     @Override
     public void onPause()
     {
         super.onPause();
-        socketBinder.emit("leave-room", itemID);
-        Log.v("Leaving room", "Leaving room now");
-        onPauseFlag = true;
-        biddingSocket.IS_JOINED_STATUS = false;
+        if (biddingSocket != null && biddingSocket.IS_JOINED_STATUS)
+        {
+            if (socketBinder.connected())
+            {
+                socketBinder.emit("leave-room", itemID);
+                Log.v("Leaving room pause", "Leaving room pause");
+                onPauseFlag = true;
+                biddingSocket.IS_JOINED_STATUS = false;
+            }
+        }
     }
     @Override
     public void onDestroy()
     {
         super.onDestroy();
-        //Log.v("Socket Disconnect", socketBinder.id());
-        socketBinder.disconnect();
-        socketBinder.off("connected", biddingSocket.onConnected);
-        socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
-        socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
-        socketBinder.off("winnerselected", biddingSocket.onWinnerSelected);
-        socketBinder.off("cancelauction", biddingSocket.onBidCancelled);
-        biddingSocket.IS_JOINED_STATUS = false;
+        if (socketBinder.connected())
+        {
+            disconnectSocket();
+            biddingSocket.IS_JOINED_STATUS = false;
+        }
     }
     private void setDetailReceived()
     {
@@ -170,6 +175,7 @@ public class DetailFragment extends Fragment {
                         {
                             Log.v("Selesai", "Request Selesai");
                             swipeRefreshLayout.setRefreshing(false);
+                            connectSocket();
                             setDataToChildFragments(detailItem);
                             //untuk menampilkan fragment submit bid
                             setChildFragments();
@@ -185,6 +191,14 @@ public class DetailFragment extends Fragment {
                         {
                             Log.v("Selesai", "Request Selesai");
                             swipeRefreshLayout.setRefreshing(false);
+
+                            if (socketBinder.connected())
+                            {
+                                socketBinder.emit("leave-room", itemID);
+                                biddingSocket.IS_JOINED_STATUS = false;
+                                disconnectSocket();
+                            }
+
                             setDataToChildFragments(detailItem);
                             //untuk menampilkan fragment submit bid
                             setChildFragments();
@@ -194,8 +208,13 @@ public class DetailFragment extends Fragment {
                             getDetailItem(itemID);
                         }
                     }
-                    else
+                    else if (biddingInformation.equals("opened"))
                     {
+                        //Log.v("MASUK OPENED", "MASUK OPENED");
+                        if (detailItem.getItembidstatus() == 1)
+                        {
+                            connectSocket();
+                        }
                         swipeRefreshLayout.setRefreshing(false);
                         setDataToChildFragments(detailItem);
                         //untuk menampilkan fragment submit bid
@@ -234,7 +253,7 @@ public class DetailFragment extends Fragment {
             biddingSocket.setSocketBidCancelled(socketBidCancelledReceiver);
             biddingSocket.setSocketWinnerSelected(socketWinnerSelectedReceiver);
             socketBinder = biddingSocket.getSocket();
-            if (!socketBinder.connected())
+            /*if (!socketBinder.connected())
             {
                 Log.v("SOCKET INITIAL SEKARANG", "false");
                 socketBinder.connect();
@@ -244,16 +263,15 @@ public class DetailFragment extends Fragment {
                 socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
                 socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
                 socketBinder.on("cancelauction", biddingSocket.onBidCancelled);
-            }
+            }*/
         }
     }
-    private void connectSocketInitial()
+    private void connectSocket()
     {
         if (!socketBinder.connected())
         {
             Log.v("SOCKET INITIAL SEKARANG", "false");
             socketBinder.connect();
-            //just receive success bid
             socketBinder.on("connected", biddingSocket.onConnected);
             socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
             socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
@@ -261,11 +279,24 @@ public class DetailFragment extends Fragment {
             socketBinder.on("cancelauction", biddingSocket.onBidCancelled);
         }
     }
+    private void disconnectSocket()
+    {
+        if (socketBinder.connected())
+        {
+            socketBinder.disconnect();
+            socketBinder.off("connected", biddingSocket.onConnected);
+            socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
+            socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
+            socketBinder.off("winnerselected", biddingSocket.onWinnerSelected);
+            socketBinder.off("cancelauction", biddingSocket.onBidCancelled);
+        }
+    }
     private void setSocketReceiver()
     {
         socketConnected = new SocketReceiver() {
             @Override
             public void socketReceived(Object status, Object response) {
+                //biddingSocket.IS_CONNECTED_STATUS = true;
                 if (!biddingSocket.IS_JOINED_STATUS)
                 {
                     Log.v("Socket CONNECTED", "CONNECTED AND INITIALIZED");
