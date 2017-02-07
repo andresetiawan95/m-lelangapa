@@ -39,8 +39,8 @@ public class WaktuBidNotStartedFragment extends Fragment {
     }
     private void initializeViews(View view)
     {
-        textView_startDate = (TextView) view.findViewById(R.id.fragment_detail_barang_waktubid_finished_waktumulai);
-        textView_endDate = (TextView) view.findViewById(R.id.fragment_detail_barang_waktubid_finished_waktuselesai);
+        textView_startDate = (TextView) view.findViewById(R.id.fragment_detail_barang_waktubid_notstarted_waktumulai);
+        textView_endDate = (TextView) view.findViewById(R.id.fragment_detail_barang_waktubid_notstarted_waktuselesai);
     }
     /*
     * Initialization method end here
