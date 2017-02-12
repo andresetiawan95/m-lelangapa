@@ -6,9 +6,14 @@ package com.lelangapa.android.resources;
 
 public class BiddingResources {
     private String idBidder, namaBidder, hargaBid, avatarBidderUrl;
+    private String idBid;
     public void setIdBidder(String idBidder)
     {
         this.idBidder = idBidder;
+    }
+    public void setIdBid(String idBid)
+    {
+        this.idBid = idBid;
     }
     public void setNamaBidder(String namaBidder)
     {
@@ -25,6 +30,10 @@ public class BiddingResources {
     public String getIdBidder()
     {
         return idBidder;
+    }
+    public String getIdBid()
+    {
+        return idBid;
     }
     public String getNamaBidder()
     {

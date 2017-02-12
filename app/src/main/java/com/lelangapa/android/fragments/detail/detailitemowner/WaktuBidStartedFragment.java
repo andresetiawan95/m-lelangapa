@@ -41,6 +41,7 @@ public class WaktuBidStartedFragment extends Fragment {
         initializeConstant();
         initializeViews(view);
         setTimeStartAndTimeFinish(detailItem.getTanggaljammulai(), detailItem.getTanggaljamselesai());
+        setCountDownTimer();
         return view;
     }
     /*

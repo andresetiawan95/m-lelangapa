@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.interfaces.AuctioneerResponseReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
+import com.lelangapa.android.resources.BiddingResources;
 import com.lelangapa.android.resources.DetailItemResources;
 import com.lelangapa.android.viewpagers.DetailBarangAuctioneerViewPagerAdapter;
 
@@ -29,9 +31,10 @@ public class AuctioneerMenuPagerFragment extends Fragment {
     private MenuPagerBiddingFinishedNoBidFragment biddingFinishedNoBidFragment;
     private MenuPagerBiddingFinishedWithBidderFragment biddingFinishedWithBidderFragment;
     private MenuPagerStatisticFragment statisticFragment;
-
+    private MenuPagerRankingFragment rankingFragment;
 
     private DetailItemResources detailItem;
+    private BiddingResources itemBiddingResources;
     private ArrayList<Fragment> fragmentViewPagerList = null;
     private ArrayList<String> titleViewPagerList = null;
     private boolean adapterAlreadyExist = false;
@@ -44,6 +47,9 @@ public class AuctioneerMenuPagerFragment extends Fragment {
         biddingFinishedNoBidFragment = new MenuPagerBiddingFinishedNoBidFragment();
         biddingFinishedWithBidderFragment = new MenuPagerBiddingFinishedWithBidderFragment();
         statisticFragment = new MenuPagerStatisticFragment();
+        rankingFragment = new MenuPagerRankingFragment();
+        fragmentViewPagerList = new ArrayList<>();
+        titleViewPagerList = new ArrayList<>();
     }
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -70,47 +76,41 @@ public class AuctioneerMenuPagerFragment extends Fragment {
 
     public void setFragmentAndTitleListDetailItemAuctioneer(int bidStatus)
     {
-        Log.v("ADAPTER ADA", "ADAPTER SUDAH ADA");
-        if (fragmentViewPagerList == null && titleViewPagerList == null)
-        {
-            fragmentViewPagerList = new ArrayList<>();
-            titleViewPagerList = new ArrayList<>();
+        if (!fragmentViewPagerList.isEmpty()){
+            fragmentViewPagerList.clear();
         }
-        else
-        {
-            if (!fragmentViewPagerList.isEmpty()) fragmentViewPagerList.clear();
-            if (!titleViewPagerList.isEmpty())titleViewPagerList.clear();
-        }
+        if (!titleViewPagerList.isEmpty())titleViewPagerList.clear();
 
         if (bidStatus == 0)
         {
             fragmentViewPagerList.add(biddingNotStartedFragment);
             fragmentViewPagerList.add(statisticFragment);
-            titleViewPagerList.add("Tawar");
+            titleViewPagerList.add("Tawaran");
             titleViewPagerList.add("Statistik");
+            Log.v("FRAGMENT added", "FRAGMENT added " + fragmentViewPagerList.size());
         }
         else if (bidStatus == 1)
         {
             fragmentViewPagerList.add(biddingStartedFragment);
             fragmentViewPagerList.add(statisticFragment);
-            titleViewPagerList.add("Tawar");
+            titleViewPagerList.add("Tawaran");
             titleViewPagerList.add("Statistik");
         }
         else if (bidStatus == -1)
         {
-            String namaBidder = detailItem.getNamabidder();
+            String namaBidder = itemBiddingResources.getNamaBidder();
             if (namaBidder.equals("nouser"))
             {
                 fragmentViewPagerList.add(biddingFinishedNoBidFragment);
                 fragmentViewPagerList.add(statisticFragment);
-                titleViewPagerList.add("Tawar");
+                titleViewPagerList.add("Tawaran");
                 titleViewPagerList.add("Statistik");
             }
             else
             {
                 fragmentViewPagerList.add(biddingFinishedWithBidderFragment);
                 fragmentViewPagerList.add(statisticFragment);
-                titleViewPagerList.add("Tawar");
+                titleViewPagerList.add("Tawaran");
                 titleViewPagerList.add("Statistik");
             }
         }
@@ -152,9 +152,10 @@ public class AuctioneerMenuPagerFragment extends Fragment {
         biddingNotStartedFragment.setStartTimeAndServerTime(startTime, serverTime);
         biddingNotStartedFragment.setTriggerStarted(trigger);
     }
-    public void setFragmentValueBidStart()
+    public void setFragmentValueBidStart(BiddingResources itemBidResources, AuctioneerResponseReceiver receiver)
     {
-
+        setBidderInformation(itemBidResources);
+        setAuctioneerResponseReceiver(receiver);
     }
     public void setFragmentValueBidFinish()
     {
@@ -167,11 +168,27 @@ public class AuctioneerMenuPagerFragment extends Fragment {
     /*
     * Set detail item value method start here
     * */
-    public void setUpDetailItem(DetailItemResources detailItem)
+    public void setUpDetailItemAndBiddingResources(DetailItemResources detailItem, BiddingResources itemBiddingResources)
     {
         this.detailItem = detailItem;
+        this.itemBiddingResources = itemBiddingResources;
     }
     /*
     * Set detail item value method end here
+    * */
+
+    /*
+    * Set or update value on child method fragment start here
+    * */
+    public void setBidderInformation(BiddingResources itemBiddingResources)
+    {
+        biddingStartedFragment.setBidderInformation(itemBiddingResources);
+    }
+    public void setAuctioneerResponseReceiver(AuctioneerResponseReceiver receiver)
+    {
+        biddingStartedFragment.setAuctioneerResponseReceiver(receiver);
+    }
+    /*
+    * Set or update value on child method end here
     * */
 }

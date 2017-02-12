@@ -7,6 +7,7 @@
         android:layout_height="1dp"
         android:background="@drawable/linear_horizontal_divider"/>
     <LinearLayout
+        android:background="@color/backgroundLayoutWhiteColor"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -36,7 +37,8 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginBottom="7dp">
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -50,4 +52,8 @@
         </LinearLayout>
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/linear_horizontal_divider"/>
 </LinearLayout>

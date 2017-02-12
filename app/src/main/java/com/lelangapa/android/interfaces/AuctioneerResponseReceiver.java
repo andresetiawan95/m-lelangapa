@@ -5,4 +5,6 @@ package com.lelangapa.android.interfaces;
  */
 
 public interface AuctioneerResponseReceiver {
+    void responseCancelReceived(boolean status);
+    void responseWinnerChosenReceived(boolean status, String idBid);
 }

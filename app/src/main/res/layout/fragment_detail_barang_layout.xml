@@ -21,6 +21,11 @@
             <FrameLayout
                 android:id="@+id/fragment_detail_barang_gambar_fragment"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/fragment_detail_barang_waktubid_fragment"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="7dp">
             </FrameLayout>

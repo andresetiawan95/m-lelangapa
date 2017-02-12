@@ -21,17 +21,19 @@ public class DetailBarangActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private HashMap<String, String> userInfo;
     private DetailFragment detailFragment;
+    private DetailItemAuctioneerFragment detailItemAuctioneerFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         detailFragment = new DetailFragment();
+        detailItemAuctioneerFragment = new DetailItemAuctioneerFragment();
         setContentView(R.layout.activity_detail_barang);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Detail");
         sessionManager = new SessionManager(DetailBarangActivity.this);
-        //setDetailItemFragmentTransaction();
+        setDetailItemFragmentTransaction();
     }
     private void setDetailItemFragmentTransaction()
     {
@@ -43,20 +45,20 @@ public class DetailBarangActivity extends AppCompatActivity {
             if (auctioneerLoginID.equals(onItemAuctioneerID))
             {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_detail_barang_layout, new DetailItemAuctioneerFragment())
+                        .replace(R.id.fragment_detail_barang_layout, detailItemAuctioneerFragment)
                         .commit();
             }
             else
             {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_detail_barang_layout, new DetailFragment())
+                        .replace(R.id.fragment_detail_barang_layout, detailFragment)
                         .commit();
             }
         }
         else
         {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_detail_barang_layout, new DetailFragment())
+                    .replace(R.id.fragment_detail_barang_layout, detailFragment)
                     .commit();
         }
         /*getSupportFragmentManager().beginTransaction()
@@ -67,6 +69,6 @@ public class DetailBarangActivity extends AppCompatActivity {
     public void onResume()
     {
         super.onResume();
-        setDetailItemFragmentTransaction();
     }
+
 }

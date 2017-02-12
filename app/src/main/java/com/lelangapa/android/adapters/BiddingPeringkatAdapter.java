@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.android.R;
-import com.lelangapa.android.resources.BiddingPeringkatResources;
+import com.lelangapa.android.resources.BiddingResources;
 
 import java.util.ArrayList;
 
@@ -18,9 +18,9 @@ import java.util.ArrayList;
  */
 
 public class BiddingPeringkatAdapter extends RecyclerView.Adapter<BiddingPeringkatAdapter.PeringkatViewHolder> {
-    private ArrayList<BiddingPeringkatResources> biddingPeringkatList;
+    private ArrayList<BiddingResources> biddingPeringkatList;
     private Context context;
-    public BiddingPeringkatAdapter(Context context, ArrayList<BiddingPeringkatResources> biddingPeringkatList)
+    public BiddingPeringkatAdapter(Context context, ArrayList<BiddingResources> biddingPeringkatList)
     {
         this.context = context;
         this.biddingPeringkatList = biddingPeringkatList;
@@ -46,7 +46,7 @@ public class BiddingPeringkatAdapter extends RecyclerView.Adapter<BiddingPeringk
     @Override
     public void onBindViewHolder(PeringkatViewHolder viewHolder, int position)
     {
-        BiddingPeringkatResources singlePeringkatItem = biddingPeringkatList.get(position);
+        BiddingResources singlePeringkatItem = biddingPeringkatList.get(position);
         //karena profile picture belum diterapkan, maka imageView belum di set dulu.
         //yang di set adalah nama dan price bidd dulu
         viewHolder.textView_biddernama.setText(singlePeringkatItem.getNamaBidder());
@@ -58,7 +58,7 @@ public class BiddingPeringkatAdapter extends RecyclerView.Adapter<BiddingPeringk
         if (biddingPeringkatList.size() >= 3) return 3;
         return biddingPeringkatList.size();
     }
-    public void updateDataSet(ArrayList<BiddingPeringkatResources> biddingPeringkatList)
+    public void updateDataSet(ArrayList<BiddingResources> biddingPeringkatList)
     {
         //menggunakan notifyDataSetChanged() untuk memberitahu adapter bahwa ada perubahan pada data set
         this.biddingPeringkatList = biddingPeringkatList;
