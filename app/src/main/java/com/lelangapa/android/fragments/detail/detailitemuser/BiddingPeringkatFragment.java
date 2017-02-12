@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.adapters.BiddingPeringkatAdapter;
-import com.lelangapa.android.resources.BiddingPeringkatResources;
+import com.lelangapa.android.resources.BiddingResources;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 
 public class BiddingPeringkatFragment extends Fragment {
-    private ArrayList<BiddingPeringkatResources> biddingPeringkatList;
+    private ArrayList<BiddingResources> biddingPeringkatList;
     private RecyclerView biddingPeringkatRecyclerView;
     private BiddingPeringkatAdapter biddingPeringkatAdapter = null;
     public BiddingPeringkatFragment(){}
@@ -35,7 +35,7 @@ public class BiddingPeringkatFragment extends Fragment {
 
         return view;
     }
-    public void setBiddingPeringkatList(ArrayList<BiddingPeringkatResources> biddingPeringkatList)
+    public void setBiddingPeringkatList(ArrayList<BiddingResources> biddingPeringkatList)
     {
         this.biddingPeringkatList = biddingPeringkatList;
         if (biddingPeringkatAdapter != null)
@@ -43,7 +43,7 @@ public class BiddingPeringkatFragment extends Fragment {
             biddingPeringkatAdapter.updateDataSet(this.biddingPeringkatList);
         }
     }
-    public void updateBiddingPeringkatList(ArrayList<BiddingPeringkatResources> biddingPeringkatList)
+    public void updateBiddingPeringkatList(ArrayList<BiddingResources> biddingPeringkatList)
     {
         //untuk mengganti list rank dengan yang terbaru;
         this.biddingPeringkatList = biddingPeringkatList;

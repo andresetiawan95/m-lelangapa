@@ -4,7 +4,7 @@ package com.lelangapa.android.resources;
  * Created by andre on 09/01/17.
  */
 
-public class BiddingPeringkatResources {
+public class BiddingResources {
     private String idBidder, namaBidder, hargaBid, avatarBidderUrl;
     public void setIdBidder(String idBidder)
     {

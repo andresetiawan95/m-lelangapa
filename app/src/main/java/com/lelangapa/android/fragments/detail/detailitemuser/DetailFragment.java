@@ -1,5 +1,6 @@
 package com.lelangapa.android.fragments.detail.detailitemuser;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -19,7 +20,7 @@ import com.lelangapa.android.interfaces.BidReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.SocketReceiver;
 import com.lelangapa.android.preferences.SessionManager;
-import com.lelangapa.android.resources.BiddingPeringkatResources;
+import com.lelangapa.android.resources.BiddingResources;
 import com.lelangapa.android.resources.DetailItemResources;
 
 import org.json.JSONArray;
@@ -64,10 +65,10 @@ public class DetailFragment extends Fragment {
     private Socket socketBinder;
     private SocketReceiver socketConnected, socketDisconnected, socketBidSuccessReceiver, socketBidFailedReceiver, socketBidCancelledReceiver, socketWinnerSelectedReceiver;
 
-    private ArrayList<BiddingPeringkatResources> biddingPeringkatList;
+    private ArrayList<BiddingResources> biddingPeringkatList;
 
-    private boolean onPauseFlag = false;
-    public DetailFragment(){}
+    private boolean onPauseWhenSocketAlreadyConnected = false, onPauseActivity = false, biddingAlreadyDone = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -96,7 +97,6 @@ public class DetailFragment extends Fragment {
         detailAuctioneerFragment = new DetailAuctioneerFragment();
         detailBiddingFinishedWithBidderFragment = new DetailBiddingFinishedWithBidderFragment();
         detailBiddingFinishedNoBidFragment = new DetailBiddingFinishedNoBidFragment();
-        activityContext = getActivity();
     }
     @Override
     public View onCreateView (final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -107,13 +107,26 @@ public class DetailFragment extends Fragment {
         return view;
     }
     @Override
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
+        activityContext = getActivity();
+    }
+    @Override
     public void onResume()
     {
         super.onResume();
-        if (onPauseFlag)
+        if (onPauseWhenSocketAlreadyConnected && !biddingInformation.equals("finish"))
         {
+            /*
+            * Logic :
+            * branch ini akan dijalankan ketika pada saat bidding sedang LIVE dan socket tersambung namun user mem-pause aplikasi,
+            * lalu user kembali lagi ke aplikasi dan bidding masih sedang berjalan (sedang LIVE).
+            *
+            * namun, ketika user kembali saat bidding sudah selesai (DONE), maka branch ini tidak dijalankan
+            * */
             getDetailItem(itemID);
-            onPauseFlag = false;
+            onPauseWhenSocketAlreadyConnected = false;
             if (!socketBinder.connected() && biddingSocket != null)
             {
                 Log.v("SOCKET SEKARANG", "false");
@@ -124,10 +137,24 @@ public class DetailFragment extends Fragment {
                 socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
                 socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
                 socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
-                socketBinder.on("cancelauction", biddingSocket.onBidCancelled);
+                socketBinder.on("cancelsuccess", biddingSocket.onBidCancelled);
             }
         }
-        if (biddingSocket != null && !biddingSocket.IS_JOINED_STATUS)
+        else if (onPauseActivity)
+        {
+            /*
+            * Logic :
+            * branch ini akan dijalankan ketika bidding belum mulai (SOON) dan user mem-pause aplikasi
+            * ketika user kembali dan bidding masih belum mulai (SOON) maupun sudah dimulai (LIVE), maupun sudah selesai (DONE).
+            *
+            * Namun, ketika sejak awal load status bidding sudah selesai (DONE), walaupun user keluar dan masuk lagi, maka
+            * aplikasi tidak akan request data baru dari API untuk efisiensi.
+            * */
+            Log.v("Masuk onPauseActivity", "MASUK SINIIIIIIIIII");
+            if (!biddingAlreadyDone) getDetailItem(itemID);
+        }
+
+        if (biddingSocket != null && !biddingSocket.IS_JOINED_STATUS && !biddingInformation.equals("finish"))
         {
             if (socketBinder.connected())
             {
@@ -136,6 +163,7 @@ public class DetailFragment extends Fragment {
                 biddingSocket.IS_JOINED_STATUS = true;
             }
         }
+        onPauseActivity = false;
     }
     @Override
     public void onPause()
@@ -147,10 +175,11 @@ public class DetailFragment extends Fragment {
             {
                 socketBinder.emit("leave-room", itemID);
                 Log.v("Leaving room pause", "Leaving room pause");
-                onPauseFlag = true;
+                onPauseWhenSocketAlreadyConnected = true;
                 biddingSocket.IS_JOINED_STATUS = false;
             }
         }
+        onPauseActivity = true;
     }
     @Override
     public void onDestroy()
@@ -190,11 +219,13 @@ public class DetailFragment extends Fragment {
                         if (detailItem.getItembidstatus()==-1)
                         {
                             Log.v("Selesai", "Request Selesai");
+                            biddingAlreadyDone = true;
                             swipeRefreshLayout.setRefreshing(false);
 
                             if (socketBinder.connected())
                             {
-                                socketBinder.emit("leave-room", itemID);
+                                //di disable karena ketika disconnect, socket otomatis keluar room
+                                //socketBinder.emit("leave-room", itemID);
                                 biddingSocket.IS_JOINED_STATUS = false;
                                 disconnectSocket();
                             }
@@ -215,6 +246,10 @@ public class DetailFragment extends Fragment {
                         {
                             connectSocket();
                         }
+                        else if (detailItem.getItembidstatus() == -1)
+                        {
+                            biddingAlreadyDone = true;
+                        }
                         swipeRefreshLayout.setRefreshing(false);
                         setDataToChildFragments(detailItem);
                         //untuk menampilkan fragment submit bid
@@ -232,12 +267,21 @@ public class DetailFragment extends Fragment {
                 if (output.toString().equals("start"))
                 {
                     biddingInformation = "start";
-                    setAlertDialogBidStarted();
+                    if (activityContext != null)
+                    {
+                        //Log.v("Tidak null", "Tidak NULL");
+                        setAlertDialogBidStarted();
+                    }
+
                 }
                 if (output.toString().equals("finish"))
                 {
                     biddingInformation = "finish";
-                    setAlertDialogBidFinished();
+                    if (activityContext != null)
+                    {
+                        //Log.v("Tidak null", "activityContext tidak NULL");
+                        setAlertDialogBidFinished();
+                    }
                 }
             }
         };
@@ -276,7 +320,7 @@ public class DetailFragment extends Fragment {
             socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
             socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
             socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
-            socketBinder.on("cancelauction", biddingSocket.onBidCancelled);
+            socketBinder.on("cancelsuccess", biddingSocket.onBidCancelled);
         }
     }
     private void disconnectSocket()
@@ -288,7 +332,7 @@ public class DetailFragment extends Fragment {
             socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
             socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
             socketBinder.off("winnerselected", biddingSocket.onWinnerSelected);
-            socketBinder.off("cancelauction", biddingSocket.onBidCancelled);
+            socketBinder.off("cancelsuccess", biddingSocket.onBidCancelled);
         }
     }
     private void setSocketReceiver()
@@ -320,7 +364,7 @@ public class DetailFragment extends Fragment {
                     {
                         //jika pengguna yang melakukan bidding telah melakukan bid sebelumnya
                         //mendapatkan object BiddingPeringkatResource dari user yang sudah melakukan bid sebelumnya
-                        BiddingPeringkatResources newBiddingFromExistUser = biddingPeringkatList.get(indexBidderBeforeUpdate);
+                        BiddingResources newBiddingFromExistUser = biddingPeringkatList.get(indexBidderBeforeUpdate);
                         //menghapus object tersebut dari list
                         biddingPeringkatList.remove(indexBidderBeforeUpdate);
                         //merubah harga pada object
@@ -331,7 +375,7 @@ public class DetailFragment extends Fragment {
                     else
                     {
                         //jika pengguna belum pernah melakukan bid sebelumnya
-                        BiddingPeringkatResources newBiddingFromNewUser = new BiddingPeringkatResources();
+                        BiddingResources newBiddingFromNewUser = new BiddingResources();
                         newBiddingFromNewUser.setIdBidder(socketResponse.getString("bidder_id_return"));
                         newBiddingFromNewUser.setNamaBidder(socketResponse.getString("bidder_name_return"));
                         newBiddingFromNewUser.setHargaBid(socketResponse.getString("bid_price_return"));
@@ -352,7 +396,7 @@ public class DetailFragment extends Fragment {
                     boolean isExtendTriggerActive = socketResponse.getBoolean("extend_trigger");
                     if (isExtendTriggerActive)
                     {
-                        detailItem.setTanggaljamselesai("end_time_item_return");
+                        detailItem.setTanggaljamselesai(socketResponse.getString("end_time_item_return"));
                         detailItem.setTanggaljamselesai_ms(socketResponse.getLong("end_time_item_return_milisecond"));
                         serverDateTimeMillisecond = socketResponse.getLong("server_time_in_millisecond");
                         detailWaktuBidStartedFragment.setDetailItemWhenTimeExtended(detailItem);
@@ -408,7 +452,7 @@ public class DetailFragment extends Fragment {
                     sendBidObject.put("harga_bid", price);
 
                     //send json to server socket
-                    if (!socketBinder.connected()) socketBinder.connect();
+                    //if (!socketBinder.connected()) socketBinder.connect();
                     socketBinder.emit("submitbid", sendBidObject.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -594,7 +638,7 @@ public class DetailFragment extends Fragment {
                             biddingPeringkatList.clear();
                             for (int j=0;j<biddingPeringkatArray.length();j++)
                             {
-                                BiddingPeringkatResources bidPeringkat = new BiddingPeringkatResources();
+                                BiddingResources bidPeringkat = new BiddingResources();
                                 JSONObject biddingPeringkatObject = biddingPeringkatArray.getJSONObject(j);
                                 bidPeringkat.setIdBidder(biddingPeringkatObject.getString("user_id"));
                                 bidPeringkat.setNamaBidder(biddingPeringkatObject.getString("user_name"));
@@ -639,8 +683,17 @@ public class DetailFragment extends Fragment {
                         getDetailItem(itemID);
                     }
                 });
-        AlertDialog bidFinishedDialog = bidStartedAlertDialogBuilder.create();
-        bidFinishedDialog.show();
+        AlertDialog bidStartedDialog = bidStartedAlertDialogBuilder.create();
+        if(!((Activity) activityContext).isFinishing() && !onPauseActivity)
+        {
+            //fixing crash saat menampilkan dialog setelah menjalankan countdowntimer
+            bidStartedDialog.show();
+        }
+        else
+        {
+            //jika activity sudah dihancurkan, maka langsung load data baru saja
+            if (!onPauseActivity) getDetailItem(itemID);
+        }
     }
     private void setAlertDialogBidFinished()
     {
@@ -654,7 +707,16 @@ public class DetailFragment extends Fragment {
                     }
                 });
         AlertDialog bidFinishedDialog = bidFinishedAlertDialogBuilder.create();
-        bidFinishedDialog.show();
+        if(!((Activity) activityContext).isFinishing() && !onPauseActivity)
+        {
+            //fixing crash saat menampilkan dialog setelah menjalankan countdowntimer
+            bidFinishedDialog.show();
+        }
+        else
+        {
+            //jika activity sudah dihancurkan, maka langsung load data baru saja
+            if(!onPauseActivity) getDetailItem(itemID);
+        }
     }
     private void setAlertDialogBidCancelled()
     {

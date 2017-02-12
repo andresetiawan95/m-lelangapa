@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.interfaces.BidReceiver;
-import com.lelangapa.android.resources.BiddingPeringkatResources;
+import com.lelangapa.android.resources.BiddingResources;
 import com.lelangapa.android.resources.DetailItemResources;
 import com.lelangapa.android.viewpagers.DetailBarangViewPagerAdapter;
 
@@ -55,11 +55,11 @@ public class DetailBiddingFragment extends Fragment {
     {
         biddingFragment.changeNamaBidderAndHargaBid(detailItem);
     }
-    public void setBiddingPeringkatList(ArrayList<BiddingPeringkatResources> biddingPeringkatList)
+    public void setBiddingPeringkatList(ArrayList<BiddingResources> biddingPeringkatList)
     {
         biddingPeringkatFragment.setBiddingPeringkatList(biddingPeringkatList);
     }
-    public void updateBiddingPeringkatList(ArrayList<BiddingPeringkatResources> biddingPeringkatList)
+    public void updateBiddingPeringkatList(ArrayList<BiddingResources> biddingPeringkatList)
     {
         biddingPeringkatFragment.updateBiddingPeringkatList(biddingPeringkatList);
     }

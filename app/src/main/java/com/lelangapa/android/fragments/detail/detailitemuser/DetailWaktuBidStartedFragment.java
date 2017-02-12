@@ -112,6 +112,13 @@ public class DetailWaktuBidStartedFragment extends Fragment {
     public void setDetailItemWhenTimeExtended(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
+        if (textView_waktuMulai != null && textView_waktuSelesai!= null)
+        {
+            String waktuMulaiNew = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(detailItem.getTanggaljammulai());
+            String waktuSelesaiNew = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(detailItem.getTanggaljamselesai());
+            textView_waktuMulai.setText(waktuMulaiNew);
+            textView_waktuSelesai.setText(waktuSelesaiNew);
+        }
     }
     public void setServerTimeWhenTimeExtended(Long serverTime)
     {
