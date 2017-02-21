@@ -58,6 +58,7 @@
             android:layout_height="wrap_content"
             android:text="Harga awal"/>
         <TextView
+            android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_hargaawal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -72,6 +73,7 @@
             android:layout_height="wrap_content"
             android:text="Harga ekspektasi"/>
         <TextView
+            android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_hargaekspektasi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -91,6 +93,7 @@
             android:layout_height="wrap_content"
             android:text="Tawaran saat ini"/>
         <TextView
+            android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_tawaran"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -104,6 +107,7 @@
             android:layout_height="wrap_content"
             android:text="Kenaikan"/>
         <TextView
+            android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_kenaikan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

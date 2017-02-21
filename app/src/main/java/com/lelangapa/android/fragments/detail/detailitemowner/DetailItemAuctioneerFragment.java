@@ -1,5 +1,6 @@
 package com.lelangapa.android.fragments.detail.detailitemowner;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -52,6 +53,10 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private AuctioneerResponseReceiver auctioneerResponseReceiver;
 
     private AuctioneerMenuPagerFragment menuPagerFragment;
+    private AuctioneerMenuPagerNotStartedFragment menuPagerNotStartedFragment;
+    private AuctioneerMenuPagerStartedFragment menuPagerStartedFragment;
+    private AuctioneerMenuPagerFinishedFragment menuPagerFinishedFragment;
+
     private HeaderFragment headerFragment;
     private ImageFragment imageFragment;
     private DescriptionFragment descriptionFragment;
@@ -135,7 +140,11 @@ public class DetailItemAuctioneerFragment extends Fragment {
     }
     private void initializeFragments()
     {
-        menuPagerFragment = new AuctioneerMenuPagerFragment();
+        //menuPagerFragment = new AuctioneerMenuPagerFragment();
+        menuPagerNotStartedFragment = new AuctioneerMenuPagerNotStartedFragment();
+        menuPagerStartedFragment = new AuctioneerMenuPagerStartedFragment();
+        menuPagerFinishedFragment = new AuctioneerMenuPagerFinishedFragment();
+
         headerFragment = new HeaderFragment();
         imageFragment = new ImageFragment();
         descriptionFragment = new DescriptionFragment();
@@ -178,7 +187,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         socketBinder.on("connected", biddingSocket.onConnected);
         socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
         socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
-        socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
+        socketBinder.on("winnerchosen", biddingSocket.onWinnerSelected);
         socketBinder.on("cancelsuccess", biddingSocket.onBidCancelled);
      }
     private void disconnectSocket()
@@ -187,7 +196,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         socketBinder.off("connected", biddingSocket.onConnected);
         socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
         socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
-        socketBinder.off("winnerselected", biddingSocket.onWinnerSelected);
+        socketBinder.off("winnerchosen", biddingSocket.onWinnerSelected);
         socketBinder.off("cancelsuccess", biddingSocket.onBidCancelled);
     }
     private void setUpSwipeRefreshLayout()
@@ -291,12 +300,12 @@ public class DetailItemAuctioneerFragment extends Fragment {
                 if (output.toString().equals("start"))
                 {
                     biddingInformation = "start";
-                    //setAlertDialogBidStarted();
+                    if (activityContext != null) setAlertDialogBidStarted();
                 }
                 if (output.toString().equals("finish"))
                 {
                     biddingInformation = "finish";
-                    //setAlertDialogBidFinished();
+                    if (activityContext != null) setAlertDialogBidFinished();
                 }
             }
         };
@@ -328,7 +337,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
                     itemBidResources.setNamaBidder(socketResponse.getString("bidder_name_return"));
                     itemBidResources.setHargaBid(socketResponse.getString("bid_price_return"));
 
-                    menuPagerFragment.setBidderInformation(itemBidResources);
+                    menuPagerStartedFragment.setBidderInformation(itemBidResources);
+                    menuPagerStartedFragment.setStatisticInformation(detailItem.getHargaawal(), detailItem.getHargatarget(), itemBidResources.getHargaBid());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -349,6 +359,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         onBidCancelledReceived = new SocketReceiver() {
             @Override
             public void socketReceived(Object status, Object response) {
+                biddingInformation = "finish";
                 setAlertDialogBidCancelled();
             }
         };
@@ -358,7 +369,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
         onWinnerSelected = new SocketReceiver() {
             @Override
             public void socketReceived(Object status, Object response) {
-                //setAlertDialogWinnerSelected();
+                biddingInformation = "finish";
+                setAlertDialogWinnerSelected();
             }
         };
     }
@@ -377,7 +389,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
                 try {
                     winnerChosenObject.put("item_id_query", itemID);
                     winnerChosenObject.put("bid_id_query", idBid);
-                    socketBinder.emit("winnerselected", winnerChosenObject);
+                    Log.v("INFO SEND", idBid);
+                    socketBinder.emit("winnerselected", winnerChosenObject.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -449,24 +462,27 @@ public class DetailItemAuctioneerFragment extends Fragment {
         if (detailItem.getItembidstatus() == 0)
         {
             Long startTime_ms = detailItem.getTanggaljammulai_ms();
-            menuPagerFragment.setUpDetailItemAndBiddingResources(detailItem, itemBidResources);
-            menuPagerFragment.setFragmentValueBidNotStart(startTime_ms, serverDateTimeMillisecond, timeTriggerReceived);
-            menuPagerFragment.setOrUpdateBidStatus(0);
+            menuPagerNotStartedFragment.setUpDetailItemAndBiddingResources(detailItem, itemBidResources);
+            menuPagerNotStartedFragment.setFragmentValue(startTime_ms, serverDateTimeMillisecond, timeTriggerReceived);
+            menuPagerNotStartedFragment.setStatisticInformation(detailItem.getHargaawal(), detailItem.getHargatarget(), itemBidResources.getHargaBid());
+            //menuPagerNotStartedFragment.setFragments();
             waktuBidNotStartedFragment.setDetailItem(detailItem);
         }
         else if (detailItem.getItembidstatus() == 1)
         {
-            menuPagerFragment.setUpDetailItemAndBiddingResources(detailItem, itemBidResources);
-            menuPagerFragment.setFragmentValueBidStart(itemBidResources, auctioneerResponseReceiver);
-            menuPagerFragment.setOrUpdateBidStatus(1);
+            menuPagerStartedFragment.setUpDetailItemAndBiddingResources(detailItem, itemBidResources);
+            menuPagerStartedFragment.setFragmentValue(itemBidResources, auctioneerResponseReceiver);
+            menuPagerStartedFragment.setStatisticInformation(detailItem.getHargaawal(), detailItem.getHargatarget(), itemBidResources.getHargaBid());
+            //menuPagerStartedFragment.setFragments();
             waktuBidStartedFragment.setDetailItem(detailItem);
             waktuBidStartedFragment.setServerTime(serverDateTimeMillisecond);
         }
         else if (detailItem.getItembidstatus() == -1)
         {
-            menuPagerFragment.setUpDetailItemAndBiddingResources(detailItem, itemBidResources);
-            menuPagerFragment.setFragmentValueBidFinish();
-            menuPagerFragment.setOrUpdateBidStatus(-1);
+            menuPagerFinishedFragment.setUpDetailItemAndBiddingResources(detailItem, itemBidResources);
+            menuPagerFinishedFragment.setFragmentValue(itemBidResources);
+            menuPagerFinishedFragment.setStatisticInformation(detailItem.getHargaawal(), detailItem.getHargatarget(), itemBidResources.getHargaBid());
+            //menuPagerFinishedFragment.setFragments();
             waktuBidFinishedFragment.setDetailItem(detailItem);
         }
         headerFragment.setDetailItem(detailItem);
@@ -478,15 +494,15 @@ public class DetailItemAuctioneerFragment extends Fragment {
     {
         if (status == 0)
         {
-            setUpUsedFragments(headerFragment, imageFragment, waktuBidNotStartedFragment, menuPagerFragment, descriptionFragment, commentaryFragment);
+            setUpUsedFragments(headerFragment, imageFragment, waktuBidNotStartedFragment, menuPagerNotStartedFragment, descriptionFragment, commentaryFragment);
         }
         else if (status == 1)
         {
-            setUpUsedFragments(headerFragment, imageFragment, waktuBidStartedFragment, menuPagerFragment, descriptionFragment, commentaryFragment);
+            setUpUsedFragments(headerFragment, imageFragment, waktuBidStartedFragment, menuPagerStartedFragment, descriptionFragment, commentaryFragment);
         }
         else if (status == -1)
         {
-            setUpUsedFragments(headerFragment, imageFragment, waktuBidFinishedFragment, menuPagerFragment, descriptionFragment, commentaryFragment);
+            setUpUsedFragments(headerFragment, imageFragment, waktuBidFinishedFragment, menuPagerFinishedFragment, descriptionFragment, commentaryFragment);
         }
         setStatusBiddingOnHeader(status);
     }
@@ -614,7 +630,72 @@ public class DetailItemAuctioneerFragment extends Fragment {
         AlertDialog bidCancelledDialog = bidCancelledAlertDialogBuilder.create();
         bidCancelledDialog.show();
     }
+    private void setAlertDialogBidStarted()
+    {
+        AlertDialog.Builder bidStartedAlertDialogBuilder = new AlertDialog.Builder(activityContext);
+        bidStartedAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_BIDSTARTED_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_BIDSTARTED_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_BIDSTARTED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getDetailItem(itemID);
+                    }
+                });
+        AlertDialog bidStartedDialog = bidStartedAlertDialogBuilder.create();
+        if(!((Activity) activityContext).isFinishing() && !onPauseActivity)
+        {
+            //fixing crash saat menampilkan dialog setelah menjalankan countdowntimer
+            bidStartedDialog.show();
+        }
+        else
+        {
+            //jika activity sudah dihancurkan, maka langsung refresh activity
+            if (!onPauseActivity) refreshActivity();
+        }
+    }
+    private void setAlertDialogBidFinished()
+    {
+        AlertDialog.Builder bidFinishedAlertDialogBuilder = new AlertDialog.Builder(activityContext);
+        bidFinishedAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getDetailItem(itemID);
+                    }
+                });
+        AlertDialog bidFinishedDialog = bidFinishedAlertDialogBuilder.create();
+        if(!((Activity) activityContext).isFinishing() && !onPauseActivity)
+        {
+            //fixing crash saat menampilkan dialog setelah menjalankan countdowntimer
+            bidFinishedDialog.show();
+        }
+        else
+        {
+            //jika activity sudah dihancurkan, maka langsung refresh activity
+            if(!onPauseActivity) refreshActivity();
+        }
+    }
+    private void setAlertDialogWinnerSelected()
+    {
+        AlertDialog.Builder winnerSelectedAlertDialogBuilder = new AlertDialog.Builder(activityContext);
+        winnerSelectedAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getDetailItem(itemID);
+                    }
+                });
+        AlertDialog winnerSelectedDialog = winnerSelectedAlertDialogBuilder.create();
+        winnerSelectedDialog.show();
+    }
     /*
     * Alert dialog method end here
     * */
+    private void refreshActivity()
+    {
+        getActivity().finish();
+        getActivity().startActivity(getActivity().getIntent());
+    }
 }

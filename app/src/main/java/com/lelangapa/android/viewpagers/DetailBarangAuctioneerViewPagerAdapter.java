@@ -2,7 +2,7 @@ package com.lelangapa.android.viewpagers;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by andre on 26/01/17.
  */
 
-public class DetailBarangAuctioneerViewPagerAdapter extends FragmentPagerAdapter {
+public class DetailBarangAuctioneerViewPagerAdapter extends FragmentStatePagerAdapter {
     private ArrayList<Fragment> mFragmentList = new ArrayList<>();
     private ArrayList<String> mTitleList = new ArrayList<>();
 
@@ -34,14 +34,14 @@ public class DetailBarangAuctioneerViewPagerAdapter extends FragmentPagerAdapter
         return mTitleList.get(position);
     }
 
-    public void setFragmentList(ArrayList<Fragment> newFragmentList)
+    public void addFragment (Fragment fragment, String title)
     {
-        this.mFragmentList = newFragmentList;
-        notifyDataSetChanged();
+        mFragmentList.add(fragment);
+        mTitleList.add(title);
     }
-    public void setTitleList(ArrayList<String> newTitleList)
-    {
-        this.mTitleList = newTitleList;
-        notifyDataSetChanged();
+    @Override
+    public int getItemPosition(Object object) {
+    // POSITION_NONE makes it possible to reload the PagerAdapter
+        return POSITION_NONE;
     }
 }

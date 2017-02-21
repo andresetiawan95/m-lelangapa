@@ -3,6 +3,7 @@ package com.lelangapa.android.activities.detail;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.fragments.detail.detailitemowner.DetailItemAuctioneerFragment;
@@ -71,4 +72,11 @@ public class DetailBarangActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            super.onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

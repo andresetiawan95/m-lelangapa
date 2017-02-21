@@ -691,8 +691,8 @@ public class DetailFragment extends Fragment {
         }
         else
         {
-            //jika activity sudah dihancurkan, maka langsung load data baru saja
-            if (!onPauseActivity) getDetailItem(itemID);
+            //jika activity sudah dihancurkan, maka langsung refresh activity
+            if (!onPauseActivity) refreshActivity();
         }
     }
     private void setAlertDialogBidFinished()
@@ -714,8 +714,8 @@ public class DetailFragment extends Fragment {
         }
         else
         {
-            //jika activity sudah dihancurkan, maka langsung load data baru saja
-            if(!onPauseActivity) getDetailItem(itemID);
+            //jika activity sudah dihancurkan, maka langsung refresh activity
+            if(!onPauseActivity) refreshActivity();
         }
     }
     private void setAlertDialogBidCancelled()
@@ -745,5 +745,10 @@ public class DetailFragment extends Fragment {
                 });
         AlertDialog winnerSelectedDialog = winnerSelectedAlertDialogBuilder.create();
         winnerSelectedDialog.show();
+    }
+    private void refreshActivity()
+    {
+        getActivity().finish();
+        getActivity().startActivity(getActivity().getIntent());
     }
 }

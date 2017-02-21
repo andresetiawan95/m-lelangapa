@@ -161,7 +161,7 @@ public class BiddingSocket {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    socketWinnerSelected.socketReceived("winnerselected", args[0]);
+                    socketWinnerSelected.socketReceived("winnerchosen", args[0]);
                 }
             });
         }
