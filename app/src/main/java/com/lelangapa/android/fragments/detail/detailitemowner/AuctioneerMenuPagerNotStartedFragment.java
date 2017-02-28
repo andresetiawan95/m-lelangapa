@@ -133,8 +133,4 @@ public class AuctioneerMenuPagerNotStartedFragment extends Fragment {
     * Viewpager setter method end here
     * */
 
-    public void setFragmentManager(FragmentManager manager)
-    {
-        this.manager = manager;
-    }
 }

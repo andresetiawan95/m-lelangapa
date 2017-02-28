@@ -6,5 +6,6 @@ import android.support.v7.app.AppCompatActivity;
  * Created by andre on 13/02/17.
  */
 
-public class RatingActivity extends AppCompatActivity {
+public class RatingListActivity extends AppCompatActivity {
+
 }

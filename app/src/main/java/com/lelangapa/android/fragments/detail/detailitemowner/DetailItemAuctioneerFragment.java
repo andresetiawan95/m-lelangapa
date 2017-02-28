@@ -360,6 +360,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
             @Override
             public void socketReceived(Object status, Object response) {
                 biddingInformation = "finish";
+                waktuBidStartedFragment.stopCountDownTimer();
                 setAlertDialogBidCancelled();
             }
         };
@@ -370,6 +371,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
             @Override
             public void socketReceived(Object status, Object response) {
                 biddingInformation = "finish";
+                waktuBidStartedFragment.stopCountDownTimer();
                 setAlertDialogWinnerSelected();
             }
         };
@@ -465,7 +467,6 @@ public class DetailItemAuctioneerFragment extends Fragment {
             menuPagerNotStartedFragment.setUpDetailItemAndBiddingResources(detailItem, itemBidResources);
             menuPagerNotStartedFragment.setFragmentValue(startTime_ms, serverDateTimeMillisecond, timeTriggerReceived);
             menuPagerNotStartedFragment.setStatisticInformation(detailItem.getHargaawal(), detailItem.getHargatarget(), itemBidResources.getHargaBid());
-            //menuPagerNotStartedFragment.setFragments();
             waktuBidNotStartedFragment.setDetailItem(detailItem);
         }
         else if (detailItem.getItembidstatus() == 1)
@@ -473,8 +474,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
             menuPagerStartedFragment.setUpDetailItemAndBiddingResources(detailItem, itemBidResources);
             menuPagerStartedFragment.setFragmentValue(itemBidResources, auctioneerResponseReceiver);
             menuPagerStartedFragment.setStatisticInformation(detailItem.getHargaawal(), detailItem.getHargatarget(), itemBidResources.getHargaBid());
-            //menuPagerStartedFragment.setFragments();
             waktuBidStartedFragment.setDetailItem(detailItem);
+            waktuBidStartedFragment.setTriggerFinished(timeTriggerReceived);
             waktuBidStartedFragment.setServerTime(serverDateTimeMillisecond);
         }
         else if (detailItem.getItembidstatus() == -1)
@@ -482,7 +483,6 @@ public class DetailItemAuctioneerFragment extends Fragment {
             menuPagerFinishedFragment.setUpDetailItemAndBiddingResources(detailItem, itemBidResources);
             menuPagerFinishedFragment.setFragmentValue(itemBidResources);
             menuPagerFinishedFragment.setStatisticInformation(detailItem.getHargaawal(), detailItem.getHargatarget(), itemBidResources.getHargaBid());
-            //menuPagerFinishedFragment.setFragments();
             waktuBidFinishedFragment.setDetailItem(detailItem);
         }
         headerFragment.setDetailItem(detailItem);

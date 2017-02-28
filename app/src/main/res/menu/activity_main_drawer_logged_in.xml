@@ -23,15 +23,13 @@
         </item>
         <item
             android:id="@+id/nav_chat"
-            android:title="Chat"
-            />
+            android:title="Chat" />
         <item
             android:id="@+id/nav_gerai"
             android:title="Gerai" />
         <item
             android:id="@+id/nav_review"
             android:title="Review" />
-
     </group>
     <group
         android:id="@+id/activity_main_drawer_loggedin_group_sessionmenu"

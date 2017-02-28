@@ -131,6 +131,10 @@ public class WaktuBidStartedFragment extends Fragment {
         countDownTimer.cancel();
         setCountDownTimer();
     }
+    public void stopCountDownTimer()
+    {
+        countDownTimer.cancel();
+    }
     /*
     * Countdown methods end here
     * */

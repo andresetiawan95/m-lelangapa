@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.UserGeraiActivity;
+import com.lelangapa.android.activities.favorite.FavoriteListActivity;
 import com.lelangapa.android.activities.profile.EditAlamatActivity;
 import com.lelangapa.android.activities.profile.EditPasswordActivity;
 import com.lelangapa.android.activities.profile.EditProfileActivity;
@@ -81,6 +82,10 @@ public class ProfileFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), EditPasswordActivity.class);
                     startActivity(intent);
                 }
+                if (position==5){
+                    Intent intent = new Intent(getActivity(), FavoriteListActivity.class);
+                    startActivity(intent);
+                }
             }
             @Override
             public void onLongItemClick(View view, int position) {
@@ -111,7 +116,15 @@ public class ProfileFragment extends Fragment {
         userProfileMenuData.setUserProfileMenuDesc("Ubah kata sandi anda.");
         userProfileList.add(userProfileMenuData);
         userProfileMenuData = new UserProfile();
-        userProfileMenuData.setUserProfileMenu("Review");
+        userProfileMenuData.setUserProfileMenu("Barang Favorit");
+        userProfileMenuData.setUserProfileMenuDesc("Periksa barang favorit anda.");
+        userProfileList.add(userProfileMenuData);
+        userProfileMenuData = new UserProfile();
+        userProfileMenuData.setUserProfileMenu("Riwayat Penawaran");
+        userProfileMenuData.setUserProfileMenuDesc("Periksa riwayat penawaran anda.");
+        userProfileList.add(userProfileMenuData);
+        userProfileMenuData = new UserProfile();
+        userProfileMenuData.setUserProfileMenu("Rating dan Review");
         userProfileMenuData.setUserProfileMenuDesc("Periksa review mengenai anda.");
         userProfileList.add(userProfileMenuData);
         userProfileMenuData = new UserProfile();

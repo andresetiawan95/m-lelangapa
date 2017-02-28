@@ -9,6 +9,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -67,12 +70,13 @@ public class DetailFragment extends Fragment {
 
     private ArrayList<BiddingResources> biddingPeringkatList;
 
-    private boolean onPauseWhenSocketAlreadyConnected = false, onPauseActivity = false, biddingAlreadyDone = false;
+    private boolean onPauseWhenSocketAlreadyConnected = false, onPauseActivity = false, biddingAlreadyDone = false, isDoneLoaded=false;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         detailItem = new DetailItemResources();
         sessionManager = new SessionManager(getActivity());
         session = sessionManager.getSession();
@@ -191,6 +195,27 @@ public class DetailFragment extends Fragment {
             biddingSocket.IS_JOINED_STATUS = false;
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.activity_detail_favorite, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem favoriteMenu = menu.findItem(R.id.action_favorite);
+        if (sessionManager.isLoggedIn() && isDoneLoaded)
+        {
+            favoriteMenu.setVisible(true);
+        }
+        else {
+            favoriteMenu.setVisible(false);
+        }
+    }
+
     private void setDetailReceived()
     {
         detailReceived = new DataReceiver() {
@@ -255,6 +280,8 @@ public class DetailFragment extends Fragment {
                         //untuk menampilkan fragment submit bid
                         setChildFragments();
                     }
+                    isDoneLoaded = true;
+                    getActivity().invalidateOptionsMenu();
                 }
             }
         };

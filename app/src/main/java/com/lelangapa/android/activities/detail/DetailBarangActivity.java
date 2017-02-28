@@ -72,6 +72,17 @@ public class DetailBarangActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        if (sessionManager.isLoggedIn() && !auctioneerLoginID.equals(onItemAuctioneerID))
+        {
+            MenuInflater menuInflater = getMenuInflater();
+            menuInflater.inflate(R.menu.activity_detail_favorite, menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }*/
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
@@ -79,4 +90,5 @@ public class DetailBarangActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

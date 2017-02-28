@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_empty_basket"/>
+        <TextView
+            android:textAppearance="?android:textAppearance"
+            android:text="Tidak ada barang favorit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textAlignment="center"
+            android:textSize="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Tambahkan barang favorit anda dengan menekan tombol bintang pada pojok kanan atas layar"/>
+    </LinearLayout>
+</FrameLayout>
