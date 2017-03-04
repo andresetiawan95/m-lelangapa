@@ -58,9 +58,9 @@ public class LoginFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String res = jsonResponse.getString("result");
-                            JSONArray userData = jsonResponse.getJSONArray("data");
-                            JSONObject userDataObject = userData.getJSONObject(0);
                             if (res.equals("1")){
+                                JSONArray userData = jsonResponse.getJSONArray("data");
+                                JSONObject userDataObject = userData.getJSONObject(0);
                                 SessionManager sessionManager = new SessionManager(getActivity());
                                 sessionManager.createSession(userDataObject.getString("id"), userDataObject.getString("username"),userDataObject.getString("name"),userDataObject.getString("email"));
 

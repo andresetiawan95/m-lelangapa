@@ -10,7 +10,7 @@ import com.lelangapa.android.interfaces.DataReceiver;
  */
 
 public class GetBarangGeraiUserAPI extends StringRequest {
-    private static final String GETBARANGGERAIUSER_URL = "http://no-api.lelangapa.com/apis/v1/items/getitemonuser";
+    private static final String GETBARANGGERAIUSER_URL = "https://no-api.lelangapa.com/apis/v1/items/getitemonuser";
     public GetBarangGeraiUserAPI(String userID, final DataReceiver dataReceiver){
         super(Request.Method.GET, GETBARANGGERAIUSER_URL + "?userid=" + userID, new Response.Listener<String>() {
             @Override

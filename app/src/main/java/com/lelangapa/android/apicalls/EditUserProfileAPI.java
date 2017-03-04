@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class EditUserProfileAPI extends StringRequest{
     private HashMap<String, String> data = new HashMap<>();
-    private static final String UPDATEPROFILE_URL = "http://no-api.lelangapa.com/apis/v1/users/update/profile";
+    private static final String UPDATEPROFILE_URL = "https://no-api.lelangapa.com/apis/v1/users/update/profile";
     public EditUserProfileAPI(HashMap<String, String> dataInput, final DataReceiver dataReceiver){
         super(Request.Method.PUT, UPDATEPROFILE_URL, new Response.Listener<String>() {
             @Override

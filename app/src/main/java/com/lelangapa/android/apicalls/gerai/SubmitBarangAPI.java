@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class SubmitBarangAPI extends StringRequest {
     private HashMap<String, String> dataBarang;
-    private static final String SUBMIT_DATA_BARANG_URL = "http://no-api.lelangapa.com/apis/v1/items/additem";
+    private static final String SUBMIT_DATA_BARANG_URL = "https://no-api.lelangapa.com/apis/v1/items/additem";
     public SubmitBarangAPI(HashMap<String, String> dataInput, final DataReceiver dataReceiver){
         super(Request.Method.POST, SUBMIT_DATA_BARANG_URL, new Response.Listener<String>() {
             @Override

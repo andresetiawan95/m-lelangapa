@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class EditPasswordAPI extends StringRequest{
     private HashMap<String, String> data = new HashMap<>();
-    private static final String UPDATEPASSWORD_URL = "http://no-api.lelangapa.com/apis/v1/users/update/password";
+    private static final String UPDATEPASSWORD_URL = "https://no-api.lelangapa.com/apis/v1/users/update/password";
     public EditPasswordAPI(HashMap<String, String> dataInput, final DataReceiver dataReceiver){
         super(Request.Method.PUT, UPDATEPASSWORD_URL, new Response.Listener<String>() {
             @Override

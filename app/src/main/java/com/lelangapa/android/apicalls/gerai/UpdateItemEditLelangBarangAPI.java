@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class UpdateItemEditLelangBarangAPI extends StringRequest {
     private HashMap<String, String> dataBarang;
-    private static final String UPDATE_DATA_BARANG_URL = "http://no-api.lelangapa.com/apis/v1/items/updateitem";
+    private static final String UPDATE_DATA_BARANG_URL = "https://no-api.lelangapa.com/apis/v1/items/updateitem";
     public UpdateItemEditLelangBarangAPI(HashMap<String, String> dataBarang, final DataReceiver dataReceiver){
         super(Request.Method.PUT, UPDATE_DATA_BARANG_URL, new Response.Listener<String>() {
             @Override

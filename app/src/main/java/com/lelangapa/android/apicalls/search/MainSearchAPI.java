@@ -10,7 +10,7 @@ import com.lelangapa.android.interfaces.DataReceiver;
  */
 
 public class MainSearchAPI extends StringRequest {
-    private static final String MAINSEARCHBARANG_URL = "http://no-api.lelangapa.com/apis/v1/search";
+    private static final String MAINSEARCHBARANG_URL = "https://no-api.lelangapa.com/apis/v1/search";
     public MainSearchAPI(String queryText, final DataReceiver dataReceiver){
         super(Request.Method.GET, MAINSEARCHBARANG_URL + "?q=" + queryText, new Response.Listener<String>() {
             @Override

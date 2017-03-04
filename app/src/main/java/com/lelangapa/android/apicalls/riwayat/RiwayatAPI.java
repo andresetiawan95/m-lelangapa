@@ -10,7 +10,7 @@ import com.lelangapa.android.interfaces.DataReceiver;
 
 public class RiwayatAPI {
     public class GetRiwayat extends StringRequest {
-        private static final String GETRIWAYATURL = "http://no-api.lelangapa.com/apis/v1/bids/history/";
+        private static final String GETRIWAYATURL = "https://no-api.lelangapa.com/apis/v1/bids/history/";
         public GetRiwayat(String userID, final DataReceiver dataReceiver) {
             super(Method.GET, GETRIWAYATURL + userID, new Response.Listener<String>() {
                 @Override

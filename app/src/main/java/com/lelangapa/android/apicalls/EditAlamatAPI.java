@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class EditAlamatAPI extends StringRequest {
     private HashMap<String, String> data = new HashMap<>();
-    private static final String UPDATEADDRESS_URL = "http://no-api.lelangapa.com/apis/v1/users/update/address";
+    private static final String UPDATEADDRESS_URL = "https://no-api.lelangapa.com/apis/v1/users/update/address";
     public EditAlamatAPI(HashMap<String, String> dataInput, final DataReceiver dataReceiver){
         super(Request.Method.PUT, UPDATEADDRESS_URL, new Response.Listener<String>() {
             @Override

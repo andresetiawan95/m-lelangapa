@@ -29,7 +29,7 @@ public class FavoriteNoEmptyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_user_favorite_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_favorite_noempty_layout, container, false);
         initializeViews(view);
         setRecyclerViewAdapter();
         setRecyclerViewProperties();

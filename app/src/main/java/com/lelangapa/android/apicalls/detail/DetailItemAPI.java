@@ -16,7 +16,7 @@ import java.util.Map;
  */
 
 public class DetailItemAPI extends StringRequest {
-    private static final String GETDETAILITEMURL = "http://no-api.lelangapa.com/apis/v1/details/getdetailitem";
+    private static final String GETDETAILITEMURL = "https://no-api.lelangapa.com/apis/v1/details/getdetailitem";
     public DetailItemAPI(String itemID, final DataReceiver dataReceiver) {
         super(Method.GET, GETDETAILITEMURL + "?item_id=" + itemID, new Response.Listener<String>() {
             @Override

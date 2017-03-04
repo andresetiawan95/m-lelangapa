@@ -19,6 +19,7 @@ import com.lelangapa.android.R;
 import com.lelangapa.android.apicalls.detail.DetailItemAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.apicalls.socket.BiddingSocket;
+import com.lelangapa.android.fragments.detail.detailitemfavorite.FavoriteStatus;
 import com.lelangapa.android.interfaces.BidReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.SocketReceiver;
@@ -42,6 +43,7 @@ import io.socket.client.Socket;
 public class DetailFragment extends Fragment {
     private DataReceiver detailReceived;
     private DataReceiver triggerReceived;
+    private DataReceiver favoriteStatusReceived;
     private BidReceiver inputBidReceiver;
     private DetailHeaderFragment detailHeaderFragment;
     private DetailImageFragment detailImageFragment;
@@ -55,6 +57,8 @@ public class DetailFragment extends Fragment {
     private DetailAuctioneerFragment detailAuctioneerFragment;
     private DetailBiddingFinishedWithBidderFragment detailBiddingFinishedWithBidderFragment;
     private DetailBiddingFinishedNoBidFragment detailBiddingFinishedNoBidFragment;
+    private FavoriteStatus detailFavoriteStatus;
+
     private DetailItemResources detailItem;
     private AlertDialog.Builder bidFailedAlertDialogBuilder;
     private Context activityContext;
@@ -63,7 +67,7 @@ public class DetailFragment extends Fragment {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private Long serverDateTimeMillisecond;
-    private String itemID, biddingInformation;
+    private String itemID, biddingInformation, favoriteID;
     private BiddingSocket biddingSocket;
     private Socket socketBinder;
     private SocketReceiver socketConnected, socketDisconnected, socketBidSuccessReceiver, socketBidFailedReceiver, socketBidCancelledReceiver, socketWinnerSelectedReceiver;
@@ -87,6 +91,7 @@ public class DetailFragment extends Fragment {
         setInitialSocketBinding();
         setDetailReceived();
         setTriggerReceived();
+        setDataReceiverFavoriteStatus();
         biddingInformation = "opened";
         biddingPeringkatList = new ArrayList<>();
         detailHeaderFragment = new DetailHeaderFragment();
@@ -200,6 +205,7 @@ public class DetailFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         inflater.inflate(R.menu.activity_detail_favorite, menu);
+        inflater.inflate(R.menu.activity_detail_unfavorite, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -207,12 +213,23 @@ public class DetailFragment extends Fragment {
     public void onPrepareOptionsMenu(Menu menu)
     {
         MenuItem favoriteMenu = menu.findItem(R.id.action_favorite);
+        MenuItem unfavoriteMenu = menu.findItem(R.id.action_unfavorite);
         if (sessionManager.isLoggedIn() && isDoneLoaded)
         {
-            favoriteMenu.setVisible(true);
+            if (favoriteID!=null && favoriteID.equals("0"))
+            {
+                favoriteMenu.setVisible(true);
+                unfavoriteMenu.setVisible(false);
+            }
+            else if (favoriteID!=null && !favoriteID.equals("0"))
+            {
+                favoriteMenu.setVisible(false);
+                unfavoriteMenu.setVisible(true);
+            }
         }
         else {
             favoriteMenu.setVisible(false);
+            unfavoriteMenu.setVisible(false);
         }
     }
 
@@ -280,8 +297,11 @@ public class DetailFragment extends Fragment {
                         //untuk menampilkan fragment submit bid
                         setChildFragments();
                     }
-                    isDoneLoaded = true;
-                    getActivity().invalidateOptionsMenu();
+                    if (sessionManager.isLoggedIn())
+                    {
+                        isDoneLoaded = true;
+                        loadFavoriteStatus();
+                    }
                 }
             }
         };
@@ -466,6 +486,21 @@ public class DetailFragment extends Fragment {
         /*
         * =========================================================================================
         * */
+    }
+    private void setDataReceiverFavoriteStatus()
+    {
+        favoriteStatusReceived = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                favoriteID = output.toString();
+                getActivity().invalidateOptionsMenu();
+            }
+        };
+    }
+    private void loadFavoriteStatus()
+    {
+        detailFavoriteStatus = new FavoriteStatus(session.get(sessionManager.getKEY_ID()), itemID, getActivity());
+        detailFavoriteStatus.setFavoriteStatusReceiver(favoriteStatusReceived);
     }
     private void setInputBidReceiver()
     {

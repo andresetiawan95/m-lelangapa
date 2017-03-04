@@ -10,7 +10,7 @@ import com.lelangapa.android.interfaces.DataReceiver;
  */
 
 public class GetItemEditLelangBarangAPI extends StringRequest {
-    private static final String GETITEMINFO_URL = "http://no-api.lelangapa.com/apis/v1/items/getitem";
+    private static final String GETITEMINFO_URL = "https://no-api.lelangapa.com/apis/v1/items/getitem";
     public GetItemEditLelangBarangAPI(String itemID, final DataReceiver dataReceiver){
         super(Request.Method.GET, GETITEMINFO_URL + "?item_id=" + itemID, new Response.Listener<String>() {
             @Override

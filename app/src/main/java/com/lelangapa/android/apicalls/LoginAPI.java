@@ -12,7 +12,7 @@ import java.util.Map;
  */
 
 public class LoginAPI extends StringRequest {
-    private static final String LOGIN_URL = "http://no-api.lelangapa.com/apis/v1/users/login";
+    private static final String LOGIN_URL = "https://no-api.lelangapa.com/apis/v1/users/login";
     private Map<String, String> data;
     public LoginAPI(String username, String password, Response.Listener<String> listener){
         super(Request.Method.POST, LOGIN_URL, listener, null);

@@ -10,7 +10,7 @@ import com.lelangapa.android.interfaces.DataReceiver;
 
 public class DetailRatingAuctioneerAPI {
     public class RatingAuctioneer extends StringRequest {
-        private static final String GETDETAILRATINGAUCTIONEER = "http://no-api.lelangapa.com/apis/v1/details/getrating";
+        private static final String GETDETAILRATINGAUCTIONEER = "https://no-api.lelangapa.com/apis/v1/details/getrating";
         public RatingAuctioneer(String auctioneerID, final DataReceiver dataReceiver)
         {
             super(Method.GET, GETDETAILRATINGAUCTIONEER + "?type=auctioneer&auctioneer_id=" + auctioneerID, new Response.Listener<String>() {
