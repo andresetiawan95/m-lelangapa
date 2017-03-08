@@ -151,6 +151,7 @@ public class FavoriteNoEmptyFragment extends Fragment {
                     }
                     if (listBarangFavorit.isEmpty())
                     {
+                        favoriteAdapter.updateDataSet(listBarangFavorit);
                         swipeRefreshLayout.setRefreshing(false);
                         whenListFavoriteIsEmptyReceiver.dataReceived("done");
                     }
