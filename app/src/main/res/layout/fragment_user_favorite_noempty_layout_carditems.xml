@@ -10,7 +10,7 @@
         card_view:cardUseCompatPadding="true">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="260dp"
             android:background="?android:attr/selectableItemBackground"
             android:focusable="true"
             android:clickable="true">
@@ -21,7 +21,7 @@
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/ic_insert_photo_grey_128dp"
                 android:scaleType="centerCrop"
-                android:layout_height="125dp" />
+                android:layout_height="135dp" />
             <LinearLayout
                 android:layout_below="@id/fragment_user_favorite_layout_imgview"
                 android:layout_width="match_parent"
@@ -40,12 +40,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="user 1"/>
-                <TextView
-                    android:id="@+id/fragment_user_favorite_layout_harga"
-                    android:text="harga 1"
-                    android:layout_marginTop="12dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
                 <ImageView
                     android:id="@+id/fragment_user_favorite_layout_trash"
                     android:layout_width="wrap_content"

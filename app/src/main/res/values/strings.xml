@@ -46,4 +46,14 @@
     <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGTITLE">Pemenang telah dipilih!</string>
     <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGMSG">Pelelang telah memilih pemenang lelang. Dengan ini maka lelang dihentikan.</string>
     <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGBUTTON">OK</string>
+
+    <string name="DETAILFRAGMENT_FAVORITE_ALERTDIALOGTITLE">Anda suka barang ini?</string>
+    <string name="DETAILFRAGMENT_FAVORITE_ALERTDIALOGMSG">Apakah anda ingin memasukkan barang ini ke dalam daftar favorit?</string>
+    <string name="DETAILFRAGMENT_FAVORITE_ALERTDIALOGOKBUTTON">YA</string>
+    <string name="DETAILFRAGMENT_FAVORITE_ALERTDIALOGCANCELBUTTON">TIDAK</string>
+
+    <string name="DETAILFRAGMENT_UNFAVORITE_ALERTDIALOGTITLE">Hapus dari favorit?</string>
+    <string name="DETAILFRAGMENT_UNFAVORITE_ALERTDIALOGMSG">Apakah anda ingin menghapus barang ini dari daftar favorit?</string>
+    <string name="DETAILFRAGMENT_UNFAVORITE_ALERTDIALOGOKBUTTON">YA</string>
+    <string name="DETAILFRAGMENT_UNFAVORITE_ALERTDIALOGCANCELBUTTON">TIDAK</string>
 </resources>

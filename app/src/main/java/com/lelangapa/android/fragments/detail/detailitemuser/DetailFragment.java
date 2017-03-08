@@ -20,6 +20,8 @@ import com.lelangapa.android.apicalls.detail.DetailItemAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.apicalls.socket.BiddingSocket;
 import com.lelangapa.android.fragments.detail.detailitemfavorite.FavoriteStatus;
+import com.lelangapa.android.fragments.detail.detailitemfavorite.FavoriteToggler;
+import com.lelangapa.android.fragments.detail.detailitemfavorite.UnfavoriteToggler;
 import com.lelangapa.android.interfaces.BidReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.SocketReceiver;
@@ -58,6 +60,8 @@ public class DetailFragment extends Fragment {
     private DetailBiddingFinishedWithBidderFragment detailBiddingFinishedWithBidderFragment;
     private DetailBiddingFinishedNoBidFragment detailBiddingFinishedNoBidFragment;
     private FavoriteStatus detailFavoriteStatus;
+    private FavoriteToggler favoriteMenuToggler;
+    private UnfavoriteToggler unfavoriteMenuToggler;
 
     private DetailItemResources detailItem;
     private AlertDialog.Builder bidFailedAlertDialogBuilder;
@@ -120,6 +124,16 @@ public class DetailFragment extends Fragment {
     {
         super.onActivityCreated(savedInstanceState);
         activityContext = getActivity();
+        favoriteMenuToggler = new FavoriteToggler(
+                getActivity(),
+                session.get(sessionManager.getKEY_ID()),
+                itemID,
+                favoriteStatusReceived);
+        unfavoriteMenuToggler = new UnfavoriteToggler(
+                getActivity(),
+                session.get(sessionManager.getKEY_ID()),
+                itemID,
+                favoriteStatusReceived);
     }
     @Override
     public void onResume()
@@ -231,6 +245,22 @@ public class DetailFragment extends Fragment {
             favoriteMenu.setVisible(false);
             unfavoriteMenu.setVisible(false);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        if (menuItem.getItemId() == R.id.action_favorite)
+        {
+            favoriteMenuToggler.showAlertDialog();
+            //Toast.makeText(getActivity(), "Favorite", Toast.LENGTH_SHORT).show();
+        }
+        else if (menuItem.getItemId() == R.id.action_unfavorite)
+        {
+            unfavoriteMenuToggler.showAlertDialog();
+            //Toast.makeText(getActivity(), "Unfavorite", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     private void setDetailReceived()
@@ -493,6 +523,7 @@ public class DetailFragment extends Fragment {
             @Override
             public void dataReceived(Object output) {
                 favoriteID = output.toString();
+                unfavoriteMenuToggler.setFavoriteID(favoriteID);
                 getActivity().invalidateOptionsMenu();
             }
         };

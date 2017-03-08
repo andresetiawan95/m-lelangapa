@@ -3,6 +3,7 @@ package com.lelangapa.android.fragments.favorite;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +31,12 @@ public class FavoriteFragment extends Fragment {
     private HashMap<String, String> userSession;
 
     private SessionManager sessionManager;
-    private DataReceiver received;
+    private DataReceiver received, whenListFavoriteIsEmptyReceiver;
     private String userID;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    private FavoriteEmptyFragment emptyFragment;
+    private FavoriteNoEmptyFragment noEmptyFragment;
 
     public FavoriteFragment() {
         listItemFavorites = new ArrayList<>();
@@ -42,6 +46,7 @@ public class FavoriteFragment extends Fragment {
     {
         super.onCreate(savedInstanceState);
         initializeSession();
+        initializeChildFragment();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -49,6 +54,7 @@ public class FavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_favorite_layout, container, false);
         initializeViews(view);
         initializeWhenDataAlreadyReceived();
+        initializeWhenListFavoriteIsEmptyReceiver();
         setSwipeRefreshLayoutProperties();
         return view;
     }
@@ -69,18 +75,25 @@ public class FavoriteFragment extends Fragment {
     {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_user_favorite_swipe_refreshLayout);
     }
+    private void initializeChildFragment()
+    {
+        emptyFragment = new FavoriteEmptyFragment();
+        noEmptyFragment = new FavoriteNoEmptyFragment();
+    }
     private void setSwipeRefreshLayoutProperties()
     {
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_orange_dark);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                Log.v("RefreshToggle", "Refresh Toggle on FavoriteFragment");
                 getDetailItemFavorites(userID);
             }
         });
         swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
+                Log.v("RefreshPost", "Refresh POST on FavoriteFragment");
                 swipeRefreshLayout.setRefreshing(true);
                 getDetailItemFavorites(userID);
             }
@@ -95,20 +108,36 @@ public class FavoriteFragment extends Fragment {
                 if (response.equals("done")) {
                     swipeRefreshLayout.setRefreshing(false);
                     if (listItemFavorites.isEmpty()) {
-                        FavoriteEmptyFragment emptyFragment = new FavoriteEmptyFragment();
+                        //FavoriteEmptyFragment emptyFragment = new FavoriteEmptyFragment();
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_user_favorite_layout, emptyFragment)
                                 .commit();
                     }
                     else {
                         //attach fragment recyclerview
-                        FavoriteNoEmptyFragment noEmptyFragment = new FavoriteNoEmptyFragment();
+                        //FavoriteNoEmptyFragment noEmptyFragment = new FavoriteNoEmptyFragment();
+                        swipeRefreshLayout.setEnabled(false);
                         noEmptyFragment.setItemFavoriteList(listItemFavorites);
+                        noEmptyFragment.setUserID(userID);
+                        noEmptyFragment.setWhenListFavoriteIsEmptyReceiver(whenListFavoriteIsEmptyReceiver);
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_user_favorite_layout, noEmptyFragment)
                                 .commit();
                     }
                 }
+            }
+        };
+    }
+    private void initializeWhenListFavoriteIsEmptyReceiver()
+    {
+        this.whenListFavoriteIsEmptyReceiver = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                //akan dieksekusi ketika listFavorite di FavoriteNoEmptyFragment sudah habis
+                swipeRefreshLayout.setEnabled(true);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_user_favorite_layout, emptyFragment)
+                        .commit();
             }
         };
     }
@@ -135,6 +164,7 @@ public class FavoriteFragment extends Fragment {
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
                     JSONArray jsonResponseArray = jsonResponse.getJSONArray("data");
+                    listItemFavorites.clear();
                     for (int i=0;i<jsonResponseArray.length(); i++)
                     {
                         JSONObject jsonArrayObject = jsonResponseArray.getJSONObject(i);
@@ -144,6 +174,13 @@ public class FavoriteFragment extends Fragment {
                         favoriteResources.setNamaItemFavorite(jsonArrayObject.getString("nama_item_return"));
                         favoriteResources.setNamaUserAuctioneerItemFavorite(jsonArrayObject.getString("nama_user_auctioneer_return"));
                         favoriteResources.setTimeListedItemFavorite(jsonArrayObject.getString("time_listed_return"));
+                        JSONArray favoriteJSONArray = jsonArrayObject.getJSONArray("imageurl");
+                        for (int j=0;j<favoriteJSONArray.length();j++)
+                        {
+                            JSONObject imageJSONObject = favoriteJSONArray.getJSONObject(j);
+                            favoriteResources.setImageURLItem("http://es3.lelangapa.com/" + imageJSONObject.getString("url"));
+                            //Log.v("IMAGE GET", favoriteResources.getImageURLItem());
+                        }
                         listItemFavorites.add(favoriteResources);
                     }
                     received.dataReceived("done");
@@ -154,6 +191,7 @@ public class FavoriteFragment extends Fragment {
         };
         return dataReceiver;
     }
+
     /*
     * Content Provider method end here
     * */

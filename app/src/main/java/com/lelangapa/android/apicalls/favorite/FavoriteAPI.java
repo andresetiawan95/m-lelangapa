@@ -67,42 +67,42 @@ public class  FavoriteAPI {
     }
 
     public class InsertFavorite extends StringRequest {
-        private HashMap<String, String> dataBarang;
+        private HashMap<String, String> dataFavorite;
         private static final String INSERTFAVORITEURL = "https://no-api.lelangapa.com/apis/v1/favorites";
-        public InsertFavorite(HashMap<String, String> dataBarang, final DataReceiver dataReceiver){
+        public InsertFavorite(HashMap<String, String> dataFavorite, final DataReceiver dataReceiver){
             super(Method.POST, INSERTFAVORITEURL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     dataReceiver.dataReceived(response);
                 }
             }, null);
-            this.dataBarang = dataBarang;
+            this.dataFavorite = dataFavorite;
         }
 
         @Override
         public HashMap<String, String> getParams()
         {
-            return dataBarang;
+            return dataFavorite;
         }
     }
 
     public class RemoveFavorite extends StringRequest {
-        private HashMap<String, String> dataBarang;
+        private HashMap<String, String> dataFavorite;
         private static final String REMOVEFAVORITEURL = "https://no-api.lelangapa.com/apis/v1/favorites";
-        public RemoveFavorite(HashMap<String, String> dataBarang, final DataReceiver dataReceiver){
-            super(Method.DELETE, REMOVEFAVORITEURL, new Response.Listener<String>() {
+        public RemoveFavorite(HashMap<String, String> dataFavorite, final DataReceiver dataReceiver){
+            super(Method.PUT, REMOVEFAVORITEURL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     dataReceiver.dataReceived(response);
                 }
             }, null);
-            this.dataBarang = dataBarang;
+            this.dataFavorite = dataFavorite;
         }
 
         @Override
         public HashMap<String, String> getParams()
         {
-            return dataBarang;
+            return dataFavorite;
         }
     }
 
@@ -120,9 +120,15 @@ public class  FavoriteAPI {
         return getFavoriteItemIDAndUserID;
     }
 
-    public InsertFavorite initializeInsertFavorite()
+    public InsertFavorite initializeInsertFavorite(HashMap<String, String> dataFavorite, DataReceiver dataReceiver)
     {
-        //implemented later
-        return null;
+        InsertFavorite insertFavorite = new InsertFavorite(dataFavorite, dataReceiver);
+        return insertFavorite;
+    }
+
+    public RemoveFavorite initializeRemoveFavorite(HashMap<String, String> dataFavorite, DataReceiver dataReceiver)
+    {
+        RemoveFavorite removeFavorite = new RemoveFavorite(dataFavorite, dataReceiver);
+        return removeFavorite;
     }
 }
