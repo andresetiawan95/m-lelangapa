@@ -1,5 +1,6 @@
 package com.lelangapa.android.activities.riwayat;
 
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 /**
@@ -7,5 +8,10 @@ import android.support.v7.app.AppCompatActivity;
  */
 
 public class RiwayatListActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
+    }
 }

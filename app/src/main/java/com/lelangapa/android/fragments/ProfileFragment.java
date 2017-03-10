@@ -124,8 +124,12 @@ public class ProfileFragment extends Fragment {
         userProfileMenuData.setUserProfileMenuDesc("Periksa riwayat penawaran anda.");
         userProfileList.add(userProfileMenuData);
         userProfileMenuData = new UserProfile();
-        userProfileMenuData.setUserProfileMenu("Rating dan Review");
-        userProfileMenuData.setUserProfileMenuDesc("Periksa review mengenai anda.");
+        userProfileMenuData.setUserProfileMenu("Beri Feedback");
+        userProfileMenuData.setUserProfileMenuDesc("Beri feedback sebagai auctioneer/winner.");
+        userProfileList.add(userProfileMenuData);
+        userProfileMenuData = new UserProfile();
+        userProfileMenuData.setUserProfileMenu("Feedback Anda");
+        userProfileMenuData.setUserProfileMenuDesc("Periksa feedback yang diberikan kepada anda.");
         userProfileList.add(userProfileMenuData);
         userProfileMenuData = new UserProfile();
         userProfileMenuData.setUserProfileMenu("Tiket Bantuan");
