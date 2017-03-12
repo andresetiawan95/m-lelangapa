@@ -15,4 +15,8 @@
     <color name="detailItemStatusBidSoon">#ff9736</color>
     <color name="detailItemStatusBidLive">#5fbf44</color>
     <color name="detailItemStatusBidDone">#808080</color>
+
+    <color name="riwayatWin">#5fbf44</color>
+    <color name="riwayatStatusLose">#616161</color>
+    <color name="riwayatBerlangsung">#fc8924</color>
 </resources>

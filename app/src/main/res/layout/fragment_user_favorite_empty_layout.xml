@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageView
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:src="@drawable/ic_empty_basket"/>
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/ic_empty_basket_128dp"/>
         <TextView
             android:textAppearance="?android:textAppearance"
             android:text="Tidak ada barang favorit"

@@ -41,7 +41,7 @@ public class  FavoriteAPI {
         }
     }
 
-    public class GetFavorite extends StringRequest {
+    public static class GetFavorite extends StringRequest {
         private static final String GETFAVORITEURL = "https://no-api.lelangapa.com/apis/v1/favorites/";
         public GetFavorite(String userID, final DataReceiver dataReceiver){
             super(Method.GET, GETFAVORITEURL + userID, new Response.Listener<String>() {
@@ -106,7 +106,7 @@ public class  FavoriteAPI {
         }
     }
 
-    public GetFavorite initializeGetFavorite(String userID, DataReceiver dataReceiver)
+    public static GetFavorite initializeGetFavorite(String userID, DataReceiver dataReceiver)
     {
         GetFavorite getFavorite = new GetFavorite(userID, dataReceiver);
         return getFavorite;

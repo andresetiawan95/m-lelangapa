@@ -17,6 +17,7 @@ import com.lelangapa.android.R;
 import com.lelangapa.android.apicalls.detail.DetailItemAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.apicalls.socket.BiddingSocket;
+import com.lelangapa.android.fragments.detail.ownerdialogfragment.ListBidderDialogFragment;
 import com.lelangapa.android.interfaces.AuctioneerResponseReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.SocketReceiver;
@@ -384,7 +385,11 @@ public class DetailItemAuctioneerFragment extends Fragment {
             public void responseCancelReceived(boolean status) {
                 socketBinder.emit("cancelauction", itemID);
             }
-
+            @Override
+            public void responseDaftarTawaranReceived()
+            {
+                showCustomDialog();
+            }
             @Override
             public void responseWinnerChosenReceived(boolean status, String idBid) {
                 JSONObject winnerChosenObject = new JSONObject();
@@ -454,6 +459,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         {
             if (socketBinder.connected())
             {
+                Log.v("On destroy", "On destroy executed");
                 disconnectSocket();
                 biddingSocket.IS_JOINED_STATUS = false;
             }
@@ -697,5 +703,12 @@ public class DetailItemAuctioneerFragment extends Fragment {
     {
         getActivity().finish();
         getActivity().startActivity(getActivity().getIntent());
+    }
+
+    private void showCustomDialog()
+    {
+        FragmentManager fm = getFragmentManager();
+        ListBidderDialogFragment listBidderDialogFragment = ListBidderDialogFragment.newInstance("Lalala");
+        listBidderDialogFragment.show(fm, "fragment_lalala");
     }
 }

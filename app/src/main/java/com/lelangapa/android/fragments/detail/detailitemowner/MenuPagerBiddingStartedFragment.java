@@ -84,6 +84,7 @@ public class MenuPagerBiddingStartedFragment extends Fragment {
         button_daftarTawaran.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                auctioneerResponseReceiver.responseDaftarTawaranReceived();
                 //implemented later
             }
         });

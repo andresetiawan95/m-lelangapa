@@ -4,19 +4,17 @@
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
     <android.support.v7.widget.CardView
-        android:id="@+id/fragment_user_riwayat_layout_cardview"
+        android:id="@+id/fragment_user_riwayat_noempty_cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardUseCompatPadding="true"
-        android:layout_marginTop="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp">
+        card_view:cardUseCompatPadding="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:orientation="horizontal"
             android:padding="7dp">
             <ImageView
+                android:id="@+id/fragment_user_riwayat_noempty_image"
                 android:layout_width="95dp"
                 android:layout_height="95dp"
                 android:src="@drawable/ic_insert_photo_grey_128dp"
@@ -26,9 +24,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/fragment_user_riwayat_noempty_judulitem"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:id="@+id/fragment_user_riwayat_noempty_judul_textview"
                     android:text="Judul Barang"
                     android:textAppearance="?android:textAppearance"/>
                 <TextView
@@ -46,6 +44,7 @@
                         android:layout_height="wrap_content"
                         android:text="Lelang ke #"/>
                     <TextView
+                        android:id="@+id/fragment_user_riwayat_noempty_bidkali"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"/>
@@ -65,16 +64,18 @@
                         android:text="Rp. "
                         android:layout_gravity="center"/>
                     <TextView
+                        android:id="@+id/fragment_user_riwayat_noempty_hargabid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1000000"
                         android:layout_gravity="center"/>
                 </LinearLayout>
                 <TextView
+                    android:id="@+id/fragment_user_riwayat_noempty_statuswin"
                     android:layout_gravity="right"
                     android:padding="5dp"
-                    android:background="@color/detailItemStatusBidLive"
                     android:text="STATUS-WINNING"
+                    android:textSize="8dp"
                     android:textColor="@color/backgroundLayoutWhiteColor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

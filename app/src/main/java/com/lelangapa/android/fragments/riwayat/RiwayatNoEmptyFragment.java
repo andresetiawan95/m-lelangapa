@@ -3,15 +3,20 @@ package com.lelangapa.android.fragments.riwayat;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.adapters.UserRiwayatAdapter;
 import com.lelangapa.android.apicalls.riwayat.RiwayatAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.interfaces.DataReceiver;
-import com.lelangapa.android.preferences.SessionManager;
+import com.lelangapa.android.interfaces.OnItemClickListener;
+import com.lelangapa.android.listeners.RecyclerItemClickListener;
 import com.lelangapa.android.resources.RiwayatResources;
 
 import org.json.JSONArray;
@@ -19,90 +24,73 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
- * Created by andre on 28/02/17.
+ * Created by andre on 10/03/17.
  */
 
-public class RiwayatFragment extends Fragment {
+public class RiwayatNoEmptyFragment extends Fragment {
     private ArrayList<RiwayatResources> listRiwayat;
     private String userID;
-    private HashMap<String, String> userSession;
-    private DataReceiver receiver, dataRiwayatReceived;
-
+    private UserRiwayatAdapter riwayatAdapter;
+    private DataReceiver dataRiwayatReceived;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private SessionManager sessionManager;
-    private RiwayatEmptyFragment emptyFragment;
-    private RiwayatNoEmptyFragment noEmptyFragment;
+    private RecyclerView recyclerView_riwayat;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        initializeConstant();
-        initializeSession();
-        initializeChildFragments();
         setDataReceiverForRiwayat();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_user_riwayat_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_riwayat_noempty_layout, container, false);
         initializeViews(view);
         setSwipeRefreshLayoutProperties();
-        initializeWhenDataAlreadyReceived();
+        setRecyclerViewAdapter();
+        setRecyclerViewProperties();
         return view;
-    }
-
-    private void initializeConstant()
-    {
-        listRiwayat = new ArrayList<>();
-    }
-    private void initializeSession()
-    {
-        sessionManager = new SessionManager(getActivity());
-        if (sessionManager.isLoggedIn())
-        {
-            userSession = sessionManager.getSession();
-            userID = userSession.get(sessionManager.getKEY_ID());
-        }
     }
     private void initializeViews(View view)
     {
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_user_riwayat_swipeRefreshLayout);
-    }
-    private void initializeChildFragments()
-    {
-        emptyFragment = new RiwayatEmptyFragment();
-        noEmptyFragment = new RiwayatNoEmptyFragment();
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_user_riwayat_noempty_swipeRefreshLayout);
+        recyclerView_riwayat = (RecyclerView) view.findViewById(R.id.fragment_user_riwayat_layout_recyclerview);
     }
 
-    private void initializeWhenDataAlreadyReceived()
+    public void setRiwayatList(ArrayList<RiwayatResources> listRiwayat)
     {
-        receiver = new DataReceiver() {
+        this.listRiwayat = listRiwayat;
+    }
+    public void setUserID(String userID)
+    {
+        this.userID = userID;
+    }
+    private void setRecyclerViewAdapter()
+    {
+        riwayatAdapter = new UserRiwayatAdapter(getActivity(), listRiwayat);
+    }
+    private void setRecyclerViewProperties()
+    {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
             @Override
-            public void dataReceived(Object output) {
-                String response = output.toString();
-                if (response.equals("done"))
-                {
-                    swipeRefreshLayout.setRefreshing(false);
-                    if (listRiwayat.isEmpty()){
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_activity_riwayat_layout, emptyFragment)
-                                .commit();
-                    }
-                    else {
-                        swipeRefreshLayout.setEnabled(false);
-                        noEmptyFragment.setUserID(userID);
-                        noEmptyFragment.setRiwayatList(listRiwayat);
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_user_riwayat_layout, noEmptyFragment)
-                                .commit();
-                    }
-                }
-            }
+            public boolean canScrollVertically() { return false; }
         };
+        recyclerView_riwayat.setLayoutManager(layoutManager);
+        recyclerView_riwayat.setItemAnimator(new DefaultItemAnimator());
+        recyclerView_riwayat.setAdapter(riwayatAdapter);
+        recyclerView_riwayat.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_riwayat, new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
     }
     private void setSwipeRefreshLayoutProperties()
     {
@@ -113,14 +101,8 @@ public class RiwayatFragment extends Fragment {
                 getRiwayat(userID);
             }
         });
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-                getRiwayat(userID);
-            }
-        });
     }
+
     private void setDataReceiverForRiwayat()
     {
         dataRiwayatReceived = new DataReceiver() {
@@ -147,7 +129,8 @@ public class RiwayatFragment extends Fragment {
                         riwayatResources.setBidStatus(jsonArrayObject.getInt("bid_status_return"));
                         listRiwayat.add(riwayatResources);
                     }
-                    receiver.dataReceived("done");
+                    riwayatAdapter.updateDataset(listRiwayat);
+                    swipeRefreshLayout.setRefreshing(false);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

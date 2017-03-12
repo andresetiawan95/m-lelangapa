@@ -18,6 +18,7 @@ import com.lelangapa.android.activities.favorite.FavoriteListActivity;
 import com.lelangapa.android.activities.profile.EditAlamatActivity;
 import com.lelangapa.android.activities.profile.EditPasswordActivity;
 import com.lelangapa.android.activities.profile.EditProfileActivity;
+import com.lelangapa.android.activities.riwayat.RiwayatActivity;
 import com.lelangapa.android.adapters.UserProfileAdapter;
 import com.lelangapa.android.decorations.DividerItemDecoration;
 import com.lelangapa.android.interfaces.OnItemClickListener;
@@ -84,6 +85,10 @@ public class ProfileFragment extends Fragment {
                 }
                 if (position==5){
                     Intent intent = new Intent(getActivity(), FavoriteListActivity.class);
+                    startActivity(intent);
+                }
+                if (position==6){
+                    Intent intent = new Intent(getActivity(), RiwayatActivity.class);
                     startActivity(intent);
                 }
             }

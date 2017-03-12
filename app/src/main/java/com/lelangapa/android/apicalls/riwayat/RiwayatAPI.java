@@ -9,7 +9,7 @@ import com.lelangapa.android.interfaces.DataReceiver;
  */
 
 public class RiwayatAPI {
-    public class GetRiwayat extends StringRequest {
+    public static class GetRiwayat extends StringRequest {
         private static final String GETRIWAYATURL = "https://no-api.lelangapa.com/apis/v1/bids/history/";
         public GetRiwayat(String userID, final DataReceiver dataReceiver) {
             super(Method.GET, GETRIWAYATURL + userID, new Response.Listener<String>() {
@@ -19,5 +19,10 @@ public class RiwayatAPI {
                 }
             }, null);
         }
+    }
+    public static GetRiwayat initializeGetRiwayat(String userID, DataReceiver dataReceiver)
+    {
+        GetRiwayat getRiwayat = new GetRiwayat(userID, dataReceiver);
+        return getRiwayat;
     }
 }

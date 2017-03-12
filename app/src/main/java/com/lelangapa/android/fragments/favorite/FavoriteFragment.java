@@ -151,8 +151,8 @@ public class FavoriteFragment extends Fragment {
     private void getDetailItemFavorites(String userID)
     {
         DataReceiver dataReceiver = setDataReceiverForItemFavorites();
-        FavoriteAPI favoriteAPI = new FavoriteAPI();
-        FavoriteAPI.GetFavorite getFavoriteAPI = favoriteAPI.initializeGetFavorite(userID, dataReceiver);
+        //FavoriteAPI favoriteAPI = new FavoriteAPI();
+        FavoriteAPI.GetFavorite getFavoriteAPI = FavoriteAPI.initializeGetFavorite(userID, dataReceiver);
         RequestController.getInstance(getActivity()).addToRequestQueue(getFavoriteAPI);
     }
     private DataReceiver setDataReceiverForItemFavorites()
