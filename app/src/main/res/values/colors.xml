@@ -19,4 +19,6 @@
     <color name="riwayatWin">#5fbf44</color>
     <color name="riwayatStatusLose">#616161</color>
     <color name="riwayatBerlangsung">#fc8924</color>
+
+    <color name="detailItemTrendingUp">#5fbf44</color>
 </resources>

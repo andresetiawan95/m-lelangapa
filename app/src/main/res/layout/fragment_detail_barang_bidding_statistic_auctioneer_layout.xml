@@ -57,12 +57,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Harga awal"/>
-        <TextView
-            android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_hargaawal"
+        <LinearLayout
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="Rp. 1.000.000"/>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rp. "/>
+            <TextView
+                android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_hargaawal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.000.000"/>
+        </LinearLayout>
+
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -72,12 +82,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Harga ekspektasi"/>
-        <TextView
-            android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_hargaekspektasi"
+        <LinearLayout
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="Rp. 1.000.000"/>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rp. "/>
+            <TextView
+                android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_hargaekspektasi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.000.000"/>
+        </LinearLayout>
+
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
@@ -92,12 +112,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tawaran saat ini"/>
-        <TextView
-            android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_tawaran"
+        <LinearLayout
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="Rp. 1.000.000"/>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rp. "/>
+            <TextView
+                android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_tawaran"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.000.000"/>
+        </LinearLayout>
+
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -106,11 +136,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Kenaikan"/>
-        <TextView
-            android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_kenaikan"
+        <LinearLayout
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="0.00%"/>
+            android:orientation="horizontal">
+            <ImageView
+                android:src="@drawable/ic_trending_up_64dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/fragment_detail_barang_bidding_statistic_auctioneer_kenaikan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/detailItemTrendingUp"/>
+        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

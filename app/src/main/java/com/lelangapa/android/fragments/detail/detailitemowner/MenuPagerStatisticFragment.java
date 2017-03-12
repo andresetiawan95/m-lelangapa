@@ -83,7 +83,7 @@ public class MenuPagerStatisticFragment extends Fragment {
     {
         long hargaAwal_long = Long.parseLong(hargaAwal);
         long hargaTawaran_long = Long.parseLong(hargaTawaran);
-        double lipat = (double) (hargaTawaran_long / hargaAwal_long);
+        double lipat = ((double)hargaTawaran_long / (double)hargaAwal_long);
         String outputKenaikan = df.format(lipat);
         return outputKenaikan;
     }
