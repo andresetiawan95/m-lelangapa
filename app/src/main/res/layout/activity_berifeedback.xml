@@ -7,7 +7,7 @@
     <include
         layout="@layout/toolbar_user_feedback" />
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager_main"
+        android:id="@+id/viewpager_berifeedback"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"  />

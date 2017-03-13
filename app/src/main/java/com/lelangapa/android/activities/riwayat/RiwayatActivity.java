@@ -3,6 +3,7 @@ package com.lelangapa.android.activities.riwayat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.fragments.riwayat.RiwayatFragment;
@@ -54,4 +55,11 @@ public class RiwayatActivity extends AppCompatActivity {
     /*
     * Setup fragment method end here
     * */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            super.onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
