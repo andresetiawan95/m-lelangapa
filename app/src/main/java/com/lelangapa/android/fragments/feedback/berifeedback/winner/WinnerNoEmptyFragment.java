@@ -1,0 +1,151 @@
+package com.lelangapa.android.fragments.feedback.berifeedback.winner;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
+import com.lelangapa.android.R;
+import com.lelangapa.android.adapters.UserFeedbackAdapter;
+import com.lelangapa.android.apicalls.feedback.berifeedback.BeriFeedbackAPI;
+import com.lelangapa.android.apicalls.singleton.RequestController;
+import com.lelangapa.android.decorations.DividerItemDecoration;
+import com.lelangapa.android.interfaces.DataReceiver;
+import com.lelangapa.android.interfaces.OnItemClickListener;
+import com.lelangapa.android.listeners.RecyclerItemClickListener;
+import com.lelangapa.android.resources.FeedbackResources;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+/**
+ * Created by andre on 14/03/17.
+ */
+
+public class WinnerNoEmptyFragment extends Fragment {
+    private ArrayList<FeedbackResources> listWinnerFeedback;
+    private String userID;
+    private UserFeedbackAdapter userFeedbackAdapter;
+    private DataReceiver dataFeedbackReceived;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView_winnerFeedback;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setDataFeedbackReceived();
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View view = inflater.inflate(R.layout.fragment_user_berifeedback_winner_noempty_layout, container, false);
+        initializeViews(view);
+        setSwipeRefreshLayoutProperties();
+        setRecyclerViewAdapter();
+        setRecyclerViewProperties();
+        return view;
+    }
+
+    private void initializeViews(View view)
+    {
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_berifeedback_winner_noempty_swipeRefreshLayout);
+        recyclerView_winnerFeedback = (RecyclerView) view.findViewById(R.id.fragment_berifeedback_winner_noempty_recyclerview);
+    }
+    private void setSwipeRefreshLayoutProperties()
+    {
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_orange_dark);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getAuctioneerBeriFeedbackList();
+            }
+        });
+    }
+    public void setUserID(String userID)
+    {
+        this.userID = userID;
+    }
+    public void setListWinnerFeedback(ArrayList<FeedbackResources> list)
+    {
+        this.listWinnerFeedback = list;
+    }
+    private void setRecyclerViewAdapter()
+    {
+        userFeedbackAdapter = new UserFeedbackAdapter(getActivity(), listWinnerFeedback);
+    }
+    private void setRecyclerViewProperties()
+    {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
+            @Override
+            public boolean canScrollVertically() { return false; }
+        };
+        recyclerView_winnerFeedback.setLayoutManager(layoutManager);
+        recyclerView_winnerFeedback.setItemAnimator(new DefaultItemAnimator());
+        recyclerView_winnerFeedback.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
+        recyclerView_winnerFeedback.setAdapter(userFeedbackAdapter);
+        recyclerView_winnerFeedback.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_winnerFeedback, new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
+
+    }
+    private void setDataFeedbackReceived()
+    {
+        dataFeedbackReceived = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                String response = output.toString();
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    String statusResponse = jsonResponse.getString("status");
+                    if (statusResponse.equals("success"))
+                    {
+                        JSONArray jsonResponseArray = jsonResponse.getJSONArray("data");
+                        listWinnerFeedback.clear();
+                        for (int i=0;i<jsonResponseArray.length();i++)
+                        {
+                            JSONObject jsonArrayObject = jsonResponseArray.getJSONObject(i);
+                            FeedbackResources feedbackResources = new FeedbackResources();
+                            feedbackResources.setIdRatinglogs(jsonArrayObject.getString("id_ratinglogs_return"));
+                            feedbackResources.setIdItem(jsonArrayObject.getString("id_item_return"));
+                            feedbackResources.setIdUser(jsonArrayObject.getString("id_user_winner_return"));
+                            feedbackResources.setNamaUser(jsonArrayObject.getString("nama_user_winner"));
+                            feedbackResources.setStatusRating(jsonArrayObject.getBoolean("status_rating_from_auctioneer_return"));
+                            feedbackResources.setNamaItem(jsonArrayObject.getString("nama_item_return"));
+                            feedbackResources.setBidTime(jsonArrayObject.getInt("bid_time_item_return"));
+                            feedbackResources.setStatusUser("winner");
+                            listWinnerFeedback.add(feedbackResources);
+                        }
+                        userFeedbackAdapter.updateDataset(listWinnerFeedback);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+    private void getAuctioneerBeriFeedbackList()
+    {
+        BeriFeedbackAPI.GetFeedbackWinnerList feedbackWinnerList =
+                BeriFeedbackAPI.instanceFeedbackWinner(userID, dataFeedbackReceived);
+        RequestController.getInstance(getActivity()).addToRequestQueue(feedbackWinnerList);
+    }
+}
