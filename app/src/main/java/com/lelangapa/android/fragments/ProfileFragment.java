@@ -19,6 +19,7 @@ import com.lelangapa.android.activities.feedback.berifeedback.BeriFeedbackActivi
 import com.lelangapa.android.activities.profile.EditAlamatActivity;
 import com.lelangapa.android.activities.profile.EditPasswordActivity;
 import com.lelangapa.android.activities.profile.EditProfileActivity;
+import com.lelangapa.android.activities.profile.UserChatActivity;
 import com.lelangapa.android.activities.riwayat.RiwayatActivity;
 import com.lelangapa.android.adapters.UserProfileAdapter;
 import com.lelangapa.android.decorations.DividerItemDecoration;
@@ -68,31 +69,35 @@ public class ProfileFragment extends Fragment {
         userProfileRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), userProfileRecyclerView, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if(position==1){
+                if(position==0){
+                    Intent intent = new Intent(getActivity(), UserChatActivity.class);
+                    startActivity(intent);
+                }
+                else if(position==1){
                     Intent intent = new Intent(getActivity(), UserGeraiActivity.class);
                     startActivity(intent);
                 }
-                if(position==2){
+                else if(position==2){
                     Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                     startActivity(intent);
                 }
-                if (position==3){
+                else if (position==3){
                     Intent intent = new Intent(getActivity(), EditAlamatActivity.class);
                     startActivity(intent);
                 }
-                if (position==4){
+                else if (position==4){
                     Intent intent = new Intent(getActivity(), EditPasswordActivity.class);
                     startActivity(intent);
                 }
-                if (position==5){
+                else if (position==5){
                     Intent intent = new Intent(getActivity(), FavoriteListActivity.class);
                     startActivity(intent);
                 }
-                if (position==6){
+                else if (position==6){
                     Intent intent = new Intent(getActivity(), RiwayatActivity.class);
                     startActivity(intent);
                 }
-                if (position==7){
+                else if (position==7){
                     Intent intent = new Intent(getActivity(), BeriFeedbackActivity.class);
                     startActivity(intent);
                 }

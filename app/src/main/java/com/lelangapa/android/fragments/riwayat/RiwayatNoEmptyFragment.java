@@ -1,5 +1,6 @@
 package com.lelangapa.android.fragments.riwayat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.activities.riwayat.detailriwayat.DetailRiwayatActivity;
 import com.lelangapa.android.adapters.UserRiwayatAdapter;
 import com.lelangapa.android.apicalls.riwayat.RiwayatAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
@@ -37,11 +39,15 @@ public class RiwayatNoEmptyFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView_riwayat;
 
+    private Intent intent;
+    private Bundle bundleExtras;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setDataReceiverForRiwayat();
+        setIntentOnDetailRiwayat();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -58,7 +64,10 @@ public class RiwayatNoEmptyFragment extends Fragment {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_user_riwayat_noempty_swipeRefreshLayout);
         recyclerView_riwayat = (RecyclerView) view.findViewById(R.id.fragment_user_riwayat_layout_recyclerview);
     }
-
+    private void setIntentOnDetailRiwayat()
+    {
+        intent = new Intent(getActivity(), DetailRiwayatActivity.class);
+    }
     public void setRiwayatList(ArrayList<RiwayatResources> listRiwayat)
     {
         this.listRiwayat = listRiwayat;
@@ -83,7 +92,14 @@ public class RiwayatNoEmptyFragment extends Fragment {
         recyclerView_riwayat.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_riwayat, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                bundleExtras = new Bundle();
+                bundleExtras.putString("user_id_loggedin", userID);
+                bundleExtras.putString("item_id", listRiwayat.get(position).getIdItem());
+                bundleExtras.putString("item_name", listRiwayat.get(position).getNamaItem());
+                bundleExtras.putString("auctioneer_name", listRiwayat.get(position).getNamaAuctioneer());
+                bundleExtras.putInt("bid_time", listRiwayat.get(position).getBidTime());
+                intent.putExtras(bundleExtras);
+                startActivity(intent);
             }
 
             @Override

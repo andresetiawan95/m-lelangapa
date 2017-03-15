@@ -20,9 +20,23 @@ public class RiwayatAPI {
             }, null);
         }
     }
+    public static class GetRiwayatBidList extends StringRequest {
+        private static final String GETRIWAYATLISTURL = "https://no-api.lelangapa.com/apis/v1/bids/history/list/";
+        public GetRiwayatBidList(String urlParams, final DataReceiver dataReceiver) {
+            super(Method.GET, GETRIWAYATLISTURL + urlParams, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    dataReceiver.dataReceived(response);
+                }
+            }, null);
+        }
+    }
     public static GetRiwayat initializeGetRiwayat(String userID, DataReceiver dataReceiver)
     {
-        GetRiwayat getRiwayat = new GetRiwayat(userID, dataReceiver);
-        return getRiwayat;
+        return new GetRiwayat(userID, dataReceiver);
+    }
+    public static GetRiwayatBidList initializeGetRiwayatBidList(String urlParams, DataReceiver dataReceiver)
+    {
+        return new GetRiwayatBidList(urlParams, dataReceiver);
     }
 }

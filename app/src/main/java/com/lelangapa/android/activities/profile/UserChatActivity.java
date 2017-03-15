@@ -3,6 +3,7 @@ package com.lelangapa.android.activities.profile;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.lelangapa.android.R;
 
@@ -19,5 +20,12 @@ public class UserChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Chat");
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            super.onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

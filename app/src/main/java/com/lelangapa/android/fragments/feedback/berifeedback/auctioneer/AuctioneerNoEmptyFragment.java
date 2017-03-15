@@ -9,13 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.adapters.UserFeedbackAdapter;
 import com.lelangapa.android.apicalls.feedback.berifeedback.BeriFeedbackAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
-import com.lelangapa.android.decorations.DividerItemDecoration;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.OnItemClickListener;
 import com.lelangapa.android.listeners.RecyclerItemClickListener;
@@ -91,7 +89,7 @@ public class AuctioneerNoEmptyFragment extends Fragment {
         };
         recyclerView_auctioneerFeedback.setLayoutManager(layoutManager);
         recyclerView_auctioneerFeedback.setItemAnimator(new DefaultItemAnimator());
-        recyclerView_auctioneerFeedback.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
+        //recyclerView_auctioneerFeedback.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
         recyclerView_auctioneerFeedback.setAdapter(userFeedbackAdapter);
         recyclerView_auctioneerFeedback.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_auctioneerFeedback, new OnItemClickListener() {
             @Override
