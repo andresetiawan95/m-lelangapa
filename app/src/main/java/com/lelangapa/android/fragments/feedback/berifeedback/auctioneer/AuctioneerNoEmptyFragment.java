@@ -1,5 +1,6 @@
 package com.lelangapa.android.fragments.feedback.berifeedback.auctioneer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,11 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.activities.feedback.detailfeedback.DetailBeriFeedbackActivity;
 import com.lelangapa.android.adapters.UserFeedbackAdapter;
 import com.lelangapa.android.apicalls.feedback.berifeedback.BeriFeedbackAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
+import com.lelangapa.android.decorations.DividerItemDecoration;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.OnItemClickListener;
 import com.lelangapa.android.listeners.RecyclerItemClickListener;
@@ -37,10 +41,13 @@ public class AuctioneerNoEmptyFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView_auctioneerFeedback;
 
+    private Intent intent;
+    private Bundle bundleExtras;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        initializeConstants();
         setDataFeedbackReceived();
     }
     @Override
@@ -53,7 +60,10 @@ public class AuctioneerNoEmptyFragment extends Fragment {
         setRecyclerViewProperties();
         return view;
     }
-
+    private void initializeConstants()
+    {
+        intent = new Intent(getActivity(), DetailBeriFeedbackActivity.class);
+    }
     private void initializeViews(View view)
     {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_berifeedback_auctioneer_noempty_swipeRefreshLayout);
@@ -89,12 +99,19 @@ public class AuctioneerNoEmptyFragment extends Fragment {
         };
         recyclerView_auctioneerFeedback.setLayoutManager(layoutManager);
         recyclerView_auctioneerFeedback.setItemAnimator(new DefaultItemAnimator());
-        //recyclerView_auctioneerFeedback.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
+        recyclerView_auctioneerFeedback.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
         recyclerView_auctioneerFeedback.setAdapter(userFeedbackAdapter);
         recyclerView_auctioneerFeedback.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_auctioneerFeedback, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                bundleExtras = new Bundle();
+                bundleExtras.putString("ratinglog_id", listAuctioneerFeedback.get(position).getIdRatinglogs());
+                bundleExtras.putString("user_name", listAuctioneerFeedback.get(position).getNamaUser());
+                bundleExtras.putString("item_name", listAuctioneerFeedback.get(position).getNamaItem());
+                bundleExtras.putString("status_user", listAuctioneerFeedback.get(position).getStatusUser());
+                bundleExtras.putBoolean("status_rating_from_user", listAuctioneerFeedback.get(position).isStatusRating());
+                intent.putExtras(bundleExtras);
+                startActivity(intent);
             }
 
             @Override

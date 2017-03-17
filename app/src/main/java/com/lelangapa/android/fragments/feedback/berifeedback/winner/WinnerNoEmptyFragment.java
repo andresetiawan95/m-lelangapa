@@ -1,5 +1,6 @@
 package com.lelangapa.android.fragments.feedback.berifeedback.winner;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.activities.feedback.detailfeedback.DetailBeriFeedbackActivity;
 import com.lelangapa.android.adapters.UserFeedbackAdapter;
 import com.lelangapa.android.apicalls.feedback.berifeedback.BeriFeedbackAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
@@ -39,10 +41,13 @@ public class WinnerNoEmptyFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView_winnerFeedback;
 
+    private Intent intent;
+    private Bundle bundleExtras;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        initializeConstants();
         setDataFeedbackReceived();
     }
     @Override
@@ -55,7 +60,10 @@ public class WinnerNoEmptyFragment extends Fragment {
         setRecyclerViewProperties();
         return view;
     }
-
+    private void initializeConstants()
+    {
+        intent = new Intent(getActivity(), DetailBeriFeedbackActivity.class);
+    }
     private void initializeViews(View view)
     {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_berifeedback_winner_noempty_swipeRefreshLayout);
@@ -96,7 +104,14 @@ public class WinnerNoEmptyFragment extends Fragment {
         recyclerView_winnerFeedback.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_winnerFeedback, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                bundleExtras = new Bundle();
+                bundleExtras.putString("ratinglog_id", listWinnerFeedback.get(position).getIdRatinglogs());
+                bundleExtras.putString("user_name", listWinnerFeedback.get(position).getNamaUser());
+                bundleExtras.putString("item_name", listWinnerFeedback.get(position).getNamaItem());
+                bundleExtras.putString("status_user", listWinnerFeedback.get(position).getStatusUser());
+                bundleExtras.putBoolean("status_rating_from_user", listWinnerFeedback.get(position).isStatusRating());
+                intent.putExtras(bundleExtras);
+                startActivity(intent);
             }
 
             @Override

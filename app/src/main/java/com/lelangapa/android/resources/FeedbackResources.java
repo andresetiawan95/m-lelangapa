@@ -6,8 +6,9 @@ package com.lelangapa.android.resources;
 
 public class FeedbackResources {
     private String idRatinglogs, idItem, idUser, namaUser, namaItem;
-    private Integer bidTime;
+    private Integer bidTime, rateGiven;
     private String statusUser;
+    private String rateMessage;
 
     private boolean statusRating;
 
@@ -73,5 +74,21 @@ public class FeedbackResources {
 
     public void setStatusUser(String statusUser) {
         this.statusUser = statusUser;
+    }
+
+    public Integer getRateGiven() {
+        return rateGiven;
+    }
+
+    public void setRateGiven(Integer rateGiven) {
+        this.rateGiven = rateGiven;
+    }
+
+    public String getRateMessage() {
+        return rateMessage;
+    }
+
+    public void setRateMessage(String rateMessage) {
+        this.rateMessage = rateMessage;
     }
 }

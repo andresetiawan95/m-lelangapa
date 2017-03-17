@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.fragments.feedback.berifeedback.auctioneer.AuctioneerFragment;
@@ -52,5 +53,12 @@ public class BeriFeedbackActivity extends AppCompatActivity {
         pagerAdapter.addFragment(winnerFragment, "Pemenang");
         pagerAdapter.addFragment(auctioneerFragment, "Pelelang");
         viewPager_beriFeedback.setAdapter(pagerAdapter);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            super.onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
