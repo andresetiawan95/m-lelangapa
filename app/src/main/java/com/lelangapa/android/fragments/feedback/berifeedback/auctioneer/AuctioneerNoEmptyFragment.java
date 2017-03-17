@@ -107,7 +107,11 @@ public class AuctioneerNoEmptyFragment extends Fragment {
                 bundleExtras = new Bundle();
                 bundleExtras.putString("ratinglog_id", listAuctioneerFeedback.get(position).getIdRatinglogs());
                 bundleExtras.putString("user_name", listAuctioneerFeedback.get(position).getNamaUser());
+                bundleExtras.putString("user_id", listAuctioneerFeedback.get(position).getIdUser());
+                bundleExtras.putString("rater_id", userID);
                 bundleExtras.putString("item_name", listAuctioneerFeedback.get(position).getNamaItem());
+                bundleExtras.putString("item_id", listAuctioneerFeedback.get(position).getIdItem());
+                bundleExtras.putInt("item_bid_time", listAuctioneerFeedback.get(position).getBidTime());
                 bundleExtras.putString("status_user", listAuctioneerFeedback.get(position).getStatusUser());
                 bundleExtras.putBoolean("status_rating_from_user", listAuctioneerFeedback.get(position).isStatusRating());
                 intent.putExtras(bundleExtras);

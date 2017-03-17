@@ -107,7 +107,11 @@ public class WinnerNoEmptyFragment extends Fragment {
                 bundleExtras = new Bundle();
                 bundleExtras.putString("ratinglog_id", listWinnerFeedback.get(position).getIdRatinglogs());
                 bundleExtras.putString("user_name", listWinnerFeedback.get(position).getNamaUser());
+                bundleExtras.putString("user_id", listWinnerFeedback.get(position).getIdUser());
+                bundleExtras.putString("rater_id", userID);
                 bundleExtras.putString("item_name", listWinnerFeedback.get(position).getNamaItem());
+                bundleExtras.putString("item_id", listWinnerFeedback.get(position).getIdItem());
+                bundleExtras.putInt("item_bid_time", listWinnerFeedback.get(position).getBidTime());
                 bundleExtras.putString("status_user", listWinnerFeedback.get(position).getStatusUser());
                 bundleExtras.putBoolean("status_rating_from_user", listWinnerFeedback.get(position).isStatusRating());
                 intent.putExtras(bundleExtras);

@@ -56,4 +56,9 @@
     <string name="DETAILFRAGMENT_UNFAVORITE_ALERTDIALOGMSG">Apakah anda ingin menghapus barang ini dari daftar favorit?</string>
     <string name="DETAILFRAGMENT_UNFAVORITE_ALERTDIALOGOKBUTTON">YA</string>
     <string name="DETAILFRAGMENT_UNFAVORITE_ALERTDIALOGCANCELBUTTON">TIDAK</string>
+
+    <string name="BERIFEEDBACK_ALERTDIALOGTITLE">Simpan Feedback?</string>
+    <string name="BERIFEEDBACK_ALERTDIALOGMSG">Apakah anda ingin menyimpan feedback yang anda berikan?</string>
+    <string name="BERIFEEDBACK_ALERTDIALOGOKBUTTON">YA</string>
+    <string name="BERIFEEDBACK_ALERTDIALOGCANCELBUTTON">TIDAK</string>
 </resources>
