@@ -18,10 +18,10 @@ import java.util.ArrayList;
  * Created by andre on 14/03/17.
  */
 
-public class UserFeedbackAdapter extends RecyclerView.Adapter<UserFeedbackAdapter.FeedbackViewHolder> {
+public class UserBeriFeedbackAdapter extends RecyclerView.Adapter<UserBeriFeedbackAdapter.FeedbackViewHolder> {
     private Context context;
     private ArrayList<FeedbackResources> listFeedback;
-    public UserFeedbackAdapter(Context context, ArrayList<FeedbackResources> list)
+    public UserBeriFeedbackAdapter(Context context, ArrayList<FeedbackResources> list)
     {
         this.context = context;
         this.listFeedback = list;
@@ -47,7 +47,7 @@ public class UserFeedbackAdapter extends RecyclerView.Adapter<UserFeedbackAdapte
     public FeedbackViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_user_berifeedback_noempty_layout_items, parent, false);
-        return new UserFeedbackAdapter.FeedbackViewHolder(itemView);
+        return new UserBeriFeedbackAdapter.FeedbackViewHolder(itemView);
     }
 
     @Override

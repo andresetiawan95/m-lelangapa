@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.feedback.detailfeedback.DetailBeriFeedbackActivity;
-import com.lelangapa.android.adapters.UserFeedbackAdapter;
+import com.lelangapa.android.adapters.UserBeriFeedbackAdapter;
 import com.lelangapa.android.apicalls.feedback.berifeedback.BeriFeedbackAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.decorations.DividerItemDecoration;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 public class AuctioneerNoEmptyFragment extends Fragment {
     private ArrayList<FeedbackResources> listAuctioneerFeedback;
     private String userID;
-    private UserFeedbackAdapter userFeedbackAdapter;
+    private UserBeriFeedbackAdapter userBeriFeedbackAdapter;
     private DataReceiver dataFeedbackReceived;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView_auctioneerFeedback;
@@ -89,7 +89,7 @@ public class AuctioneerNoEmptyFragment extends Fragment {
     }
     private void setRecyclerViewAdapter()
     {
-        userFeedbackAdapter = new UserFeedbackAdapter(getActivity(), listAuctioneerFeedback);
+        userBeriFeedbackAdapter = new UserBeriFeedbackAdapter(getActivity(), listAuctioneerFeedback);
     }
     private void setRecyclerViewProperties()
     {
@@ -100,7 +100,7 @@ public class AuctioneerNoEmptyFragment extends Fragment {
         recyclerView_auctioneerFeedback.setLayoutManager(layoutManager);
         recyclerView_auctioneerFeedback.setItemAnimator(new DefaultItemAnimator());
         recyclerView_auctioneerFeedback.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
-        recyclerView_auctioneerFeedback.setAdapter(userFeedbackAdapter);
+        recyclerView_auctioneerFeedback.setAdapter(userBeriFeedbackAdapter);
         recyclerView_auctioneerFeedback.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_auctioneerFeedback, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -152,7 +152,7 @@ public class AuctioneerNoEmptyFragment extends Fragment {
                             feedbackResources.setStatusUser("auctioneer");
                             listAuctioneerFeedback.add(feedbackResources);
                         }
-                        userFeedbackAdapter.updateDataset(listAuctioneerFeedback);
+                        userBeriFeedbackAdapter.updateDataset(listAuctioneerFeedback);
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 } catch (JSONException e) {

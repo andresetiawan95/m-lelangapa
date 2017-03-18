@@ -81,12 +81,13 @@
                     android:text="1"/>
             </LinearLayout>
             <RatingBar
+                android:id="@+id/fragment_feedbackanda_noempty_layout_rate_given"
                 android:layout_alignParentRight="true"
                 style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:rating="3"
-                android:isIndicator="false"/>
+                android:isIndicator="true"/>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

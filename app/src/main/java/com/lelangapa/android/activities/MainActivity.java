@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +18,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.activities.favorite.FavoriteListActivity;
+import com.lelangapa.android.activities.feedback.feedbackanda.FeedbackAndaActivity;
 import com.lelangapa.android.activities.profile.UserChatActivity;
 import com.lelangapa.android.activities.search.MainSearchActivity;
 import com.lelangapa.android.fragments.BerandaHomeFragment;
@@ -88,11 +89,11 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem item) {
                 int id = item.getItemId();
                 if (id==R.id.nav_home){
-                    HomeFragment homeFragment = new HomeFragment();
+                    /*HomeFragment homeFragment = new HomeFragment();
                     getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_main_layout, homeFragment)
-                            .commit();
+                            .commit();*/
                 }
                 else if (id==R.id.nav_login) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -126,6 +127,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (id==R.id.nav_gerai){
                     Intent intent = new Intent(MainActivity.this, UserGeraiActivity.class);
+                    startActivity(intent);
+                }
+                else if (id==R.id.nav_favorite){
+                    Intent intent = new Intent(MainActivity.this, FavoriteListActivity.class);
+                    startActivity(intent);
+                }
+                else if (id==R.id.nav_feedback_anda){
+                    Intent intent = new Intent(MainActivity.this, FeedbackAndaActivity.class);
                     startActivity(intent);
                 }
                 //Toast.makeText(getApplicationContext(), item.getItemId(), Toast.LENGTH_SHORT).show();

@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.feedback.detailfeedback.DetailBeriFeedbackActivity;
-import com.lelangapa.android.adapters.UserFeedbackAdapter;
+import com.lelangapa.android.adapters.UserBeriFeedbackAdapter;
 import com.lelangapa.android.apicalls.feedback.berifeedback.BeriFeedbackAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.decorations.DividerItemDecoration;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 public class WinnerNoEmptyFragment extends Fragment {
     private ArrayList<FeedbackResources> listWinnerFeedback;
     private String userID;
-    private UserFeedbackAdapter userFeedbackAdapter;
+    private UserBeriFeedbackAdapter userBeriFeedbackAdapter;
     private DataReceiver dataFeedbackReceived;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView_winnerFeedback;
@@ -89,7 +89,7 @@ public class WinnerNoEmptyFragment extends Fragment {
     }
     private void setRecyclerViewAdapter()
     {
-        userFeedbackAdapter = new UserFeedbackAdapter(getActivity(), listWinnerFeedback);
+        userBeriFeedbackAdapter = new UserBeriFeedbackAdapter(getActivity(), listWinnerFeedback);
     }
     private void setRecyclerViewProperties()
     {
@@ -100,7 +100,7 @@ public class WinnerNoEmptyFragment extends Fragment {
         recyclerView_winnerFeedback.setLayoutManager(layoutManager);
         recyclerView_winnerFeedback.setItemAnimator(new DefaultItemAnimator());
         recyclerView_winnerFeedback.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
-        recyclerView_winnerFeedback.setAdapter(userFeedbackAdapter);
+        recyclerView_winnerFeedback.setAdapter(userBeriFeedbackAdapter);
         recyclerView_winnerFeedback.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_winnerFeedback, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -152,7 +152,7 @@ public class WinnerNoEmptyFragment extends Fragment {
                             feedbackResources.setStatusUser("winner");
                             listWinnerFeedback.add(feedbackResources);
                         }
-                        userFeedbackAdapter.updateDataset(listWinnerFeedback);
+                        userBeriFeedbackAdapter.updateDataset(listWinnerFeedback);
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 } catch (JSONException e) {

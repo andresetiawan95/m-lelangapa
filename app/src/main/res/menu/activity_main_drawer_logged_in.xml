@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
+    <!--<group
         android:id="@+id/activity_main_drawer_loggedin_group_topmenu"
         android:checkableBehavior="single">
         <item
@@ -13,7 +13,7 @@
         <item
             android:id="@+id/nav_kategori"
             android:title="Kategori" />
-    </group>
+    </group>-->
     <group
         android:id="@+id/activity_main_drawer_loggedin_group_usermenu"
         android:checkableBehavior="single">
@@ -28,8 +28,11 @@
             android:id="@+id/nav_gerai"
             android:title="Gerai" />
         <item
-            android:id="@+id/nav_review"
-            android:title="Review" />
+            android:id="@+id/nav_favorite"
+            android:title="Favorit" />
+        <item
+            android:id="@+id/nav_feedback_anda"
+            android:title="Feedback" />
     </group>
     <group
         android:id="@+id/activity_main_drawer_loggedin_group_sessionmenu"

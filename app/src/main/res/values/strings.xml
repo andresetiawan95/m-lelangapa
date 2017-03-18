@@ -23,7 +23,7 @@
     <string name="DUMMY_EMAIL">dummy@lelangkita.com</string>
 
     <!--Gerai Activity-->
-    <string name="GERAI_EMPTY_MSGHEAD">Ups! Sepertinya anda belum melelang apapun</string>
+    <string name="GERAI_EMPTY_MSGHEAD">Gerai lelang anda kosong</string>
     <string name="GERAI_EMPTY_MSGSUBHEAD">Tekan tombol plus dibawah untuk memulai lelang</string>
 
     <!--Detail Activity and Fragment-->
