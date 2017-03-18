@@ -16,6 +16,7 @@ import com.lelangapa.android.R;
 import com.lelangapa.android.activities.UserGeraiActivity;
 import com.lelangapa.android.activities.favorite.FavoriteListActivity;
 import com.lelangapa.android.activities.feedback.berifeedback.BeriFeedbackActivity;
+import com.lelangapa.android.activities.feedback.feedbackanda.FeedbackAndaActivity;
 import com.lelangapa.android.activities.profile.EditAlamatActivity;
 import com.lelangapa.android.activities.profile.EditPasswordActivity;
 import com.lelangapa.android.activities.profile.EditProfileActivity;
@@ -99,6 +100,10 @@ public class ProfileFragment extends Fragment {
                 }
                 else if (position==7){
                     Intent intent = new Intent(getActivity(), BeriFeedbackActivity.class);
+                    startActivity(intent);
+                }
+                else if (position==8){
+                    Intent intent = new Intent(getActivity(), FeedbackAndaActivity.class);
                     startActivity(intent);
                 }
             }
