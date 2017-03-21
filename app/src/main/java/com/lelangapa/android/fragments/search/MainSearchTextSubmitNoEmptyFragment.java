@@ -34,12 +34,13 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_search_textsubmit_layout_noempty, container, false);
         searchResultRecycleView = (RecyclerView) view.findViewById(R.id.fragment_main_search_layout_recyclerview);
         searchAdapter = new MainSearchAdapter(getActivity(), searchResult);
-        RecyclerView.LayoutManager searchLayoutManager = new GridLayoutManager(getActivity(), 2) {
+        RecyclerView.LayoutManager searchLayoutManager = new GridLayoutManager(getActivity(), 2);
+        /*{
             @Override
             public boolean canScrollVertically(){
                 return false;
             }
-        };
+        };*/
         searchResultRecycleView.setLayoutManager(searchLayoutManager);
         searchResultRecycleView.setAdapter(searchAdapter);
         searchResultRecycleView.setItemAnimator(new DefaultItemAnimator());

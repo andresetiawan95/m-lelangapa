@@ -91,10 +91,7 @@ public class FavoriteNoEmptyFragment extends Fragment {
     }
     private void setRecyclerViewProperties()
     {
-        final RecyclerView.LayoutManager upLayoutManager = new GridLayoutManager(getActivity(), 2) {
-            @Override
-            public boolean canScrollVertically() { return false; }
-        };
+        RecyclerView.LayoutManager upLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView_favorite.setLayoutManager(upLayoutManager);
         recyclerView_favorite.setAdapter(favoriteAdapter);
         recyclerView_favorite.setItemAnimator(new DefaultItemAnimator());

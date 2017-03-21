@@ -56,15 +56,11 @@ public class ProfileFragment extends Fragment {
 
         userProfileRecyclerView = (RecyclerView) view.findViewById(R.id.userprofile_recyclerview);
         upAdapter = new UserProfileAdapter(userProfileList);
-        RecyclerView.LayoutManager upLayoutManager = new LinearLayoutManager(getActivity()) {
-            @Override
-            public boolean canScrollVertically(){
-                return false;
-            }
-        };
+        RecyclerView.LayoutManager upLayoutManager = new LinearLayoutManager(getActivity());
         userProfileRecyclerView.setLayoutManager(upLayoutManager);
         userProfileRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
         userProfileRecyclerView.setFocusable(false);
+        //userProfileRecyclerView.setNestedScrollingEnabled(false);
         userProfileRecyclerView.setItemAnimator(new DefaultItemAnimator());
         userProfileRecyclerView.setAdapter(upAdapter);
         userProfileRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), userProfileRecyclerView, new OnItemClickListener() {

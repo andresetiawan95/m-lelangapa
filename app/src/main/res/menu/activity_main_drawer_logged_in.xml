@@ -19,19 +19,24 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_profil"
+            android:icon="@drawable/ic_navdrawer_profile"
             android:title="Profil">
         </item>
         <item
             android:id="@+id/nav_chat"
+            android:icon="@drawable/ic_navdrawer_chat"
             android:title="Chat" />
         <item
             android:id="@+id/nav_gerai"
+            android:icon="@drawable/ic_navdrawer_gerai"
             android:title="Gerai" />
         <item
             android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_navdrawer_favorite"
             android:title="Favorit" />
         <item
             android:id="@+id/nav_feedback_anda"
+            android:icon="@drawable/ic_navdrawer_feedback"
             android:title="Feedback" />
     </group>
     <group
@@ -39,6 +44,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_navdrawer_logout"
             android:title="Logout" />
     </group>
 </menu>

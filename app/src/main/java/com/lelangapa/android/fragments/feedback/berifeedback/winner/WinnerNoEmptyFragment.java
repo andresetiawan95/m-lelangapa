@@ -93,10 +93,11 @@ public class WinnerNoEmptyFragment extends Fragment {
     }
     private void setRecyclerViewProperties()
     {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        /*{
             @Override
             public boolean canScrollVertically() { return false; }
-        };
+        };*/
         recyclerView_winnerFeedback.setLayoutManager(layoutManager);
         recyclerView_winnerFeedback.setItemAnimator(new DefaultItemAnimator());
         recyclerView_winnerFeedback.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));

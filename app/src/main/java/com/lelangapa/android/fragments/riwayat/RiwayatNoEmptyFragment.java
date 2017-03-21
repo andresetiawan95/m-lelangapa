@@ -82,10 +82,7 @@ public class RiwayatNoEmptyFragment extends Fragment {
     }
     private void setRecyclerViewProperties()
     {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
-            @Override
-            public boolean canScrollVertically() { return false; }
-        };
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView_riwayat.setLayoutManager(layoutManager);
         recyclerView_riwayat.setItemAnimator(new DefaultItemAnimator());
         recyclerView_riwayat.setAdapter(riwayatAdapter);

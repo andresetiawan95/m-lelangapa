@@ -35,15 +35,19 @@ public class UserGeraiNoEmptyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_gerai_layout_notempty, container, false);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_user_gerai_layout_recyclerview);
         barangAdapter = new UserGeraiBarangAdapter(getActivity(), dataBarang);
-        RecyclerView.LayoutManager upLayoutManager = new GridLayoutManager(getActivity(), 2) {
+        RecyclerView.LayoutManager upLayoutManager = new GridLayoutManager(getActivity(), 2);
+        /*
+        * {
             @Override
             public boolean canScrollVertically(){
                 return false;
             }
-        };
+        }
+        */
         recyclerView.setLayoutManager(upLayoutManager);
         recyclerView.setAdapter(barangAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {

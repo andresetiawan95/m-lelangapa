@@ -93,10 +93,11 @@ public class AuctioneerNoEmptyFragment extends Fragment {
     }
     private void setRecyclerViewProperties()
     {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        /*{
             @Override
             public boolean canScrollVertically() { return false; }
-        };
+        }*/
         recyclerView_auctioneerFeedback.setLayoutManager(layoutManager);
         recyclerView_auctioneerFeedback.setItemAnimator(new DefaultItemAnimator());
         recyclerView_auctioneerFeedback.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));

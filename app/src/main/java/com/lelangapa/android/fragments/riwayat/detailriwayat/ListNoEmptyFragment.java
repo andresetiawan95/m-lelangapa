@@ -46,10 +46,7 @@ public class ListNoEmptyFragment extends Fragment {
     }
     private void setRecyclerViewProperties()
     {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
-            @Override
-            public boolean canScrollVertically() { return false; }
-        };
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView_biddingList.setLayoutManager(layoutManager);
         recyclerView_biddingList.setItemAnimator(new DefaultItemAnimator());
         recyclerView_biddingList.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
