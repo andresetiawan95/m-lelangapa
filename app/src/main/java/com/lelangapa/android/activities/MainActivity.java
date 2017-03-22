@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.favorite.FavoriteListActivity;
 import com.lelangapa.android.activities.feedback.feedbackanda.FeedbackAndaActivity;
-import com.lelangapa.android.activities.profile.UserChatActivity;
+import com.lelangapa.android.activities.profile.chat.UserChatActivity;
 import com.lelangapa.android.activities.search.MainSearchActivity;
 import com.lelangapa.android.fragments.BerandaHomeFragment;
 import com.lelangapa.android.fragments.CategoryHomeFragment;

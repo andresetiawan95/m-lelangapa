@@ -4,8 +4,14 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.lelangapa.android.interfaces.SocketReceiver;
+import com.lelangapa.android.resources.SocketSSLResources;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -27,9 +33,12 @@ public class BiddingSocket {
 
     public boolean IS_CONNECTED_STATUS = false;
     public boolean IS_JOINED_STATUS = false;
+
+    private SocketSSLResources socketSSLResources;
     public BiddingSocket(Activity activity)
     {
         this.activity = activity;
+        socketSSLResources = new SocketSSLResources(this.activity);
         this.mSocket = createServerSocket();
     }
     public void setSocketConnected(SocketReceiver socketConnected)
@@ -67,8 +76,20 @@ public class BiddingSocket {
             IO.Options options = new IO.Options();
             options.forceNew = false;
             options.reconnection = true;
-            mSocket = IO.socket("http://188.166.179.2:11000", options);
+            options.sslContext = socketSSLResources.getSSLSocketContext();
+            options.hostnameVerifier = socketSSLResources.getHostnameVerifier();
+            mSocket = IO.socket("https://188.166.179.2:15000", options);
         } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
             e.printStackTrace();
         }
         return mSocket;

@@ -1,4 +1,4 @@
-package com.lelangapa.android.activities.profile;
+package com.lelangapa.android.activities.profile.chat;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

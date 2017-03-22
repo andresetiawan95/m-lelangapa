@@ -44,7 +44,7 @@
         </activity>
         <activity
             android:screenOrientation="portrait"
-            android:name=".activities.profile.UserChatActivity">
+            android:name=".activities.profile.chat.UserChatActivity">
         </activity>
         <activity
             android:screenOrientation="portrait"

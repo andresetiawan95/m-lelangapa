@@ -20,7 +20,7 @@ import com.lelangapa.android.activities.feedback.feedbackanda.FeedbackAndaActivi
 import com.lelangapa.android.activities.profile.EditAlamatActivity;
 import com.lelangapa.android.activities.profile.EditPasswordActivity;
 import com.lelangapa.android.activities.profile.EditProfileActivity;
-import com.lelangapa.android.activities.profile.UserChatActivity;
+import com.lelangapa.android.activities.profile.chat.UserChatActivity;
 import com.lelangapa.android.activities.riwayat.RiwayatActivity;
 import com.lelangapa.android.adapters.UserProfileAdapter;
 import com.lelangapa.android.decorations.DividerItemDecoration;
