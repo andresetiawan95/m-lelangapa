@@ -227,23 +227,31 @@ public class DetailFragment extends Fragment {
     public void onPrepareOptionsMenu(Menu menu)
     {
         MenuItem favoriteMenu = menu.findItem(R.id.action_favorite);
+        MenuItem chatFavoriteMenu = menu.findItem(R.id.action_chat_favorite);
         MenuItem unfavoriteMenu = menu.findItem(R.id.action_unfavorite);
+        MenuItem chatUnfavoriteMenu = menu.findItem(R.id.action_chat_unfavorite);
         if (sessionManager.isLoggedIn() && isDoneLoaded)
         {
             if (favoriteID!=null && favoriteID.equals("0"))
             {
                 favoriteMenu.setVisible(true);
+                chatFavoriteMenu.setVisible(true);
                 unfavoriteMenu.setVisible(false);
+                chatUnfavoriteMenu.setVisible(false);
             }
             else if (favoriteID!=null && !favoriteID.equals("0"))
             {
                 favoriteMenu.setVisible(false);
+                chatFavoriteMenu.setVisible(false);
                 unfavoriteMenu.setVisible(true);
+                chatUnfavoriteMenu.setVisible(true);
             }
         }
         else {
             favoriteMenu.setVisible(false);
+            chatFavoriteMenu.setVisible(false);
             unfavoriteMenu.setVisible(false);
+            chatUnfavoriteMenu.setVisible(false);
         }
     }
 

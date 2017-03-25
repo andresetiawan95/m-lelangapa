@@ -6,20 +6,34 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.fragments.profile.chat.chatlist.UserChatFragment;
 
 /**
  * Created by andre on 27/11/16.
  */
 
 public class UserChatActivity extends AppCompatActivity {
+    private UserChatFragment userChatFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        initializeFragment();
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Chat");
+        setupFragment();
+    }
+    private void initializeFragment()
+    {
+        userChatFragment = new UserChatFragment();
+    }
+    private void setupFragment()
+    {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_user_chat_layout, userChatFragment)
+                .commit();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

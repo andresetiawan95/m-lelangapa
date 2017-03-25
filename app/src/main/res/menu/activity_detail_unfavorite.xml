@@ -5,4 +5,9 @@
         android:icon="@drawable/ic_action_unfavorite_toggle"
         android:title="@string/action_unfavorite"
         app:showAsAction="always" />
+    <item android:id="@+id/action_chat_unfavorite"
+        android:icon="@drawable/ic_action_chat_24dp"
+        android:title="@string/action_chat"
+        app:showAsAction="always"
+        />
 </menu>

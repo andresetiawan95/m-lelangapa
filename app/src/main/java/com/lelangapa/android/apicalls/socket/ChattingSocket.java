@@ -3,8 +3,14 @@ package com.lelangapa.android.apicalls.socket;
 import android.app.Activity;
 
 import com.lelangapa.android.interfaces.SocketReceiver;
+import com.lelangapa.android.resources.SocketSSLResources;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -25,9 +31,11 @@ public class ChattingSocket {
     private SocketReceiver socketSendStatus;
 
     public boolean IS_JOINED_ROOM_STATUS;
+    private SocketSSLResources socketSSLResources;
     public ChattingSocket(Activity activity)
     {
         this.activity = activity;
+        socketSSLResources = new SocketSSLResources(this.activity);
         createServerSocket();
     }
     public void setSocketOnNewMessageReceived(SocketReceiver receiver)
@@ -55,9 +63,21 @@ public class ChattingSocket {
             IO.Options options = new IO.Options();
             options.forceNew = false;
             options.reconnection = true;
-            mSocket = IO.socket("http://chatting.lelangapa.com/", options);
+            options.sslContext = socketSSLResources.getSSLSocketContext();
+            options.hostnameVerifier = socketSSLResources.getHostnameVerifier();
+            mSocket = IO.socket("https://188.166.179.2:12000", options);
         }
         catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
             e.printStackTrace();
         }
     }

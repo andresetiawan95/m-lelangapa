@@ -47,7 +47,7 @@ public class ProfileFragment extends Fragment {
 
         SessionManager sessionManager = new SessionManager(getActivity());
         if (sessionManager.isLoggedIn()){
-            HashMap<String, String> userProfile = sessionManager.getSession();
+            HashMap<String, String> userProfile = SessionManager.getSessionStatic();
             TextView userProfileName = (TextView) view.findViewById(R.id.fragment_userprofile_user_name);
             TextView userProfileEmail = (TextView) view.findViewById(R.id.fragment_userprofile_user_email);
             userProfileName.setText(userProfile.get(sessionManager.getKEY_NAME()));
