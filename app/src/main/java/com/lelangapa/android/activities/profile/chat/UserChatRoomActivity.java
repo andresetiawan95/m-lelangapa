@@ -48,4 +48,8 @@ public class UserChatRoomActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    public void changeActionBarTitle(String title)
+    {
+        getSupportActionBar().setTitle(title);
+    }
 }

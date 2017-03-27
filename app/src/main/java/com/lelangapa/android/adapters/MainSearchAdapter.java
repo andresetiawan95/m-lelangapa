@@ -51,6 +51,9 @@ public class MainSearchAdapter extends RecyclerView.Adapter<MainSearchAdapter.My
         {
             Picasso.with(context).load(result.getUrlgambarbarang()).into(viewHolder.gambarbarang);
         }
+        else {
+            viewHolder.gambarbarang.setImageResource(R.drawable.ic_insert_photo_grey_128dp);
+        }
         viewHolder.namabarang.setText(result.getNamabarang());
         viewHolder.user.setText(result.getNamaauctioneer());
         viewHolder.harga.setText(result.getHargaawal());

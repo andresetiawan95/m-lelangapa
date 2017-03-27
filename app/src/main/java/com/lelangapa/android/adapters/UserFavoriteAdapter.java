@@ -69,6 +69,9 @@ public class UserFavoriteAdapter extends RecyclerView.Adapter<UserFavoriteAdapte
         if (itemFavorite.getImageURLItem() != null) {
             Picasso.with(context).load(itemFavorite.getImageURLItem()).into(viewHolder.imageView_imageItem);
         }
+        else {
+            viewHolder.imageView_imageItem.setImageResource(R.drawable.ic_insert_photo_grey_128dp);
+        }
         viewHolder.textView_judulItem.setText(itemFavorite.getNamaItemFavorite());
         viewHolder.textView_user.setText(itemFavorite.getNamaUserAuctioneerItemFavorite());
         viewHolder.imageView_trash.setOnClickListener(new View.OnClickListener() {
