@@ -62,4 +62,6 @@
     <string name="BERIFEEDBACK_ALERTDIALOGMSG">Apakah anda ingin menyimpan feedback yang anda berikan?</string>
     <string name="BERIFEEDBACK_ALERTDIALOGOKBUTTON">YA</string>
     <string name="BERIFEEDBACK_ALERTDIALOGCANCELBUTTON">TIDAK</string>
+
+    <string name="CHATMESSAGE_HINT">Ketik pesan...</string>
 </resources>

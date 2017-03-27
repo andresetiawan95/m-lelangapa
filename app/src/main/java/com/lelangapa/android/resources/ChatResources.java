@@ -5,8 +5,8 @@ package com.lelangapa.android.resources;
  */
 
 public class ChatResources {
-    public static final int TYPE_MESSAGE_SENT = 0;
-    public static final int TYPE_MESSAGE_RECEIVED = 1;
+    public static final int TYPE_MESSAGE_SENT = 0;  //untuk pesan yang dikirim pengguna ke pengguna lain
+    public static final int TYPE_MESSAGE_RECEIVED = 1;  //untuk pesan yang diterima pengguna dari pengguna lain
 
     private int chatType;
     private String idUser, namaUser, chatRoom, chatMessage;

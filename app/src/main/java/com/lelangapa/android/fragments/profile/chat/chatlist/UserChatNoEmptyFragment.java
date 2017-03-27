@@ -85,6 +85,11 @@ public class UserChatNoEmptyFragment extends Fragment {
         recyclerView_roomList.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_roomList, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                bundleExtras = new Bundle();
+                bundleExtras.putString("your_user_id", userID);
+                bundleExtras.putString("your_friend_user_id", listChatRoom.get(position).getIdUser());
+                bundleExtras.putString("your_friend_name", listChatRoom.get(position).getNamaUser());
+                intent.putExtras(bundleExtras);
                 startActivity(intent);
             }
 

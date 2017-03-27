@@ -1,8 +1,10 @@
 package com.lelangapa.android.activities.detail;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.lelangapa.android.R;
@@ -47,6 +49,7 @@ public class DetailBarangActivity extends AppCompatActivity {
             {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_detail_barang_layout, detailItemAuctioneerFragment)
+                        .addToBackStack(null)
                         .commit();
             }
             else
@@ -86,9 +89,33 @@ public class DetailBarangActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
-            super.onBackPressed();
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed(){
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        Log.d("BACKSTACK", Integer.toString(count));
+        if (count == 1) {
+            finish();
+            //additional code
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
+    }
+
+    public void changeActionBarTitle(String title)
+    {
+        getSupportActionBar().setTitle(title);
+    }
+    public void addFragmentStack(Fragment fragment, String title)
+    {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_detail_barang_layout, fragment)
+                .addToBackStack(null)
+                .commit();
+        changeActionBarTitle(title);
+    }
 }

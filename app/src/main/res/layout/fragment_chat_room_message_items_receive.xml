@@ -17,7 +17,7 @@
             android:orientation="vertical"
             android:background="@color/backgroundLayoutWhiteColor">
             <TextView
-                android:id="@+id/fragment_chat_room_message_name"
+                android:id="@+id/fragment_chat_room_message_receive_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nama User"
