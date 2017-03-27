@@ -18,7 +18,7 @@ import com.lelangapa.android.activities.detail.DetailBarangActivity;
 import com.lelangapa.android.apicalls.detail.DetailItemAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.apicalls.socket.BiddingSocket;
-import com.lelangapa.android.fragments.detail.detailtawaran.DetailTawaranFragment;
+import com.lelangapa.android.fragments.detail.detailtawaran.DaftarTawaranFragment;
 import com.lelangapa.android.fragments.detail.ownerdialogfragment.ListBidderDialogFragment;
 import com.lelangapa.android.interfaces.AuctioneerResponseReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
@@ -739,7 +739,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private void showFragmentTawaran()
     {
         isChangeTawaranFragment = true;
-        DetailTawaranFragment tawaranFragment = new DetailTawaranFragment();
+        DaftarTawaranFragment tawaranFragment = new DaftarTawaranFragment();
         tawaranFragment.setSocket(socketBinder);
         ((DetailBarangActivity) getActivity()).addFragmentStack(tawaranFragment, "Daftar Tawaran");
         /*getFragmentManager().beginTransaction()
