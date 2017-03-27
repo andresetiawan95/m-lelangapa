@@ -14,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.activities.detail.DetailBarangActivity;
 import com.lelangapa.android.apicalls.detail.DetailItemAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.apicalls.socket.BiddingSocket;
+import com.lelangapa.android.fragments.detail.detailtawaran.DetailTawaranFragment;
 import com.lelangapa.android.fragments.detail.ownerdialogfragment.ListBidderDialogFragment;
 import com.lelangapa.android.interfaces.AuctioneerResponseReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
@@ -69,6 +71,9 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private FragmentManager fragmentManager;
 
+    //nyoba
+    private boolean isChangeTawaranFragment = false;
+
     public DetailItemAuctioneerFragment()
     {
         initializeFragments();
@@ -82,9 +87,10 @@ public class DetailItemAuctioneerFragment extends Fragment {
     {
         super.onCreate(savedInstanceState);
         initializeConstants();
-        initializeDataReceiver();
+
         initializeSocketReceiver();
         initializeSocket();
+        initializeDataReceiver();
     }
 
     @Override
@@ -137,7 +143,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         onPauseActivity = false;
         biddingAlreadyDone = false;
         activityContext = getActivity();
-        fragmentManager = getFragmentManager();
+        fragmentManager = getChildFragmentManager();
     }
     private void initializeFragments()
     {
@@ -214,8 +220,11 @@ public class DetailItemAuctioneerFragment extends Fragment {
             @Override
             public void run() {
                 Log.v("Refresh post status", "Refresh post jalan");
-                swipeRefreshLayout.setRefreshing(true);
-                getDetailItem(itemID);
+                if (!isChangeTawaranFragment)
+                {
+                    swipeRefreshLayout.setRefreshing(true);
+                    getDetailItem(itemID);
+                }
             }
         });
     }
@@ -289,6 +298,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
                         setDataToChildFragments(detailItem, itemBidResources);
                         setChildFragments(detailItem.getItembidstatus());
                     }
+                    ((DetailBarangActivity) getActivity()).changeActionBarTitle(detailItem.getNamabarang());
                 }
             }
         };
@@ -388,7 +398,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
             @Override
             public void responseDaftarTawaranReceived()
             {
-                showCustomDialog();
+                //showCustomDialog();
+                showFragmentTawaran();
             }
             @Override
             public void responseWinnerChosenReceived(boolean status, String idBid) {
@@ -441,6 +452,12 @@ public class DetailItemAuctioneerFragment extends Fragment {
     }
     private void onPauseConfiguration()
     {
+        //nyoba
+        if(isChangeTawaranFragment && detailItem.getItembidstatus() == 1)
+        {
+            waktuBidStartedFragment.stopCountDownTimer();
+        }
+
         if (biddingSocket != null && biddingSocket.IS_JOINED_STATUS)
         {
             if (socketBinder.connected())
@@ -483,6 +500,13 @@ public class DetailItemAuctioneerFragment extends Fragment {
             waktuBidStartedFragment.setDetailItem(detailItem);
             waktuBidStartedFragment.setTriggerFinished(timeTriggerReceived);
             waktuBidStartedFragment.setServerTime(serverDateTimeMillisecond);
+
+            //nyoba
+            if (isChangeTawaranFragment)
+            {
+                waktuBidStartedFragment.cancelAndStartNewTimerWhenFragmentPaused();
+                isChangeTawaranFragment = false;
+            }
         }
         else if (detailItem.getItembidstatus() == -1)
         {
@@ -710,5 +734,17 @@ public class DetailItemAuctioneerFragment extends Fragment {
         FragmentManager fm = getFragmentManager();
         ListBidderDialogFragment listBidderDialogFragment = ListBidderDialogFragment.newInstance("Lalala");
         listBidderDialogFragment.show(fm, "fragment_lalala");
+    }
+
+    private void showFragmentTawaran()
+    {
+        isChangeTawaranFragment = true;
+        DetailTawaranFragment tawaranFragment = new DetailTawaranFragment();
+        tawaranFragment.setSocket(socketBinder);
+        ((DetailBarangActivity) getActivity()).addFragmentStack(tawaranFragment, "Daftar Tawaran");
+        /*getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_detail_barang_layout, tawaranFragment)
+                .addToBackStack(null)
+                .commit();*/
     }
 }
