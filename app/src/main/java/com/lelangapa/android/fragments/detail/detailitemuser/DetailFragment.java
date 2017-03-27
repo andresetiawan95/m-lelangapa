@@ -3,6 +3,7 @@ package com.lelangapa.android.fragments.detail.detailitemuser;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.activities.detail.DetailBarangActivity;
+import com.lelangapa.android.activities.profile.chat.UserChatRoomActivity;
 import com.lelangapa.android.apicalls.detail.DetailItemAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.apicalls.socket.BiddingSocket;
@@ -78,6 +81,9 @@ public class DetailFragment extends Fragment {
 
     private ArrayList<BiddingResources> biddingPeringkatList;
 
+    private Bundle bundleExtras;
+    private Intent intentChatActivity;
+
     private boolean onPauseWhenSocketAlreadyConnected = false, onPauseActivity = false, biddingAlreadyDone = false, isDoneLoaded=false;
 
     @Override
@@ -85,6 +91,9 @@ public class DetailFragment extends Fragment {
     {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        intentChatActivity = new Intent(getActivity(), UserChatRoomActivity.class);
+
         detailItem = new DetailItemResources();
         sessionManager = new SessionManager(getActivity());
         session = sessionManager.getSession();
@@ -268,6 +277,13 @@ public class DetailFragment extends Fragment {
             unfavoriteMenuToggler.showAlertDialog();
             //Toast.makeText(getActivity(), "Unfavorite", Toast.LENGTH_SHORT).show();
         }
+
+        if (menuItem.getItemId() == R.id.action_chat_favorite ||
+                menuItem.getItemId() == R.id.action_chat_unfavorite)
+        {
+            intentToChatActivity();
+        }
+
         return super.onOptionsItemSelected(menuItem);
     }
 
@@ -340,6 +356,7 @@ public class DetailFragment extends Fragment {
                         isDoneLoaded = true;
                         loadFavoriteStatus();
                     }
+                    ((DetailBarangActivity) getActivity()).changeActionBarTitle(detailItem.getNamabarang());
                 }
             }
         };
@@ -851,5 +868,15 @@ public class DetailFragment extends Fragment {
     {
         getActivity().finish();
         getActivity().startActivity(getActivity().getIntent());
+    }
+
+    private void intentToChatActivity()
+    {
+        bundleExtras = new Bundle();
+        bundleExtras.putString("your_user_id", session.get(sessionManager.getKEY_ID()));
+        bundleExtras.putString("your_friend_user_id", detailItem.getIdauctioneer());
+        bundleExtras.putString("your_friend_name", detailItem.getNamaauctioneer());
+        intentChatActivity.putExtras(bundleExtras);
+        startActivity(intentChatActivity);
     }
 }
