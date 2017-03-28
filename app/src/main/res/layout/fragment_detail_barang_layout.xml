@@ -30,6 +30,11 @@
                 android:layout_marginBottom="7dp">
             </FrameLayout>
             <FrameLayout
+                android:id="@+id/fragment_detail_barang_auctioneer_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </FrameLayout>
+            <FrameLayout
                 android:id="@+id/fragment_detail_barang_bidding_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,12 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="7dp">
             </FrameLayout>
-            <FrameLayout
-                android:id="@+id/fragment_detail_barang_auctioneer_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp">
-            </FrameLayout>
+
         </LinearLayout>
     </ScrollView>
 

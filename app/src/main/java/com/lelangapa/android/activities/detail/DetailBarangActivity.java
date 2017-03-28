@@ -98,7 +98,7 @@ public class DetailBarangActivity extends AppCompatActivity {
     public void onBackPressed(){
         int count = getSupportFragmentManager().getBackStackEntryCount();
         Log.d("BACKSTACK", Integer.toString(count));
-        if (count == 1) {
+        if (count <= 1) {
             finish();
             //additional code
         } else {
