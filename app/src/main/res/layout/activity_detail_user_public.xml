@@ -35,20 +35,55 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-            <ImageView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                android:src="@color/colorAccent"
                 android:scaleType="fitXY"
-                app:layout_collapseMode="parallax"/>
+                app:layout_collapseMode="none">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/colorAccent"
+                    android:scaleType="fitXY"/>
+                <LinearLayout
+                    android:layout_marginTop="?attr/actionBarSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    app:layout_collapseMode="none">
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src ="@drawable/ic_noavatar"/>
+                    <TextView
+                        android:id="@+id/activity_detail_user_public_name"
+                        android:layout_marginLeft="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="User"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"
+                        android:textSize="16dp"/>
+                </LinearLayout>
+            </RelativeLayout>
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/activity_detail_user_public_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+                <TextView
+                    android:id="@+id/activity_detail_user_public_toolbar_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Detail User"
+                    android:textAppearance="?android:textAppearance"
+                    android:textSize="16dp"/>
+            </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 

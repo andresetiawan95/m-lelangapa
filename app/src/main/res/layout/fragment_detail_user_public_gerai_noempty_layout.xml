@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+    <android.support.v4.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <com.lelangapa.android.modifiedviews.SearchEditText
+            android:id="@+id/fragment_detail_user_public_gerai_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cari barang..."
+            android:gravity="left|center"
+            android:padding="10dp"
+            android:drawablePadding="22dp"
+            android:drawableLeft="@drawable/ic_search_black_24dp"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:background="@color/backgroundLayoutWhiteColor">
+
+        </com.lelangapa.android.modifiedviews.SearchEditText>
+        <!--<SearchView
+            android:id="@+id/fragment_detail_user_public_gerai_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true">
+        </SearchView>-->
+    </android.support.v4.widget.NestedScrollView>
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_detail_user_public_gerai_items"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>

@@ -10,11 +10,11 @@
         <LinearLayout
             android:orientation="vertical" android:layout_width="match_parent"
             android:layout_height="match_parent">-->
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/fragment_user_gerai_layout_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical" />
-        <!--</LinearLayout>
-    </android.support.v4.widget.NestedScrollView>-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_detail_user_public_riwayat_layout_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+    <!--</LinearLayout>
+</android.support.v4.widget.NestedScrollView>-->
 </LinearLayout>

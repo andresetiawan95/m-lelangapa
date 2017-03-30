@@ -10,12 +10,14 @@ import android.widget.TextView;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.userpublic.DetailUserPublicActivity;
+import com.lelangapa.android.resources.DetailItemResources;
 
 /**
  * Created by Andre on 12/26/2016.
  */
 
 public class DetailAuctioneerFragment extends Fragment {
+    private DetailItemResources detailItemResources;
     private String auctioneerID, auctioneerName;
     private TextView textView_namaAuctioneer;
     //private Button button_checkProfile;
@@ -42,6 +44,8 @@ public class DetailAuctioneerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DetailUserPublicActivity.class);
+                intent.putExtra("id_user", auctioneerID);
+                intent.putExtra("nama_user", auctioneerName);
                 startActivity(intent);
             }
         };
@@ -52,6 +56,10 @@ public class DetailAuctioneerFragment extends Fragment {
     {
         this.auctioneerID = auctioneerID;
         this.auctioneerName = auctioneerName;
+    }
+    public void setAuctioneerInfo(DetailItemResources detailItemResources)
+    {
+        this.detailItemResources = detailItemResources;
     }
     private void setTextViewAuctioneerInformation()
     {

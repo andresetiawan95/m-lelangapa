@@ -1,4 +1,4 @@
-package com.lelangapa.android.fragments.userpublic;
+package com.lelangapa.android.fragments.userpublic.info;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,11 +12,11 @@ import com.lelangapa.android.R;
  * Created by andre on 28/03/17.
  */
 
-public class UserPublicGeraiEmptyFragment extends Fragment {
+public class UserPublicInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_detail_user_public_gerai_layout_empty, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_user_public_info_layout, container, false);
         return view;
     }
 }

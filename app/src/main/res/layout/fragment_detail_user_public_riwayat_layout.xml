@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:id="@+id/fragment_detail_user_public_gerai_layout">
+    android:id="@+id/fragment_detail_user_public_riwayat_layout">
     <ProgressBar
-        android:id="@+id/fragment_detail_user_public_gerai_layout_progress_bar"
+        android:id="@+id/fragment_detail_user_public_riwayat_layout_progress_bar"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="center"/>

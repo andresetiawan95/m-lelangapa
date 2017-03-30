@@ -1,4 +1,4 @@
-package com.lelangapa.android.fragments.userpublic;
+package com.lelangapa.android.fragments.userpublic.riwayat;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 import com.lelangapa.android.R;
 
 /**
- * Created by andre on 28/03/17.
+ * Created by andre on 30/03/17.
  */
 
-public class UserPublicFeedbackFragment extends Fragment {
+public class EmptyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_detail_user_public_feedback_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_user_public_riwayat_empty_layout, container, false);
         return view;
     }
 }

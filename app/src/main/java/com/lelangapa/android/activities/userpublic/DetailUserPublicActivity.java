@@ -8,11 +8,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
 
 import com.lelangapa.android.R;
-import com.lelangapa.android.fragments.userpublic.UserPublicFeedbackFragment;
-import com.lelangapa.android.fragments.userpublic.UserPublicGeraiFragment;
-import com.lelangapa.android.fragments.userpublic.UserPublicInfoFragment;
+import com.lelangapa.android.fragments.userpublic.feedback.UserPublicFeedbackFragment;
+import com.lelangapa.android.fragments.userpublic.info.UserPublicInfoFragment;
+import com.lelangapa.android.fragments.userpublic.riwayat.MainFragment;
 import com.lelangapa.android.viewpagers.UserPublicViewPagerAdapter;
 
 /**
@@ -22,30 +24,46 @@ import com.lelangapa.android.viewpagers.UserPublicViewPagerAdapter;
 public class DetailUserPublicActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private Toolbar toolbar;
+    private TextView textView_toolbar, textView_namaUser;
 
+    private AppBarLayout appBarLayout;
+    private boolean isShow = false;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         initializeViews();
+        setupViews();
         setupViewPager();
         setupTabLayoutAndViewpager();
     }
     private void initializeViews()
     {
         setContentView(R.layout.activity_detail_user_public);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_detail_user_public_toolbar);
+        appBarLayout = (AppBarLayout) findViewById(R.id.activity_detail_user_public_appbar);
+        toolbar = (Toolbar) findViewById(R.id.activity_detail_user_public_toolbar);
         tabLayout = (TabLayout) findViewById(R.id.activity_detail_user_public_tablayout);
         viewPager = (ViewPager) findViewById(R.id.activity_detail_user_public_viewpager);
+        textView_toolbar = (TextView) findViewById(R.id.activity_detail_user_public_toolbar_textview);
+        textView_namaUser = (TextView) findViewById(R.id.activity_detail_user_public_name);
         setSupportActionBar(toolbar);
+        textView_toolbar.setVisibility(View.GONE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(" ");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.activity_detail_user_public_collapsing_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
         //collapsingToolbarLayout.setTitle("Detail User");
 
         collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.backgroundLayoutWhiteColor));
         collapsedToolbarForNotShowingTitleWhenExpanded(collapsingToolbarLayout);
         //collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this,R.color.backgroundLayoutWhiteColor));
+    }
+    private void setupViews()
+    {
+        String name = getIntent().getStringExtra("nama_user");
+        textView_namaUser.setText(name);
+        textView_toolbar.setText(name);
     }
     private void setupTabLayoutAndViewpager()
     {
@@ -54,7 +72,8 @@ public class DetailUserPublicActivity extends AppCompatActivity {
     private void setupViewPager()
     {
         UserPublicViewPagerAdapter userPublicViewPagerAdapter = new UserPublicViewPagerAdapter(getSupportFragmentManager());
-        userPublicViewPagerAdapter.addFragment(new UserPublicGeraiFragment(), "Gerai");
+        userPublicViewPagerAdapter.addFragment(new com.lelangapa.android.fragments.userpublic.gerai.MainFragment(), "Gerai");
+        userPublicViewPagerAdapter.addFragment(new MainFragment(), "Riwayat");
         userPublicViewPagerAdapter.addFragment(new UserPublicFeedbackFragment(), "Feedback");
         userPublicViewPagerAdapter.addFragment(new UserPublicInfoFragment(), "Info");
 //        /userPublicViewPagerAdapter.addFragment(null, "Info");
@@ -62,9 +81,9 @@ public class DetailUserPublicActivity extends AppCompatActivity {
     }
     private void collapsedToolbarForNotShowingTitleWhenExpanded(final CollapsingToolbarLayout collapsingToolbarLayout)
     {
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.activity_detail_user_public_appbar);
+       // AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.activity_detail_user_public_appbar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = false;
+            //boolean isShow = false;
             int scrollRange = -1;
 
             @Override
@@ -73,13 +92,23 @@ public class DetailUserPublicActivity extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.setTitle("Title");
+                    textView_toolbar.setVisibility(View.VISIBLE);
+                    //collapsingToolbarLayout.setTitle(" ");
                     isShow = true;
                 } else if(isShow) {
-                    collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
+                    textView_toolbar.setVisibility(View.GONE);
+                    //collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
                     isShow = false;
                 }
             }
         });
+    }
+    public void collapseToolbar()
+    {
+        if (!isShow) {
+            //Log.v("collapsing", "is collapsing");
+            appBarLayout.setExpanded(false);
+            isShow = true;
+        }
     }
 }
