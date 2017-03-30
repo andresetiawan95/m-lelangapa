@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorElementLight">#ff4136</color>
+    <color name="colorElementDark">#ffffff</color>
+
     <color name="colorPrimary">#ff4136</color>
     <color name="colorPrimaryDark">#d6362d</color>
     <!--<color name="colorPrimary">#5b6ab9</color>-->
     <!--<color name="colorPrimaryDark">#616897</color>-->
     <color name="colorAccent">#d6362d</color>
     <color name="tabIndicatorColor">#ffffff</color>
+
+    <color name="colorPrimaryLighter">#ffffff</color>
+    <color name="colorPrimaryLight">#ffffff</color>
+    <!--<color name="colorPrimary">#5b6ab9</color>-->
+    <!--<color name="colorPrimaryDark">#616897</color>-->
+    <color name="colorAccentLight">#d6362d</color>
+    <color name="tabIndicatorColorLight">#d6362d</color>
+    <color name="tabLayoutBackgroundLight">#ffffff</color>
+
     <color name="buttonWhiteColor">#ffffff</color>
     <color name="buttonSendChat">#ff9736</color>
     <color name="backgroundLayoutWhiteColor">#fffefe</color>

@@ -20,6 +20,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navbar_home_header"
+        app:itemBackground="@android:color/transparent"
         app:menu="@menu/activity_main_drawer_logged_in" />
 
 </android.support.v4.widget.DrawerLayout>

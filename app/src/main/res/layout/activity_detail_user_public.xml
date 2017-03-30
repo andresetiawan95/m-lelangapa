@@ -15,18 +15,19 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
-        android:background="?attr/colorPrimary"
         app:layout_anchor="@+id/activity_detail_user_public_appbar"
         app:layout_anchorGravity="bottom"
         app:tabGravity="fill"
         app:tabMode="fixed"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:tabIndicatorColor="@color/tabIndicatorColor" />
+        android:background="@color/tabLayoutBackgroundLight"
+        app:tabTextColor="@color/colorPrimary"
+        app:tabSelectedTextColor="@color/colorPrimaryDark"
+        app:tabIndicatorColor="@color/tabIndicatorColorForDetailBarang" />
     <android.support.design.widget.AppBarLayout
         android:id="@+id/activity_detail_user_public_appbar"
         android:layout_width="match_parent"
         android:layout_height="170dp"
-        android:theme="@style/AppTheme.AppBarOverlay"
+        android:theme="@style/AppThemeLight.ColoredBackArrow"
         app:elevation="0dp">
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/activity_detail_user_public_collapsing_toolbar"
@@ -44,7 +45,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@color/colorAccent"
+                    android:src="@color/colorPrimaryLight"
                     android:scaleType="fitXY"/>
                 <LinearLayout
                     android:layout_marginTop="?attr/actionBarSize"
@@ -75,7 +76,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
+                app:popupTheme="@style/AppThemeLight.PopupOverlay">
                 <TextView
                     android:id="@+id/activity_detail_user_public_toolbar_textview"
                     android:layout_width="wrap_content"

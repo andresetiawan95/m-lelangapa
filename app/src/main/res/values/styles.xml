@@ -12,14 +12,43 @@
         <item name="autoCompleteTextViewStyle">@style/cursorColor</item>
     </style>
 
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimaryLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="tabIndicatorColor">@color/tabIndicatorColorLight</item>
+        <item name="autoCompleteTextViewStyle">@style/cursorColorLight</item>
+        <item name="searchViewStyle">@style/SearchViewNoIconStyle</item>
+    </style>
+
+    <style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppThemeLight.ColoredBackArrow" parent="AppThemeLight">
+        <item name="android:textColorPrimary">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@color/colorAccent</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="SearchViewNoIconStyle" parent="Widget.AppCompat.SearchView">
+        <item name="searchHintIcon">@null</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="cursorColor" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:textCursorDrawable">@drawable/main_search_cursor</item>
     </style>
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="cursorColorLight" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:textCursorDrawable">@drawable/main_search_cursor_light</item>
+    </style>
+
 </resources>
