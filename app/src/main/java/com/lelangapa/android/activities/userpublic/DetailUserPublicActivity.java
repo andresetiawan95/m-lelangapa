@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.lelangapa.android.R;
 import com.lelangapa.android.fragments.userpublic.feedback.FeedbackMainFragment;
 import com.lelangapa.android.fragments.userpublic.gerai.GeraiMainFragment;
-import com.lelangapa.android.fragments.userpublic.info.InfoMainFragment;
 import com.lelangapa.android.fragments.userpublic.riwayat.RiwayatMainFragment;
 import com.lelangapa.android.viewpagers.UserPublicViewPagerAdapter;
 
@@ -84,7 +83,6 @@ public class DetailUserPublicActivity extends AppCompatActivity {
         userPublicViewPagerAdapter.addFragment(new GeraiMainFragment(), "Gerai");
         userPublicViewPagerAdapter.addFragment(new RiwayatMainFragment(), "Riwayat");
         userPublicViewPagerAdapter.addFragment(new FeedbackMainFragment(), "Feedback");
-        userPublicViewPagerAdapter.addFragment(new InfoMainFragment(), "Info");
 
         int limit = (userPublicViewPagerAdapter.getCount() > 1 ? userPublicViewPagerAdapter.getCount() - 1 : 1);
 //        /userPublicViewPagerAdapter.addFragment(null, "Info");

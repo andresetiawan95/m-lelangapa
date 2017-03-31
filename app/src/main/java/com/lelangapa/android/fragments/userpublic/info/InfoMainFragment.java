@@ -13,6 +13,7 @@ import com.lelangapa.android.R;
  */
 
 public class InfoMainFragment extends Fragment {
+    //MAYBE DEVELOPED LATER. SEKARANG BELUM BUTUH
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
