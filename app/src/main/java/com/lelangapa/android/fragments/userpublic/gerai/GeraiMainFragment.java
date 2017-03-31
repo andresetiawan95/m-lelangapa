@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * Created by andre on 28/03/17.
  */
 
-public class MainFragment extends Fragment {
+public class GeraiMainFragment extends Fragment {
     private ProgressBar progressBar_loadingData;
 
     private EmptyFragment emptyFragment;
@@ -32,7 +32,7 @@ public class MainFragment extends Fragment {
     private ArrayList<DetailItemResources> listGeraiItem;
     private DataReceiver dataReceiver;
     private String userID;
-    public MainFragment()
+    public GeraiMainFragment()
     {
         initializeConstant();
     }

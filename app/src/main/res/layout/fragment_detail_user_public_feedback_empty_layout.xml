@@ -17,7 +17,7 @@
                 android:src="@drawable/ic_error_128dp"/>
             <TextView
                 android:textAppearance="?android:textAppearance"
-                android:text="Tidak ada riwayat"
+                android:text="Tidak ada feedback"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

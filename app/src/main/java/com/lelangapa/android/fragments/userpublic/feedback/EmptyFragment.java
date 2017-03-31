@@ -9,14 +9,13 @@ import android.view.ViewGroup;
 import com.lelangapa.android.R;
 
 /**
- * Created by andre on 28/03/17.
+ * Created by andre on 31/03/17.
  */
 
-public class UserPublicFeedbackFragment extends Fragment {
+public class EmptyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_detail_user_public_feedback_layout, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_detail_user_public_feedback_empty_layout, container, false);
     }
 }

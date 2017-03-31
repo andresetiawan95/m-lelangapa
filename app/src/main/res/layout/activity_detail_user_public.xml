@@ -45,8 +45,8 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@color/colorPrimaryLight"
-                    android:scaleType="fitXY"/>
+                    android:src="@drawable/vector_marketplace_nyolong_gambar"
+                    android:scaleType="centerCrop"/>
                 <LinearLayout
                     android:layout_marginTop="?attr/actionBarSize"
                     android:layout_width="match_parent"

@@ -13,9 +13,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.lelangapa.android.R;
-import com.lelangapa.android.fragments.userpublic.feedback.UserPublicFeedbackFragment;
-import com.lelangapa.android.fragments.userpublic.info.UserPublicInfoFragment;
-import com.lelangapa.android.fragments.userpublic.riwayat.MainFragment;
+import com.lelangapa.android.fragments.userpublic.feedback.FeedbackMainFragment;
+import com.lelangapa.android.fragments.userpublic.gerai.GeraiMainFragment;
+import com.lelangapa.android.fragments.userpublic.info.InfoMainFragment;
+import com.lelangapa.android.fragments.userpublic.riwayat.RiwayatMainFragment;
 import com.lelangapa.android.viewpagers.UserPublicViewPagerAdapter;
 
 /**
@@ -80,12 +81,15 @@ public class DetailUserPublicActivity extends AppCompatActivity {
     private void setupViewPager()
     {
         UserPublicViewPagerAdapter userPublicViewPagerAdapter = new UserPublicViewPagerAdapter(getSupportFragmentManager());
-        userPublicViewPagerAdapter.addFragment(new com.lelangapa.android.fragments.userpublic.gerai.MainFragment(), "Gerai");
-        userPublicViewPagerAdapter.addFragment(new MainFragment(), "Riwayat");
-        userPublicViewPagerAdapter.addFragment(new UserPublicFeedbackFragment(), "Feedback");
-        userPublicViewPagerAdapter.addFragment(new UserPublicInfoFragment(), "Info");
+        userPublicViewPagerAdapter.addFragment(new GeraiMainFragment(), "Gerai");
+        userPublicViewPagerAdapter.addFragment(new RiwayatMainFragment(), "Riwayat");
+        userPublicViewPagerAdapter.addFragment(new FeedbackMainFragment(), "Feedback");
+        userPublicViewPagerAdapter.addFragment(new InfoMainFragment(), "Info");
+
+        int limit = (userPublicViewPagerAdapter.getCount() > 1 ? userPublicViewPagerAdapter.getCount() - 1 : 1);
 //        /userPublicViewPagerAdapter.addFragment(null, "Info");
         viewPager.setAdapter(userPublicViewPagerAdapter);
+        viewPager.setOffscreenPageLimit(limit);
     }
     private void collapsedToolbarForNotShowingTitleWhenExpanded(final CollapsingToolbarLayout collapsingToolbarLayout)
     {

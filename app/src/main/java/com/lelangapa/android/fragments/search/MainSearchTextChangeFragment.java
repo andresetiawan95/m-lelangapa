@@ -28,6 +28,11 @@ public class MainSearchTextChangeFragment extends Fragment {
         textInit = text;
     }
     public void changeText(String newText){
-        textChangeTextView.setText(newText);
+        //31-03-2017 bug fixing untuk mencegah terjadinya error ketika terjadi laggy saat membuka MainSearchActivity
+        //dan langsung mengetikan sesuatu di searchView
+        if (textChangeTextView != null)
+        {
+            textChangeTextView.setText(newText);
+        }
     }
 }

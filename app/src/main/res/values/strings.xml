@@ -64,4 +64,14 @@
     <string name="BERIFEEDBACK_ALERTDIALOGCANCELBUTTON">TIDAK</string>
 
     <string name="CHATMESSAGE_HINT">Ketik pesan...</string>
+
+    <!-- String resource for spinner on UserPublicActivity (Fragment Feedback)-->
+    <string-array name="spinner_feedback_for_public">
+        <item>Sebagai pemenang</item>
+        <item>Sebagai pelelang</item>
+    </string-array>
+
+    <string-array name="categories">
+        
+    </string-array>
 </resources>

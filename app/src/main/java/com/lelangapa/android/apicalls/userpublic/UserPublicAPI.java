@@ -32,6 +32,28 @@ public class UserPublicAPI {
             }, null);
         }
     }
+    public static class GetFeedbackAsAuctioneerAPI extends StringRequest {
+        private static final String GETFEEDBACKASAUCTIONEERURL = "https://no-api.lelangapa.com/apis/v1/users/";
+        private GetFeedbackAsAuctioneerAPI(String urlparams, final DataReceiver dataReceiver){
+            super(Method.GET, GETFEEDBACKASAUCTIONEERURL + urlparams, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    dataReceiver.dataReceived(response);
+                }
+            }, null);
+        }
+    }
+    public static class GetFeedbackAsWinnerAPI extends StringRequest {
+        private static final String GETFEEDBACKASWINNERURL = "https://no-api.lelangapa.com/apis/v1/users/";
+        private GetFeedbackAsWinnerAPI(String urlparams, final DataReceiver dataReceiver){
+            super(Method.GET, GETFEEDBACKASWINNERURL + urlparams, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    dataReceiver.dataReceived(response);
+                }
+            }, null);
+        }
+    }
     public static GetGeraiAPI instanceGeraiAPI(String userID, DataReceiver dataReceiver)
     {
         return new GetGeraiAPI(userID, dataReceiver);
@@ -39,5 +61,13 @@ public class UserPublicAPI {
     public static GetRiwayatAPI instanceRiwayatAPI (String userID, DataReceiver dataReceiver)
     {
         return new GetRiwayatAPI(userID, dataReceiver);
+    }
+    public static GetFeedbackAsAuctioneerAPI instanceFeedbackAuctioneer (String urlparams, DataReceiver dataReceiver)
+    {
+        return new GetFeedbackAsAuctioneerAPI(urlparams, dataReceiver);
+    }
+    public static GetFeedbackAsWinnerAPI instanceFeedbackWinner (String urlparams, DataReceiver dataReceiver)
+    {
+        return new GetFeedbackAsWinnerAPI(urlparams, dataReceiver);
     }
 }

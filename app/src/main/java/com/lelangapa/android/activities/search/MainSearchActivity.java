@@ -25,12 +25,13 @@ public class MainSearchActivity extends AppCompatActivity {
     private MainSearchTextChangeFragment textChangeFragment;
     private MainSearchTextSubmitFragment textSubmitFragment;
     private SearchView searchView;
-    private Fragment currentFragment = null;
-    private boolean switchToTextChangeFragment = false;
-    private boolean switchToTextQuerySubmitFragment = false;
+    private Fragment currentFragment;
+    private boolean switchToTextChangeFragment;
+    private boolean switchToTextQuerySubmitFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        initializeConstants();
         setContentView(R.layout.activity_main_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         textChangeFragment = new MainSearchTextChangeFragment();
@@ -49,6 +50,12 @@ public class MainSearchActivity extends AppCompatActivity {
             textView.setText(intent.getStringExtra(SearchManager.QUERY));
         }
     }*/
+    private void initializeConstants()
+    {
+        currentFragment = null;
+        switchToTextChangeFragment = false;
+        switchToTextQuerySubmitFragment = false;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
@@ -67,7 +74,7 @@ public class MainSearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (switchToTextQuerySubmitFragment==false){
+                if (!switchToTextQuerySubmitFragment){
                     currentFragment = getFragmentManager().findFragmentByTag("FRAGMENT_TEXT_SUBMIT");
                     if (currentFragment==null)
                     {
@@ -92,7 +99,7 @@ public class MainSearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (switchToTextChangeFragment==false){
+                if (!switchToTextChangeFragment){
                     currentFragment = getFragmentManager().findFragmentByTag("FRAGMENT_TEXT_CHANGE");
                     if (currentFragment==null)
                     {

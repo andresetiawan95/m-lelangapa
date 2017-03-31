@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * Created by andre on 29/03/17.
  */
 
-public class MainFragment extends Fragment {
+public class RiwayatMainFragment extends Fragment {
     private ArrayList<RiwayatResources> listRiwayat;
     private String userID;
     private DataReceiver dataReceiver;
@@ -32,7 +32,7 @@ public class MainFragment extends Fragment {
 
     private EmptyFragment emptyFragment;
     private NoEmptyFragment noEmptyFragment;
-    public MainFragment()
+    public RiwayatMainFragment()
     {
         initializeConstants();
     }
@@ -102,9 +102,26 @@ public class MainFragment extends Fragment {
             }
         };
     }
+    private void getAndRemoveFragment()
+    {
+        Fragment currentFragment = getChildFragmentManager().findFragmentById(R.id.fragment_detail_user_public_riwayat_layout);
+        if (currentFragment != null) {
+            getChildFragmentManager().beginTransaction()
+                    .remove(currentFragment)
+                    .commit();
+        }
+    }
+    private void enableProgressBar()
+    {
+        this.progressBar_loadingData.setVisibility(View.VISIBLE);
+    }
+    private void disableProgressBar()
+    {
+        this.progressBar_loadingData.setVisibility(View.GONE);
+    }
     private void setupFragment()
     {
-        progressBar_loadingData.setVisibility(View.GONE);
+        disableProgressBar();
         if (listRiwayat.isEmpty())
         {
             getChildFragmentManager().beginTransaction()
@@ -121,6 +138,8 @@ public class MainFragment extends Fragment {
     }
     private void getRiwayatItems()
     {
+        getAndRemoveFragment();
+        enableProgressBar();
         UserPublicAPI.GetRiwayatAPI getRiwayatAPI = UserPublicAPI.instanceRiwayatAPI(userID, dataReceiver);
         RequestController.getInstance(getActivity()).addToRequestQueue(getRiwayatAPI);
     }

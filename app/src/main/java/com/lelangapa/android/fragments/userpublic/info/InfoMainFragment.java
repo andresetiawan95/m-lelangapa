@@ -12,7 +12,7 @@ import com.lelangapa.android.R;
  * Created by andre on 28/03/17.
  */
 
-public class UserPublicInfoFragment extends Fragment {
+public class InfoMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
