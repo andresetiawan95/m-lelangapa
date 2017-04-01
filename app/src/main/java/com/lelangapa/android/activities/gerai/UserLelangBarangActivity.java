@@ -39,7 +39,7 @@ public class UserLelangBarangActivity extends AppCompatActivity implements Input
     private SessionManager sessionManager;
     private HashMap<String, String> data;
     private HashMap<String, String> dataImage = new HashMap<>();
-    public static final int MY_TIMEOUT = 10000;
+    public static final int MY_TIMEOUT = 100000;
     public static final int MY_RETRY = 2;
     public static final float MY_BACKOFF_MULT = 2f;
     private static final String KEY_IMAGE = "image";
