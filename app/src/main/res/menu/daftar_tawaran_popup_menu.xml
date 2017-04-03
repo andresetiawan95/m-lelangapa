@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/daftar_tawaran_choose_winner"
+        app:showAsAction="withText"
+        android:title="Terima tawaran"
+        android:visible="true"/>
+    <item
+        android:id="@+id/daftar_tawaran_cancel_offer"
+        app:showAsAction="withText"
+        android:title="Batalkan tawaran"
+        android:visible="true"/>
+    <item
+        android:id="@+id/daftar_tawaran_block_user"
+        app:showAsAction="withText"
+        android:title="Block pengguna"
+        android:visible="true"/>
+</menu>

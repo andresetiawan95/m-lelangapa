@@ -141,7 +141,7 @@ public class FavoriteNoEmptyFragment extends Fragment {
                         for (int j=0;j<favoriteJSONArray.length();j++)
                         {
                             JSONObject imageJSONObject = favoriteJSONArray.getJSONObject(j);
-                            favoriteResources.setImageURLItem("http://es3.lelangapa.com/" + imageJSONObject.getString("url"));
+                            favoriteResources.setImageURLItem("http://img-s7.lelangapa.com/" + imageJSONObject.getString("url"));
                             //Log.v("IMAGE GET", favoriteResources.getImageURLItem());
                         }
                         listBarangFavorit.add(favoriteResources);

@@ -9,6 +9,7 @@ public class DetailItemResources {
     private String tanggaljammulai, tanggaljamselesai;
     private Long tanggaljammulai_ms, tanggaljamselesai_ms;
     private Integer itembidstatus;
+    private Integer bidtime;
     public DetailItemResources(){}
     public void setIdbarang(String id){
         idbarang = id;
@@ -76,6 +77,9 @@ public class DetailItemResources {
     {
         itembidstatus = bidstatus;
     }
+    public void setBidtime(Integer bidtime) {
+        this.bidtime = bidtime;
+    }
     public String getUrlgambarbarang(){
         return urlgambarbarang;
     }
@@ -134,4 +138,8 @@ public class DetailItemResources {
     {
         return hargabid;
     }
+    public Integer getBidtime() {
+        return bidtime;
+    }
+
 }

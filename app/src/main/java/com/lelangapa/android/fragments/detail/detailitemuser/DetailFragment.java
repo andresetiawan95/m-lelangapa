@@ -168,8 +168,8 @@ public class DetailFragment extends Fragment {
                 socketBinder.on("connected", biddingSocket.onConnected);
                 socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
                 socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
-                socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
-                socketBinder.on("cancelsuccess", biddingSocket.onBidCancelled);
+                socketBinder.on("winnerchosen", biddingSocket.onWinnerSelected);
+                socketBinder.on("cancelsuccess", biddingSocket.onAuctionCancelled);
             }
         }
         else if (onPauseActivity)
@@ -396,7 +396,7 @@ public class DetailFragment extends Fragment {
             biddingSocket.setSocketConnected(socketConnected);
             biddingSocket.setSocketBidSuccessReceiver(socketBidSuccessReceiver);
             biddingSocket.setSocketBidFailedReceiver(socketBidFailedReceiver);
-            biddingSocket.setSocketBidCancelled(socketBidCancelledReceiver);
+            biddingSocket.setSocketAuctionCancelled(socketBidCancelledReceiver);
             biddingSocket.setSocketWinnerSelected(socketWinnerSelectedReceiver);
             socketBinder = biddingSocket.getSocket();
             /*if (!socketBinder.connected())
@@ -408,7 +408,7 @@ public class DetailFragment extends Fragment {
                 socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
                 socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
                 socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
-                socketBinder.on("cancelauction", biddingSocket.onBidCancelled);
+                socketBinder.on("cancelauction", biddingSocket.onAuctionCancelled);
             }*/
         }
     }
@@ -422,7 +422,7 @@ public class DetailFragment extends Fragment {
             socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
             socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
             socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
-            socketBinder.on("cancelsuccess", biddingSocket.onBidCancelled);
+            socketBinder.on("cancelsuccess", biddingSocket.onAuctionCancelled);
         }
     }
     private void disconnectSocket()
@@ -433,8 +433,8 @@ public class DetailFragment extends Fragment {
             socketBinder.off("connected", biddingSocket.onConnected);
             socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
             socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
-            socketBinder.off("winnerselected", biddingSocket.onWinnerSelected);
-            socketBinder.off("cancelsuccess", biddingSocket.onBidCancelled);
+            socketBinder.off("winnerchosen", biddingSocket.onWinnerSelected);
+            socketBinder.off("cancelsuccess", biddingSocket.onAuctionCancelled);
         }
     }
     private void setSocketReceiver()
@@ -766,7 +766,7 @@ public class DetailFragment extends Fragment {
                             for (int j=0;j<detailUrlGambarItemArray.length();j++)
                             {
                                 JSONObject detailUrlGambarItemObject = detailUrlGambarItemArray.getJSONObject(j);
-                                detailItem.setUrlgambarbarang("http://es3.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
+                                detailItem.setUrlgambarbarang("http://img-s7.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
                             }
                         }
                         detailReceived.dataReceived("done");
@@ -839,9 +839,9 @@ public class DetailFragment extends Fragment {
     private void setAlertDialogBidCancelled()
     {
         AlertDialog.Builder bidCancelledAlertDialogBuilder = new AlertDialog.Builder(activityContext);
-        bidCancelledAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGTITLE)
-                .setMessage(R.string.DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGMSG)
-                .setPositiveButton(R.string.DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
+        bidCancelledAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getDetailItem(itemID);

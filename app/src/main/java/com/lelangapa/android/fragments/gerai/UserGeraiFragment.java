@@ -86,7 +86,7 @@ public class UserGeraiFragment extends Fragment {
                             JSONArray resArrayGambar = resObject.getJSONArray("url");
                             for (int j=0;j<resArrayGambar.length();j++){
                                 JSONObject resGambarObject = resArrayGambar.getJSONObject(j);
-                                geraiResources.setUrlgambarbarang("http://es3.lelangapa.com/" + resGambarObject.getString("url"));
+                                geraiResources.setUrlgambarbarang("http://img-s7.lelangapa.com/" + resGambarObject.getString("url"));
                             }
                             dataBarang.add(geraiResources);
                         }

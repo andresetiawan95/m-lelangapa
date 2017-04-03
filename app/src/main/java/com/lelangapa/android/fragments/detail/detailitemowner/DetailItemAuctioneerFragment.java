@@ -52,7 +52,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private Socket socketBinder;
 
     private DataReceiver detailReceived, timeTriggerReceived;
-    private SocketReceiver onConnectedReceived, onBidSuccessReceived, onBidFailedReceived, onBidCancelledReceived, onWinnerSelected;
+    private SocketReceiver onConnectedReceived, onBidSuccessReceived, onBidFailedReceived, onAuctionCancelledReceived, onWinnerSelected;
     private AuctioneerResponseReceiver auctioneerResponseReceiver;
 
     private AuctioneerMenuPagerFragment menuPagerFragment;
@@ -67,6 +67,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private WaktuBidNotStartedFragment waktuBidNotStartedFragment;
     private WaktuBidStartedFragment waktuBidStartedFragment;
     private WaktuBidFinishedFragment waktuBidFinishedFragment;
+    private DaftarTawaranFragment daftarTawaranFragment;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private FragmentManager fragmentManager;
@@ -103,6 +104,12 @@ public class DetailItemAuctioneerFragment extends Fragment {
     }
 
     @Override
+    public void onStart()
+    {
+        super.onStart();
+        Log.v("On start", "on Start");
+    }
+    @Override
     public void onResume()
     {
         super.onResume();
@@ -115,7 +122,12 @@ public class DetailItemAuctioneerFragment extends Fragment {
         super.onPause();
         onPauseConfiguration();
     }
-
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        Log.v("On stop", "On stop");
+    }
     @Override
     public void onDestroy()
     {
@@ -159,6 +171,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
         waktuBidNotStartedFragment = new WaktuBidNotStartedFragment();
         waktuBidStartedFragment = new WaktuBidStartedFragment();
         waktuBidFinishedFragment = new WaktuBidFinishedFragment();
+
+        daftarTawaranFragment = new DaftarTawaranFragment();
     }
     private void initializeSocket()
     {
@@ -168,9 +182,17 @@ public class DetailItemAuctioneerFragment extends Fragment {
             biddingSocket.setSocketConnected(onConnectedReceived);
             biddingSocket.setSocketBidSuccessReceiver(onBidSuccessReceived);
             biddingSocket.setSocketBidFailedReceiver(onBidFailedReceived);
-            biddingSocket.setSocketBidCancelled(onBidCancelledReceived);
+            biddingSocket.setSocketAuctionCancelled(onAuctionCancelledReceived);
             biddingSocket.setSocketWinnerSelected(onWinnerSelected);
+
+            biddingSocket.setSocketBidSuccessFromDetailTawaran(daftarTawaranFragment.getSocketOnBidSuccess());
+            biddingSocket.setSocketBidCancelledFromDetailTawaran(daftarTawaranFragment.getSocketOnBidCancelled());
+            biddingSocket.setSocketWinnerSelectedFromDetailTawaran(daftarTawaranFragment.getSocketOnWinnerSelected());
+
             socketBinder = biddingSocket.getSocket();
+
+            daftarTawaranFragment.setSocket(socketBinder);
+            daftarTawaranFragment.setBiddingSocket(biddingSocket);
         }
     }
     private void initializeDataReceiver()
@@ -195,7 +217,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
         socketBinder.on("bidsuccess", biddingSocket.onSubmitBidSuccess);
         socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
         socketBinder.on("winnerchosen", biddingSocket.onWinnerSelected);
-        socketBinder.on("cancelsuccess", biddingSocket.onBidCancelled);
+        socketBinder.on("cancelsuccess", biddingSocket.onAuctionCancelled);
+        socketBinder.on("cancelbidsuccess", biddingSocket.onBidCancelled);
      }
     private void disconnectSocket()
     {
@@ -204,7 +227,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
         socketBinder.off("bidsuccess", biddingSocket.onSubmitBidSuccess);
         socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
         socketBinder.off("winnerchosen", biddingSocket.onWinnerSelected);
-        socketBinder.off("cancelsuccess", biddingSocket.onBidCancelled);
+        socketBinder.off("cancelsuccess", biddingSocket.onAuctionCancelled);
+        socketBinder.off("cancelbidsuccess", biddingSocket.onBidCancelled);
     }
     private void setUpSwipeRefreshLayout()
     {
@@ -220,9 +244,9 @@ public class DetailItemAuctioneerFragment extends Fragment {
             @Override
             public void run() {
                 Log.v("Refresh post status", "Refresh post jalan");
-                if (!isChangeTawaranFragment)
+                if (!onPauseActivity)
                 {
-                    swipeRefreshLayout.setRefreshing(true);
+                    //swipeRefreshLayout.setRefreshing(true);
                     getDetailItem(itemID);
                 }
             }
@@ -367,7 +391,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
     }
     private void setSocketOnBiddingCancelledReceived()
     {
-        onBidCancelledReceived = new SocketReceiver() {
+        onAuctionCancelledReceived = new SocketReceiver() {
             @Override
             public void socketReceived(Object status, Object response) {
                 biddingInformation = "finish";
@@ -427,7 +451,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
     {
         if (onPauseWhenSocketAlreadyConnected && !biddingInformation.equals("finish"))
         {
-            getDetailItem(itemID);
+            if (!isChangeTawaranFragment) getDetailItem(itemID); //<< untuk mencegah terjadinya pemanggilan API 2x oleh swipeRefreshLayout.post ketika menjalankan fragment DetailTawaran
+            //jadi biarkan swipeRefreshLayout saja yang memanggil getDetailItem
             onPauseWhenSocketAlreadyConnected = false;
             if (!socketBinder.connected() && biddingSocket != null)
             {
@@ -437,10 +462,10 @@ public class DetailItemAuctioneerFragment extends Fragment {
         else if (onPauseActivity)
         {
             Log.v("Masuk onPauseActivity", "MASUK SINIIIIIIIIII");
-            if (!biddingAlreadyDone) getDetailItem(itemID);
+            if (!biddingAlreadyDone && !isChangeTawaranFragment) getDetailItem(itemID);
         }
 
-        if (biddingSocket != null && !biddingSocket.IS_JOINED_STATUS && !biddingInformation.equals("finish"))
+        if (biddingSocket != null && !biddingSocket.IS_JOINED_STATUS && !biddingInformation.equals("finish") && !isChangeTawaranFragment)
         {
             if (socketBinder.connected())
             {
@@ -449,6 +474,13 @@ public class DetailItemAuctioneerFragment extends Fragment {
                 biddingSocket.IS_JOINED_STATUS = true;
             }
         }
+        else if (isChangeTawaranFragment) {
+            if (biddingSocket!= null && biddingSocket.IS_JOINED_STATUS) {
+                Log.v("Still joining", "socket still joining");
+            }
+            //isChangeTawaranFragment = false;
+        }
+        onPauseActivity = false;
     }
     private void onPauseConfiguration()
     {
@@ -458,7 +490,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
             waktuBidStartedFragment.stopCountDownTimer();
         }
 
-        if (biddingSocket != null && biddingSocket.IS_JOINED_STATUS)
+        if (biddingSocket != null && biddingSocket.IS_JOINED_STATUS && !isChangeTawaranFragment)
         {
             if (socketBinder.connected())
             {
@@ -467,6 +499,9 @@ public class DetailItemAuctioneerFragment extends Fragment {
                 onPauseWhenSocketAlreadyConnected = true;
                 biddingSocket.IS_JOINED_STATUS = false;
             }
+        }
+        else if (isChangeTawaranFragment) {
+            //doing nothing
         }
         onPauseActivity = true;
     }
@@ -602,6 +637,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
                             detailItem.setJamselesai(endHour);
                             detailItem.setIdauctioneer(itemDataObject.getString("user_id"));
                             detailItem.setNamaauctioneer(itemDataObject.getString("user_name"));
+                            detailItem.setBidtime(itemDataObject.getInt("bid_time"));
                             //detailItem.setNamabidder(itemDataObject.getString("bidder_name"));
                             //detailItem.setHargabid(itemDataObject.getString("item_bid_price"));
 
@@ -626,7 +662,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
                             for (int j=0;j<detailUrlGambarItemArray.length();j++)
                             {
                                 JSONObject detailUrlGambarItemObject = detailUrlGambarItemArray.getJSONObject(j);
-                                detailItem.setUrlgambarbarang("http://es3.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
+                                detailItem.setUrlgambarbarang("http://img-s7.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
                             }
                         }
                         detailReceived.dataReceived("done");
@@ -649,9 +685,9 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private void setAlertDialogBidCancelled()
     {
         AlertDialog.Builder bidCancelledAlertDialogBuilder = new AlertDialog.Builder(activityContext);
-        bidCancelledAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGTITLE)
-                .setMessage(R.string.DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGMSG)
-                .setPositiveButton(R.string.DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
+        bidCancelledAlertDialogBuilder.setTitle(R.string.DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGBUTTON, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getDetailItem(itemID);
@@ -739,9 +775,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private void showFragmentTawaran()
     {
         isChangeTawaranFragment = true;
-        DaftarTawaranFragment tawaranFragment = new DaftarTawaranFragment();
-        tawaranFragment.setSocket(socketBinder);
-        ((DetailBarangActivity) getActivity()).addFragmentStack(tawaranFragment, "Daftar Tawaran");
+        daftarTawaranFragment.setDetailItem(detailItem);
+        ((DetailBarangActivity) getActivity()).addFragmentStack(daftarTawaranFragment, "Daftar Tawaran");
         /*getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_detail_barang_layout, tawaranFragment)
                 .addToBackStack(null)

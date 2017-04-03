@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class SubmitGambarBarangAPI extends StringRequest {
     private HashMap<String, String> dataImage;
-    private static final String GAMBAR_BARANG_URL = "http://es3.lelangapa.com/upload.php";
+    private static final String GAMBAR_BARANG_URL = "http://es3.lelangapa.com/upload-aws.php";
     public SubmitGambarBarangAPI(HashMap<String, String> dataInput, final DataReceiver dataReceiver){
         super(Request.Method.POST, GAMBAR_BARANG_URL, new Response.Listener<String>() {
             @Override

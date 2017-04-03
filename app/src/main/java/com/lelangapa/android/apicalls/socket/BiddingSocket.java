@@ -28,11 +28,16 @@ public class BiddingSocket {
     private SocketReceiver socketDisconnected;
     private SocketReceiver socketBidSuccessReceiver;
     private SocketReceiver socketBidFailedReceiver;
-    private SocketReceiver socketBidCancelled;
+    private SocketReceiver socketAuctionCancelled;
     private SocketReceiver socketWinnerSelected;
+
+    private SocketReceiver socketBidSuccessFromDetailTawaran;
+    private SocketReceiver socketBidCancelledFromDetailTawaran;
+    private SocketReceiver socketWinnerSelectedFromDetailTawaran;
 
     public boolean IS_CONNECTED_STATUS = false;
     public boolean IS_JOINED_STATUS = false;
+    public boolean IS_CHANGE_TO_DETAIL_TAWARAN_FRAGMENT;
 
     private SocketSSLResources socketSSLResources;
     public BiddingSocket(Activity activity)
@@ -53,13 +58,28 @@ public class BiddingSocket {
     {
         this.socketBidSuccessReceiver = socketReceiverSuccess;
     }
+
+    //yang baru
+    public void setSocketBidSuccessFromDetailTawaran(SocketReceiver socketReceiver)
+    {
+        this.socketBidSuccessFromDetailTawaran = socketReceiver;
+    }
+    public void setSocketBidCancelledFromDetailTawaran(SocketReceiver socketReceiver)
+    {
+        this.socketBidCancelledFromDetailTawaran = socketReceiver;
+    }
+    public void setSocketWinnerSelectedFromDetailTawaran(SocketReceiver socketReceiver)
+    {
+        this.socketWinnerSelectedFromDetailTawaran = socketReceiver;
+    }
+
     public void setSocketBidFailedReceiver(SocketReceiver socketReceiverFailed)
     {
         this.socketBidFailedReceiver = socketReceiverFailed;
     }
-    public void setSocketBidCancelled(SocketReceiver socketBidCancelled)
+    public void setSocketAuctionCancelled(SocketReceiver socketBidCancelled)
     {
-        this.socketBidCancelled = socketBidCancelled;
+        this.socketAuctionCancelled = socketBidCancelled;
     }
     public void setSocketWinnerSelected(SocketReceiver socketWinnerSelected)
     {
@@ -148,7 +168,9 @@ public class BiddingSocket {
                 public void run() {
                     if (!getSocket().connected())getSocket().connect();
                     Log.v("Bid success", "Bid success");
-                    socketBidSuccessReceiver.socketReceived("bidsuccess", args[0]);
+                    if (IS_CHANGE_TO_DETAIL_TAWARAN_FRAGMENT)
+                        socketBidSuccessFromDetailTawaran.socketReceived("bidsuccess", args[0]);
+                    else socketBidSuccessReceiver.socketReceived("bidsuccess", args[0]);
                 }
             });
         }
@@ -165,13 +187,13 @@ public class BiddingSocket {
             });
         }
     };
-    public Emitter.Listener onBidCancelled = new Emitter.Listener() {
+    public Emitter.Listener onAuctionCancelled = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    socketBidCancelled.socketReceived("cancelauction", args[0]);
+                    socketAuctionCancelled.socketReceived("cancelauction", args[0]);
                 }
             });
         }
@@ -182,7 +204,22 @@ public class BiddingSocket {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (IS_CHANGE_TO_DETAIL_TAWARAN_FRAGMENT)
+                        socketWinnerSelectedFromDetailTawaran.socketReceived("winnerchosen", args[0]);
                     socketWinnerSelected.socketReceived("winnerchosen", args[0]);
+                }
+            });
+        }
+    };
+    public Emitter.Listener onBidCancelled = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.v("Cancel bid success", "cancel bid success");
+                    if (IS_CHANGE_TO_DETAIL_TAWARAN_FRAGMENT)
+                        socketBidCancelledFromDetailTawaran.socketReceived("cancelbidsuccess", args[0]);
                 }
             });
         }

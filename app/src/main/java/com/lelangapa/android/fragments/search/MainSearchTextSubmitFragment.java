@@ -85,7 +85,7 @@ public class MainSearchTextSubmitFragment extends Fragment {
                             JSONArray searchPropertyImageArray = searchResultObj.getJSONArray("url");
                             for (int x=0;x<searchPropertyImageArray.length();x++) {
                                 JSONObject searchPropertyImageObj = searchPropertyImageArray.getJSONObject(x);
-                                searchProperty.setUrlgambarbarang("http://es3.lelangapa.com/" + searchPropertyImageObj.getString("url"));
+                                searchProperty.setUrlgambarbarang("http://img-s7.lelangapa.com/" + searchPropertyImageObj.getString("url"));
                             }
                             searchResult.add(searchProperty);
                         }

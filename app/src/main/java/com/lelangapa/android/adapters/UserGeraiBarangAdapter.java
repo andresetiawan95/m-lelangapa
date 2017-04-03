@@ -48,9 +48,11 @@ public class UserGeraiBarangAdapter extends RecyclerView.Adapter<UserGeraiBarang
     @Override
     public void onBindViewHolder(MyViewHolder viewHolder, int position){
         UserGeraiResources resBarang = dataBarang.get(position);
-        if (resBarang.getUrlgambarbarang()!=null)
-        {
+        if (resBarang.getUrlgambarbarang()!=null) {
             Picasso.with(context).load(resBarang.getUrlgambarbarang()).into(viewHolder.gambarbarang);
+        }
+        else {
+            viewHolder.gambarbarang.setImageResource(R.drawable.ic_insert_photo_grey_128dp);
         }
         viewHolder.namabarang.setText(resBarang.getNamabarang());
         viewHolder.harga.setText(resBarang.getHargaawal());

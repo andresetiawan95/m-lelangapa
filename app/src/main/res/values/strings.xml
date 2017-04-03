@@ -40,9 +40,9 @@
     <string name="DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGMSG">Terimakasih sudah berpartisipasi dalam lelang ini. Klik "OK" untuk memuat ulang laman</string>
     <string name="DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGBUTTON">OK</string>
 
-    <string name="DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGTITLE">Lelang telah dibatalkan</string>
-    <string name="DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGMSG">Lelang telah dibatalkan oleh pelelang. Seluruh penawaran telah dibatalkan</string>
-    <string name="DETAILFRAGMENT_BIDCANCELLED_ALERTDIALOGBUTTON">OK</string>
+    <string name="DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGTITLE">Lelang telah dibatalkan</string>
+    <string name="DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGMSG">Lelang telah dibatalkan oleh pelelang. Seluruh penawaran telah dibatalkan</string>
+    <string name="DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGBUTTON">OK</string>
 
     <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGTITLE">Pemenang telah dipilih!</string>
     <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGMSG">Pelelang telah memilih pemenang lelang. Dengan ini maka lelang dihentikan.</string>
@@ -62,6 +62,12 @@
     <string name="BERIFEEDBACK_ALERTDIALOGMSG">Apakah anda ingin menyimpan feedback yang anda berikan?</string>
     <string name="BERIFEEDBACK_ALERTDIALOGOKBUTTON">YA</string>
     <string name="BERIFEEDBACK_ALERTDIALOGCANCELBUTTON">TIDAK</string>
+
+    <string name="CANCEL_BID_ALERTDIALOGTITLE">Batalkan Penawaran?</string>
+    <string name="CANCEL_BID_ALERTDIALOGMSG">Apakah anda yakin akan membatalkan penawaran ini?</string>
+    <string name="CANCEL_BID_ALERTDIALOGOKBUTTON">YA</string>
+    <string name="CANCEL_BID_ALERTDIALOGCANCELBUTTON">TIDAK</string>
+
 
     <string name="CHATMESSAGE_HINT">Ketik pesan...</string>
 
