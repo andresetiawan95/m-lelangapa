@@ -90,7 +90,7 @@ public class GeraiMainFragment extends Fragment {
                         JSONArray searchPropertyImageArray = respArrayObject.getJSONArray("url");
                         for (int x=0;x<searchPropertyImageArray.length();x++) {
                             JSONObject searchPropertyImageObj = searchPropertyImageArray.getJSONObject(x);
-                            detailItem.setUrlgambarbarang("http://es3.lelangapa.com/" + searchPropertyImageObj.getString("url"));
+                            detailItem.setUrlgambarbarang("http://img-s7.lelangapa.com/" + searchPropertyImageObj.getString("url"));
                         }
                         listGeraiItem.add(detailItem);
                     }

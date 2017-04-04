@@ -1,30 +1,46 @@
 package com.lelangapa.android.fragments.gerai;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.lelangapa.android.R;
-import com.lelangapa.android.interfaces.InputReceiver;
+import com.lelangapa.android.activities.UserGeraiActivity;
+import com.lelangapa.android.adapters.MultipleImageUploadAdapter;
+import com.lelangapa.android.apicalls.gerai.SubmitBarangAPI;
+import com.lelangapa.android.apicalls.gerai.SubmitGambarBarangAPI;
+import com.lelangapa.android.apicalls.singleton.RequestController;
+import com.lelangapa.android.interfaces.DataReceiver;
+import com.lelangapa.android.interfaces.ImagePicker;
+import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.resources.DateTimeConverter;
+import com.lelangapa.android.resources.ImageResources;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -35,20 +51,16 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class UserLelangBarangFragment extends Fragment {
-    private InputReceiver iReceiver;
-    private EditText editText_namabarang;
-    private EditText editText_deskripsibarang;
-    private EditText editText_hargabarang_awal;
-    private EditText editText_hargabarang_target;
-    private EditText editText_tanggalmulai;
-    private EditText editText_jammulai;
-    private EditText editText_tanggalselesai;
-    private EditText editText_jamselesai;
-    private ImageView gambarBarang;
+    private EditText editText_namabarang, editText_deskripsibarang, editText_hargabarang_awal, editText_hargabarang_target, editText_tanggalmulai;
+    private EditText editText_jammulai, editText_tanggalselesai, editText_jamselesai;
+    //private ImageView gambarBarang;
+    private Button button_lelangBarang;
+    private ProgressDialog progressDialog;
+    private SessionManager sessionManager;
+    private static HashMap<String, String> session;
 
     private Bitmap bitmap;
     int year, month, day, hour, minute;
-    String nama, deskripsi, harga, tanggalmulai, jammulai, tanggalselesai, jamselesai;
 
     private static final String KEY_NAMABARANG = "name";
     private static final String KEY_DESCBARANG = "description";
@@ -57,25 +69,76 @@ public class UserLelangBarangFragment extends Fragment {
     private static final String KEY_STARTTIME = "start_time";
     private static final String KEY_ENDTIME = "end_time";
     private static final String KEY_IMAGE = "image";
+    public static final int MY_TIMEOUT = 100000;
+    public static final int MY_RETRY = 2;
+    public static final float MY_BACKOFF_MULT = 2f;
 
     private int PICK_IMAGE_REQUEST = 1;
-    public UserLelangBarangFragment(){}
-    @Override
-    public void onAttach(Context context){
-        super.onAttach(context);
-        try {
-            iReceiver = (InputReceiver) getContext();
-        }
-        catch (ClassCastException e){
-            throw new ClassCastException(context.toString()
-                    + " must implement interface");
-        }
+    private int IMAGE_ARRAY_INDEX = 0;
+    private int IMAGE_ALREADY_UPLOADED_INDEX = 1;
+    private String itemID;
+
+    private HashMap<String, String> data, dataImage;
+    private ArrayList<ImageResources> listImages;
+    private MultipleImageUploadAdapter adapter;
+    private RecyclerView recyclerView_imageList;
+    private ImagePicker imagePicker;
+    private DataReceiver imageReceiver;
+
+    public UserLelangBarangFragment()
+    {
+        initializeConstants();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_user_lelang_barang_layout, container, false);
-        View buttonView = getActivity().findViewById(R.id.fragment_user_lelang_barang_jual_button);
-        Button buttonLelang = (Button) buttonView;
+        initializeSession();
+        initializeViews(view);
+        initializeImageReceiver();
+        setImagePicker();
+        setupViews();
+        initializeAdapter();
+        setRecyclerViewProperties();
+        return view;
+    }
+    private void initializeConstants()
+    {
+        data = new HashMap<>();
+        dataImage = new HashMap<>();
+        listImages = new ArrayList<>();
+    }
+    private void initializeImageReceiver()
+    {
+        imageReceiver = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                String response = output.toString();
+                if (response.equals("success")){
+                    if (IMAGE_ALREADY_UPLOADED_INDEX == listImages.size() -1) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getActivity(), "Lelang telah disubmit", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), UserGeraiActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                    else {
+                        IMAGE_ALREADY_UPLOADED_INDEX+=1;
+                        wrapImageData(itemID, IMAGE_ALREADY_UPLOADED_INDEX);
+                        sendGambarBarangToServer();
+                    }
+                }
+            }
+        };
+    }
+    private void initializeSession()
+    {
+        sessionManager = new SessionManager(getActivity());
+        session = SessionManager.getSessionStatic();
+    }
+    private void initializeViews(View view)
+    {
+        button_lelangBarang = (Button) getActivity().findViewById(R.id.fragment_user_lelang_barang_jual_button);
         editText_namabarang = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_nama_barang);
         editText_deskripsibarang = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_deskripsi_barang);
         editText_hargabarang_awal = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_harga_awal_barang);
@@ -84,18 +147,21 @@ public class UserLelangBarangFragment extends Fragment {
         editText_tanggalselesai = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_tanggal_selesai);
         editText_jammulai = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_jam_mulai);
         editText_jamselesai = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_jam_selesai);
-        gambarBarang = (ImageView) view.findViewById(R.id.fragment_user_lelang_barang_gambar);
-
-        gambarBarang.setOnClickListener(new View.OnClickListener() {
+        //gambarBarang = (ImageView) view.findViewById(R.id.fragment_user_lelang_barang_gambar);
+        recyclerView_imageList = (RecyclerView) view.findViewById(R.id.fragment_user_lelang_barang_image_recyclerview);
+    }
+    private void setupViews()
+    {
+        /*gambarBarang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseImage();
             }
-        });
+        });*/
         editText_tanggalmulai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            selectDate(editText_tanggalmulai);
+                selectDate(editText_tanggalmulai);
             }
         });
         editText_tanggalselesai.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +173,7 @@ public class UserLelangBarangFragment extends Fragment {
         editText_jammulai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            selectHour(editText_jammulai);
+                selectHour(editText_jammulai);
             }
         });
         editText_jamselesai.setOnClickListener(new View.OnClickListener() {
@@ -116,38 +182,56 @@ public class UserLelangBarangFragment extends Fragment {
                 selectHour(editText_jamselesai);
             }
         });
-        buttonLelang.setOnClickListener(new View.OnClickListener() {
+        button_lelangBarang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Log.v("Masuk", "tombol ditekan dari fragment");
-               checkFilledData();
+                wrapFilledItemData();
             }
         });
-        return view;
     }
-
-    private void checkFilledData(){
-        /*
-        nama = editText_namabarang.getText().toString().trim();
-        deskripsi = editText_deskripsibarang.getText().toString().trim();
-        harga = editText_hargabarang_awal.getText().toString().trim();
-        tanggalmulai = editText_tanggalmulai.getText().toString().trim();
-        jammulai = editText_jammulai.getText().toString().trim();
-        tanggalselesai = editText_tanggalselesai.getText().toString().trim();
-        jamselesai = editText_jamselesai.getText().toString().trim();
-        */
+    private void setImagePicker()
+    {
+        imagePicker = new ImagePicker() {
+            @Override
+            public void picked(Integer indexOfArray) {
+                //Log.v("Index", Integer.toString(indexOfArray));
+                IMAGE_ARRAY_INDEX = indexOfArray;
+                chooseImage();
+            }
+        };
+    }
+    private void initializeAdapter()
+    {
+        ImageResources init = new ImageResources();
+        listImages.add(init);
+        adapter = new MultipleImageUploadAdapter(getActivity(), listImages, imagePicker);
+    }
+    private void setRecyclerViewProperties()
+    {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView_imageList.setLayoutManager(layoutManager);
+        recyclerView_imageList.setAdapter(adapter);
+    }
+    private void wrapFilledItemData(){
         DateTimeConverter dateTimeConverter = new DateTimeConverter();
-        HashMap<String, String> data = new HashMap<>();
+        data.put("id_user", session.get(sessionManager.getKEY_ID()));
         data.put(KEY_NAMABARANG, editText_namabarang.getText().toString());
         data.put(KEY_DESCBARANG, editText_deskripsibarang.getText().toString());
         data.put(KEY_STARTINGPRICE, editText_hargabarang_awal.getText().toString());
         data.put(KEY_EXPECTEDPRICE, editText_hargabarang_target.getText().toString());
         data.put(KEY_STARTTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalmulai.getText().toString() + " " + editText_jammulai.getText().toString() + ":00"));
         data.put(KEY_ENDTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalselesai.getText().toString() + " " + editText_jamselesai.getText().toString() + ":00"));
-        data.put(KEY_IMAGE, getStringImage(bitmap));
-        //Log.v("Data nama", editText_namabarang.getText().toString());
-        //Log.v("Data endtime", editText_tanggalselesai.getText().toString() + " " + editText_jamselesai.getText().toString() + ":00");
-        iReceiver.inputReceived(data);
+        //data.put(KEY_IMAGE, getStringImage(bitmap));
+        progressDialog = ProgressDialog.show(getActivity(), "Sedang diproses..","Harap tunggu...");
+        sendLelangData();
+    }
+    private void wrapImageData(String itemID, int index)
+    {
+        dataImage.put("image", getStringImage(listImages.get(index-1).getBitmap()));
+        dataImage.put("ext", "jpg");
+        dataImage.put("id_user", session.get(sessionManager.getKEY_ID()));
+        dataImage.put("itemid", itemID);
     }
     public String getStringImage(Bitmap bmp){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -160,7 +244,9 @@ public class UserLelangBarangFragment extends Fragment {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        Intent chooserIntent = Intent.createChooser(intent, "Select Picture");
+        //chooserIntent.putExtra("lol", "LOLOLOL");
+        startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST);
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -168,8 +254,22 @@ public class UserLelangBarangFragment extends Fragment {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
             Uri filepath = data.getData();
             try {
+                //Log.v("EXTRA SUCCESS", data.getStringExtra("lol"));
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filepath);
-                gambarBarang.setImageBitmap(bitmap);
+                if (IMAGE_ARRAY_INDEX == listImages.size() -1) {
+                    listImages.get(IMAGE_ARRAY_INDEX).setIdImage(Integer.toString(IMAGE_ARRAY_INDEX));
+                    listImages.get(IMAGE_ARRAY_INDEX).setBitmap(bitmap);
+                    ImageResources newinit = new ImageResources();
+                    listImages.add(newinit);
+
+                    adapter.updateImageSet();
+                }
+                else {
+                    listImages.get(IMAGE_ARRAY_INDEX).setIdImage(Integer.toString(IMAGE_ARRAY_INDEX));
+                    listImages.get(IMAGE_ARRAY_INDEX).setBitmap(bitmap);
+                    adapter.updateImageSet();
+                }
+                //gambarBarang.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -200,5 +300,37 @@ public class UserLelangBarangFragment extends Fragment {
             }
         }, hour, minute, false);
         timePickerDialog.show();
+    }
+
+    private void sendLelangData()
+    {
+        DataReceiver dataReceiver = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                String response = output.toString();
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    String successResp = jsonResponse.getString("status");
+                    if (successResp.equals("success")){
+                        String result = jsonResponse.getString("id_item");
+                        itemID = result;
+                        wrapImageData(itemID, IMAGE_ALREADY_UPLOADED_INDEX);
+                        sendGambarBarangToServer();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        SubmitBarangAPI submitBarangAPI = new SubmitBarangAPI(data, dataReceiver);
+        RequestController.getInstance(getActivity()).addToRequestQueue(submitBarangAPI);
+    }
+
+    private void sendGambarBarangToServer()
+    {
+        Log.v("Masuk ke upload gambar", "Sudah masuk ke upload gambar");
+        SubmitGambarBarangAPI submitGambarBarangAPI = new SubmitGambarBarangAPI(dataImage, imageReceiver);
+        submitGambarBarangAPI.setRetryPolicy(new DefaultRetryPolicy(MY_TIMEOUT, MY_RETRY, MY_BACKOFF_MULT));
+        RequestController.getInstance(getActivity()).addToRequestQueue(submitGambarBarangAPI);
     }
 }
