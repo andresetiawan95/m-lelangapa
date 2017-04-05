@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new BerandaHomeFragment(), getResources().getString(R.string.HOME));
         adapter.addFragment(new TrendingHomeFragment(), getResources().getString(R.string.TRENDING));
         adapter.addFragment(new CategoryHomeFragment(), getResources().getString(R.string.CATEGORY));
+        int limit = adapter.getCount() > 1 ? adapter.getCount() - 1 : 1;
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(limit);
     }
 
     @Override

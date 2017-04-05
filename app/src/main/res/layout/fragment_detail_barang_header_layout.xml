@@ -11,18 +11,18 @@
         android:paddingBottom="6dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp">
-        <TextView
+        <!--<TextView
             android:id="@+id/fragment_detail_barang_header_judul"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Judul Barang"
             android:textAppearance="?android:textAppearance"
             android:textSize="16dp"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"/>-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/fragment_detail_barang_header_profilepicture"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
@@ -33,7 +33,7 @@
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nama Auctioneer"/>
+                android:text="Nama Auctioneer"/>-->
             <FrameLayout
                 android:id="@+id/fragment_detail_barang_header_status_fragment"
                 android:layout_width="60dp"

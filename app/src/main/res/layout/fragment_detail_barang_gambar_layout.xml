@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/backgroundLayoutWhiteColor">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+       <!-- <ImageView
+            android:id="@+id/fragment_detail_barang_gambar_gambaritem"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="8dp">
-            <ImageView
-                android:id="@+id/fragment_detail_barang_gambar_gambaritem"
-                android:scaleType="center"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:src="@drawable/ic_insert_photo_grey_128dp"/>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+            android:layout_height="200dp"
+            android:src="@drawable/ic_insert_photo_grey_128dp"/>-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/fragment_detail_barang_gambar_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+        </android.support.v4.view.ViewPager>
+        <com.lelangapa.android.modifiedviews.CirclePageIndicator
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/fragment_detail_barang_gambar_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>

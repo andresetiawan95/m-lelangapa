@@ -6,10 +6,21 @@
     <RelativeLayout
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
+        <!--<TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceMedium"
-            android:text="Selamat datang di lelangapa"/>
+            android:text="Selamat datang di lelangapa"/>-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager_beranda"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="5dp">
+        </android.support.v4.view.ViewPager>
+        <com.lelangapa.android.modifiedviews.CirclePageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/viewpager_beranda"/>
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

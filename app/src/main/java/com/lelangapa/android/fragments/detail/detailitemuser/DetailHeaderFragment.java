@@ -30,10 +30,10 @@ public class DetailHeaderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_detail_barang_header_layout, container, false);
-        textView_judulBarang = (TextView) view.findViewById(R.id.fragment_detail_barang_header_judul);
+        /*textView_judulBarang = (TextView) view.findViewById(R.id.fragment_detail_barang_header_judul);
         textView_namaAuctioneer = (TextView) view.findViewById(R.id.fragment_detail_barang_header_auctioneername);
         textView_judulBarang.setText(detailItem.getNamabarang());
-        textView_namaAuctioneer.setText(detailItem.getNamaauctioneer());
+        textView_namaAuctioneer.setText(detailItem.getNamaauctioneer());*/
         return view;
     }
     private void setStatusBiddingFragment(int status)

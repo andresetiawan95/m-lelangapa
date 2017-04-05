@@ -80,6 +80,7 @@ public class DetailFragment extends Fragment {
     private SocketReceiver socketConnected, socketDisconnected, socketBidSuccessReceiver, socketBidFailedReceiver, socketBidCancelledReceiver, socketWinnerSelectedReceiver;
 
     private ArrayList<BiddingResources> biddingPeringkatList;
+    private ArrayList<String> listImageURL;
 
     private Bundle bundleExtras;
     private Intent intentChatActivity;
@@ -107,6 +108,7 @@ public class DetailFragment extends Fragment {
         setDataReceiverFavoriteStatus();
         biddingInformation = "opened";
         biddingPeringkatList = new ArrayList<>();
+        listImageURL = new ArrayList<>();
         detailHeaderFragment = new DetailHeaderFragment();
         detailImageFragment = new DetailImageFragment();
         detailBiddingFragment = new DetailBiddingFragment();
@@ -754,6 +756,7 @@ public class DetailFragment extends Fragment {
 
                             //clear list when load data from server
                             biddingPeringkatList.clear();
+                            listImageURL.clear();
                             for (int j=0;j<biddingPeringkatArray.length();j++)
                             {
                                 BiddingResources bidPeringkat = new BiddingResources();
@@ -766,8 +769,9 @@ public class DetailFragment extends Fragment {
                             for (int j=0;j<detailUrlGambarItemArray.length();j++)
                             {
                                 JSONObject detailUrlGambarItemObject = detailUrlGambarItemArray.getJSONObject(j);
-                                detailItem.setUrlgambarbarang("http://img-s7.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
+                                listImageURL.add("http://img-s7.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
                             }
+                            detailItem.setListImageURL(listImageURL);
                         }
                         detailReceived.dataReceived("done");
                     }

@@ -47,6 +47,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private boolean onPauseWhenSocketAlreadyConnected, onPauseActivity, biddingAlreadyDone;
     private Context activityContext;
     private ArrayList<BiddingResources> biddingPeringkatList;
+    private ArrayList<String> listImageURL;
 
     private BiddingSocket biddingSocket;
     private Socket socketBinder;
@@ -156,6 +157,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         biddingAlreadyDone = false;
         activityContext = getActivity();
         fragmentManager = getChildFragmentManager();
+        listImageURL = new ArrayList<>();
     }
     private void initializeFragments()
     {
@@ -659,11 +661,13 @@ public class DetailItemAuctioneerFragment extends Fragment {
                                 bidPeringkat.setHargaBid(biddingPeringkatObject.getString("bid_price"));
                                 biddingPeringkatList.add(bidPeringkat);
                             }*/
+                            listImageURL.clear();
                             for (int j=0;j<detailUrlGambarItemArray.length();j++)
                             {
                                 JSONObject detailUrlGambarItemObject = detailUrlGambarItemArray.getJSONObject(j);
-                                detailItem.setUrlgambarbarang("http://img-s7.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
+                                listImageURL.add("http://img-s7.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
                             }
+                            detailItem.setListImageURL(listImageURL);
                         }
                         detailReceived.dataReceived("done");
                     }

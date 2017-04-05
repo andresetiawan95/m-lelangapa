@@ -1,5 +1,7 @@
 package com.lelangapa.android.resources;
 
+import java.util.ArrayList;
+
 /**
  * Created by Andre on 12/17/2016.
  */
@@ -10,6 +12,9 @@ public class DetailItemResources {
     private Long tanggaljammulai_ms, tanggaljamselesai_ms;
     private Integer itembidstatus;
     private Integer bidtime;
+
+    private ArrayList<String> listImageURL;
+
     public DetailItemResources(){}
     public void setIdbarang(String id){
         idbarang = id;
@@ -142,4 +147,11 @@ public class DetailItemResources {
         return bidtime;
     }
 
+    public ArrayList<String> getListImageURL() {
+        return listImageURL;
+    }
+
+    public void setListImageURL(ArrayList<String> listImageURL) {
+        this.listImageURL = listImageURL;
+    }
 }

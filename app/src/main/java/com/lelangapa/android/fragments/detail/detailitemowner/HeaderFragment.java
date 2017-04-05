@@ -29,17 +29,17 @@ public class HeaderFragment extends Fragment {
     {
         View view = inflater.inflate(R.layout.fragment_detail_barang_header_layout, container, false);
         initializeViews(view);
-        setItemInformation();
+        //setItemInformation();
         return view;
     }
     /*
     * Initialization method start here
     * */
     private void initializeViews(View view)
-    {
+    {/*
         textView_judulBarang = (TextView) view.findViewById(R.id.fragment_detail_barang_header_judul);
         textView_namaAuctioneer = (TextView) view.findViewById(R.id.fragment_detail_barang_header_auctioneername);
-        imageView_avatar = (ImageView) view.findViewById(R.id.fragment_detail_barang_header_profilepicture);
+        imageView_avatar = (ImageView) view.findViewById(R.id.fragment_detail_barang_header_profilepicture);*/
     }
     /*
     * Initialization method end here
@@ -56,11 +56,11 @@ public class HeaderFragment extends Fragment {
     {
         setStatusBiddingFragment(status);
     }
-    private void setItemInformation()
+    /*private void setItemInformation()
     {
         textView_judulBarang.setText(detailItem.getNamabarang());
         textView_namaAuctioneer.setText(detailItem.getNamaauctioneer());
-    }
+    }*/
     /*
     * Setter method end here
     * */
