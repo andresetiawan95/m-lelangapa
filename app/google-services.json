@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "818458560903",
+    "firebase_url": "https://lelangapa-53b24.firebaseio.com",
+    "project_id": "lelangapa-53b24",
+    "storage_bucket": "lelangapa-53b24.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818458560903:android:63fd3defba6711ee",
+        "android_client_info": {
+          "package_name": "com.lelangapa.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "818458560903-4vatvo52sm8h7l459uv1r0uq1nmqa7r5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJM4dzRrSaDFZZL27SUY-3mdSJxh6bJjA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
