@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,6 +24,7 @@
                 android:layout_height="wrap_content"
                 android:text="Nama Kategori"
                 android:layout_gravity="center"
+                android:textSize="14sp"
                 android:layout_marginLeft="5dp"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>

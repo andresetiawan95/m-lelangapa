@@ -43,8 +43,7 @@
         android:background="@color/buttonBackgroundColorUser"
         android:textColor="@color/buttonWhiteColor"
         android:text="Login"
-        android:layout_marginBottom="12dp"
-        android:textAppearance="?android:textAppearanceMedium"/>
+        android:layout_marginBottom="12dp"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -52,7 +51,7 @@
             android:id="@+id/fragment_login_register_keterangan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Belum memiliki Akun Lelangkita? "/>
+            android:text="Belum memiliki Akun Lelangapa? "/>
         <TextView
             android:id="@+id/fragment_login_register_textview"
             android:layout_toRightOf="@id/fragment_login_register_keterangan"

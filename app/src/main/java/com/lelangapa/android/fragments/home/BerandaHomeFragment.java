@@ -22,6 +22,9 @@ public class BerandaHomeFragment extends Fragment {
     private ArrayList<Integer> listImages;
     private ViewPager viewPager;
     private PageIndicator pageIndicator;
+
+    private BerandaHomeCategoryFragment homeCategoryFragment;
+
     public BerandaHomeFragment()
     {
         listImages = new ArrayList<>();
@@ -30,8 +33,10 @@ public class BerandaHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_beranda_home_layout, container, false);
         initializeViews(view);
+        initializeFragments();
         initializeImages();
         setupViewPagerAndIndicator();
+        setupCategoryFragment();
         return view;
     }
 
@@ -50,7 +55,7 @@ public class BerandaHomeFragment extends Fragment {
     }
     private void initializeFragments()
     {
-
+        homeCategoryFragment = new BerandaHomeCategoryFragment();
     }
     private void setupViewPagerAndIndicator()
     {
@@ -58,5 +63,11 @@ public class BerandaHomeFragment extends Fragment {
 
         viewPager.setAdapter(adapter);
         pageIndicator.setViewPager(viewPager);
+    }
+    private void setupCategoryFragment()
+    {
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragment_beranda_home_category_layout, homeCategoryFragment)
+                .commit();
     }
 }

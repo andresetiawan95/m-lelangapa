@@ -165,7 +165,6 @@
             android:background="@color/buttonBackgroundColorUser"
             android:textColor="@color/buttonWhiteColor"
             android:text="Register"
-            android:layout_marginBottom="12dp"
-            android:textAppearance="?android:textAppearanceMedium"/>
+            android:layout_marginBottom="12dp"/>
     </LinearLayout>
 </ScrollView>

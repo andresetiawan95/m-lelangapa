@@ -62,7 +62,10 @@ public class LoginFragment extends Fragment {
                                 JSONArray userData = jsonResponse.getJSONArray("data");
                                 JSONObject userDataObject = userData.getJSONObject(0);
                                 SessionManager sessionManager = new SessionManager(getActivity());
-                                sessionManager.createSession(userDataObject.getString("id"), userDataObject.getString("username"),userDataObject.getString("name"),userDataObject.getString("email"));
+                                sessionManager.createSession(userDataObject.getString("id_user_return"),
+                                        userDataObject.getString("username_return"),
+                                        userDataObject.getString("name_user_return"),
+                                        userDataObject.getString("email_user_return"));
 
                                 Intent loginIntent = new Intent(getActivity(), MainActivity.class);
                                 loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
