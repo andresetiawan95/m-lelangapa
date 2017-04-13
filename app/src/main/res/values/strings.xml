@@ -12,7 +12,7 @@
     <!--Home Activity-->
     <string name="HOME">Home</string>
     <string name="TRENDING">Trending</string>
-    <string name="CATEGORY">Kategori</string>
+    <string name="PROMO">Promo</string>
     <!--Session Manager-->0
     <string name="SESSION_PREFERENCES">sessionPreference</string>
     <string name="IS_LOGGED_IN">isLoggedIn</string>
@@ -75,9 +75,5 @@
     <string-array name="spinner_feedback_for_public">
         <item>Sebagai pemenang</item>
         <item>Sebagai pelelang</item>
-    </string-array>
-
-    <string-array name="categories">
-
     </string-array>
 </resources>

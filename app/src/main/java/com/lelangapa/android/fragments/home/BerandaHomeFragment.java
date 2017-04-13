@@ -1,4 +1,4 @@
-package com.lelangapa.android.fragments;
+package com.lelangapa.android.fragments.home;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,6 +47,10 @@ public class BerandaHomeFragment extends Fragment {
         listImages.add(R.drawable.ic_insert_photo_grey_128dp);
         listImages.add(R.drawable.ic_insert_photo_grey_128dp);
         listImages.add(R.drawable.ic_insert_photo_grey_128dp);
+    }
+    private void initializeFragments()
+    {
+
     }
     private void setupViewPagerAndIndicator()
     {

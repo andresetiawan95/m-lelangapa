@@ -1,4 +1,4 @@
-package com.lelangapa.android.fragments;
+package com.lelangapa.android.fragments.home;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

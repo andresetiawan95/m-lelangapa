@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--<TextView
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view_beranda"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="Selamat datang di lelangapa"/>-->
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager_beranda"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginBottom="5dp">
-        </android.support.v4.view.ViewPager>
-        <com.lelangapa.android.modifiedviews.CirclePageIndicator
-            android:id="@+id/indicator"
+            card_view:cardUseCompatPadding="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager_beranda"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="5dp">
+                </android.support.v4.view.ViewPager>
+                <com.lelangapa.android.modifiedviews.CirclePageIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+        <FrameLayout
+            android:id="@+id/fragment_beranda_home_category_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/viewpager_beranda"/>
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/card_view_beranda"/>
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
