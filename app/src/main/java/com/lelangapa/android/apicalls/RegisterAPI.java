@@ -12,7 +12,7 @@ import java.util.Map;
  */
 
 public class RegisterAPI extends StringRequest {
-    private static final String REGISTER_URL = "https://no-api.lelangapa.com/apis/v1/users/register";
+    private static final String REGISTER_URL = "https://no-api.lelangapa.com/public-apis/v1/users/register";
     private Map<String, String> data;
     public RegisterAPI(String username, String domain, String name, String password, String address, String email, String city, String province, String telepon, Response.Listener<String> listener){
         super(Request.Method.POST, REGISTER_URL, listener, null);

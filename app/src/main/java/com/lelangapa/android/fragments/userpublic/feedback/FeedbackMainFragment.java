@@ -130,12 +130,12 @@ public class FeedbackMainFragment extends Fragment {
         getAndRemoveFragment();
         enableProgressBar();
         if (position == 0) {
-            urlParams = userID + "/ratings/winner";
+            urlParams = userID + "/ratings/as/winner";
             UserPublicAPI.GetFeedbackAsWinnerAPI winnerAPI = UserPublicAPI.instanceFeedbackWinner(urlParams, dataReceiver);
             RequestController.getInstance(getActivity()).addToRequestQueue(winnerAPI);
         }
         else {
-            urlParams = userID + "/ratings/auctioneer";
+            urlParams = userID + "/ratings/as/auctioneer";
             UserPublicAPI.GetFeedbackAsAuctioneerAPI auctioneerAPI =
                     UserPublicAPI.instanceFeedbackAuctioneer(urlParams, dataReceiver);
             RequestController.getInstance(getActivity()).addToRequestQueue(auctioneerAPI);

@@ -7,6 +7,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.lelangapa.android.interfaces.DataReceiver;
+import com.lelangapa.android.preferences.SessionManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,9 @@ public class  FavoriteAPI {
         public Map<String, String> getHeaders() throws AuthFailureError {
             Map<String, String>  params = new HashMap<String, String>();
             params.put("Cache-Control", "max-age=0");
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+            }
             Log.v("REQUEST HEADER", params.toString());
             return params;
         }
@@ -61,6 +65,9 @@ public class  FavoriteAPI {
         public Map<String, String> getHeaders() throws AuthFailureError {
             Map<String, String>  params = new HashMap<String, String>();
             params.put("Cache-Control", "max-age=0");
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+             }
             Log.v("REQUEST HEADER", params.toString());
             return params;
         }
@@ -78,7 +85,16 @@ public class  FavoriteAPI {
             }, null);
             this.dataFavorite = dataFavorite;
         }
-
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
+        }
         @Override
         public HashMap<String, String> getParams()
         {
@@ -98,7 +114,16 @@ public class  FavoriteAPI {
             }, null);
             this.dataFavorite = dataFavorite;
         }
-
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
+        }
         @Override
         public HashMap<String, String> getParams()
         {

@@ -1,11 +1,16 @@
 package com.lelangapa.android.apicalls.feedback.berifeedback;
 
+import android.util.Log;
+
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.lelangapa.android.interfaces.DataReceiver;
+import com.lelangapa.android.preferences.SessionManager;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by andre on 13/03/17.
@@ -14,26 +19,46 @@ import java.util.HashMap;
 public class BeriFeedbackAPI {
     public static class GetFeedbackWinnerList extends StringRequest
     {
-        private static final String GETFEEDBACKWINNERLISTURL = "https://no-api.lelangapa.com/apis/v1/ratings/winner/";
+        private static final String GETFEEDBACKWINNERLISTURL = "https://no-api.lelangapa.com/apis/v1/users/ratings/for/winner";
         public GetFeedbackWinnerList(String userID, final DataReceiver dataReceiver){
-            super(Method.GET, GETFEEDBACKWINNERLISTURL + userID, new Response.Listener<String>() {
+            super(Method.GET, GETFEEDBACKWINNERLISTURL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     dataReceiver.dataReceived(response);
                 }
             }, null);
         }
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
+        }
     }
     public static class GetFeedbackAuctioneerList extends StringRequest
     {
-        private static final String GETFEEDBACKAUCTIONEERLISTURL = "https://no-api.lelangapa.com/apis/v1/ratings/auctioneer/";
+        private static final String GETFEEDBACKAUCTIONEERLISTURL = "https://no-api.lelangapa.com/apis/v1/users/ratings/for/auctioneer";
         public GetFeedbackAuctioneerList(String userID, final DataReceiver dataReceiver){
-            super(Method.GET, GETFEEDBACKAUCTIONEERLISTURL + userID, new Response.Listener<String>() {
+            super(Method.GET, GETFEEDBACKAUCTIONEERLISTURL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     dataReceiver.dataReceived(response);
                 }
             }, null);
+        }
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
         }
     }
     public static class GetFeedbackWinnerDetail extends StringRequest
@@ -47,6 +72,16 @@ public class BeriFeedbackAPI {
                 }
             }, null);
         }
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
+        }
     }
     public static class GetFeedbackAuctioneerDetail extends StringRequest
     {
@@ -58,6 +93,16 @@ public class BeriFeedbackAPI {
                     dataReceiver.dataReceived(response);
                 }
             }, null);
+        }
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
         }
     }
     public static class InsertFeedbackForAuctioneer extends StringRequest
@@ -72,6 +117,16 @@ public class BeriFeedbackAPI {
                 }
             }, null);
             this.feedback = feedback;
+        }
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
         }
         @Override
         public HashMap<String, String> getParams()
@@ -93,6 +148,16 @@ public class BeriFeedbackAPI {
             this.feedback = feedback;
         }
         @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
+        }
+        @Override
         public HashMap<String, String> getParams()
         {
             return feedback;
@@ -112,6 +177,16 @@ public class BeriFeedbackAPI {
             this.feedback = feedback;
         }
         @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
+        }
+        @Override
         public HashMap<String, String> getParams()
         {
             return feedback;
@@ -129,6 +204,16 @@ public class BeriFeedbackAPI {
                 }
             }, null);
             this.feedback = feedback;
+        }
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
         }
         @Override
         public HashMap<String, String> getParams()

@@ -24,17 +24,21 @@ public class SessionManager {
     private static final String DUMMY_USERNAME = "dummy";
     private static final String DUMMY_NAME = "Dummy";
     private static final String DUMMY_EMAIL = "dummy@lelangkita.com";
+
+    public static final String KEY_TOKEN = "token";
+    public static final String DUMMY_TOKEN = "no_token";
     public SessionManager(Context context){
         this.context = context;
         sessionPreferences = this.context.getSharedPreferences(SESSION_PREFERENCES, Context.MODE_PRIVATE);
         editor = sessionPreferences.edit();
     }
-    public void createSession(String id, String username, String name, String email){
+    public void createSession(String id, String username, String name, String email, String token){
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.putString(KEY_ID, id);
         editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_NAME, name);
         editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_TOKEN, token);
         editor.commit();
     }
     public void editEmailSessionPreference(String email){
@@ -51,6 +55,7 @@ public class SessionManager {
         sessionMap.put(KEY_USERNAME, sessionPreferences.getString(KEY_USERNAME, DUMMY_USERNAME));
         sessionMap.put(KEY_NAME, sessionPreferences.getString(KEY_NAME, DUMMY_NAME));
         sessionMap.put(KEY_EMAIL, sessionPreferences.getString(KEY_EMAIL, DUMMY_EMAIL));
+        sessionMap.put(KEY_TOKEN, sessionPreferences.getString(KEY_TOKEN, DUMMY_TOKEN));
         return sessionMap;
     }
     public void destroySession(){
@@ -72,6 +77,7 @@ public class SessionManager {
         sessionMap.put(KEY_USERNAME, sessionPreferences.getString(KEY_USERNAME, DUMMY_USERNAME));
         sessionMap.put(KEY_NAME, sessionPreferences.getString(KEY_NAME, DUMMY_NAME));
         sessionMap.put(KEY_EMAIL, sessionPreferences.getString(KEY_EMAIL, DUMMY_EMAIL));
+        sessionMap.put(KEY_TOKEN, sessionPreferences.getString(KEY_TOKEN, DUMMY_TOKEN));
         return sessionMap;
     }
     public String getKEY_NAME(){
@@ -81,4 +87,12 @@ public class SessionManager {
         return KEY_EMAIL;
     }
     public String getKEY_ID() { return KEY_ID; }
+
+    /* SOME NEW STATIC METHODS */
+    public static boolean isLoggedInStatic() {
+        return sessionPreferences.getBoolean(IS_LOGGED_IN, false);
+    }
+    public static String getUserTokenStatic() {
+        return sessionPreferences.getString(KEY_TOKEN, DUMMY_TOKEN);
+    }
 }

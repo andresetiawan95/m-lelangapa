@@ -3,6 +3,7 @@ package com.lelangapa.android.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class LoginFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String res = jsonResponse.getString("result");
+                            Log.v("JWT TOKEN", jsonResponse.getString("token"));
                             if (res.equals("1")){
                                 JSONArray userData = jsonResponse.getJSONArray("data");
                                 JSONObject userDataObject = userData.getJSONObject(0);
@@ -65,7 +67,8 @@ public class LoginFragment extends Fragment {
                                 sessionManager.createSession(userDataObject.getString("id_user_return"),
                                         userDataObject.getString("username_return"),
                                         userDataObject.getString("name_user_return"),
-                                        userDataObject.getString("email_user_return"));
+                                        userDataObject.getString("email_user_return"),
+                                        jsonResponse.getString("token"));
 
                                 Intent loginIntent = new Intent(getActivity(), MainActivity.class);
                                 loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

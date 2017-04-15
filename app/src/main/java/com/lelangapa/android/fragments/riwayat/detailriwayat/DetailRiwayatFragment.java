@@ -125,7 +125,7 @@ public class DetailRiwayatFragment extends Fragment {
     }
     private void getBiddingList()
     {
-        String urlParam = userID + '-' + riwayatResources.getIdItem() + '-' + Integer.toString(riwayatResources.getBidTime());
+        String urlParam = userID + "/bids/history/list/" + riwayatResources.getIdItem() + '-' + Integer.toString(riwayatResources.getBidTime());
         //Log.v("URLPARAM", urlParam);
         RiwayatAPI.GetRiwayatBidList getRiwayatBidList = RiwayatAPI.initializeGetRiwayatBidList(urlParam, listReceiver);
         RequestController.getInstance(getActivity()).addToRequestQueue(getRiwayatBidList);

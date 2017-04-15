@@ -10,10 +10,10 @@ import com.lelangapa.android.interfaces.DataReceiver;
 
 public class UserPublicAPI {
     public static class GetGeraiAPI extends StringRequest {
-        private static final String GETGERAIAPIURL = "https://no-api.lelangapa.com/apis/v1/items/getitemonuser";
+        private static final String GETGERAIAPIURL = "https://no-api.lelangapa.com/public-apis/v1/users/";
         private GetGeraiAPI(String userID, final DataReceiver dataReceiver)
         {
-            super(Method.GET, GETGERAIAPIURL + "?userid=" + userID, new Response.Listener<String>() {
+            super(Method.GET, GETGERAIAPIURL + userID + "/items", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     dataReceiver.dataReceived(response);
@@ -22,9 +22,9 @@ public class UserPublicAPI {
         }
     }
     public static class GetRiwayatAPI extends StringRequest {
-        private static final String GETRIWAYATURL = "https://no-api.lelangapa.com/apis/v1/bids/history/";
+        private static final String GETRIWAYATURL = "https://no-api.lelangapa.com/public-apis/v1/users/";
         private GetRiwayatAPI(String userID, final DataReceiver dataReceiver) {
-            super(Method.GET, GETRIWAYATURL + userID, new Response.Listener<String>() {
+            super(Method.GET, GETRIWAYATURL + userID + "/bids/history", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     dataReceiver.dataReceived(response);
@@ -33,7 +33,7 @@ public class UserPublicAPI {
         }
     }
     public static class GetFeedbackAsAuctioneerAPI extends StringRequest {
-        private static final String GETFEEDBACKASAUCTIONEERURL = "https://no-api.lelangapa.com/apis/v1/users/";
+        private static final String GETFEEDBACKASAUCTIONEERURL = "https://no-api.lelangapa.com/public-apis/v1/users/";
         private GetFeedbackAsAuctioneerAPI(String urlparams, final DataReceiver dataReceiver){
             super(Method.GET, GETFEEDBACKASAUCTIONEERURL + urlparams, new Response.Listener<String>() {
                 @Override
@@ -44,7 +44,7 @@ public class UserPublicAPI {
         }
     }
     public static class GetFeedbackAsWinnerAPI extends StringRequest {
-        private static final String GETFEEDBACKASWINNERURL = "https://no-api.lelangapa.com/apis/v1/users/";
+        private static final String GETFEEDBACKASWINNERURL = "https://no-api.lelangapa.com/public-apis/v1/users/";
         private GetFeedbackAsWinnerAPI(String urlparams, final DataReceiver dataReceiver){
             super(Method.GET, GETFEEDBACKASWINNERURL + urlparams, new Response.Listener<String>() {
                 @Override
