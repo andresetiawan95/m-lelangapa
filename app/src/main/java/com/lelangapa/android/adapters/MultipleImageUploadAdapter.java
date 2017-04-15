@@ -42,6 +42,9 @@ public class MultipleImageUploadAdapter extends RecyclerView.Adapter<MultipleIma
         if (imageResources.getBitmap() != null) {
             holder.imageView_image.setImageBitmap(imageResources.getBitmap());
         }
+        else {
+            holder.imageView_image.setImageResource(R.drawable.ic_add_box_grey_48dp);
+        }
         holder.imageView_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
