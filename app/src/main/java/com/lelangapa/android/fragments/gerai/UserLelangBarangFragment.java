@@ -3,6 +3,7 @@ package com.lelangapa.android.fragments.gerai;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.UserGeraiActivity;
+import com.lelangapa.android.activities.cropper.GalleryUtil;
 import com.lelangapa.android.adapters.MultipleImageUploadAdapter;
 import com.lelangapa.android.apicalls.gerai.SubmitBarangAPI;
 import com.lelangapa.android.apicalls.gerai.SubmitGambarBarangAPI;
@@ -39,7 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -74,6 +76,7 @@ public class UserLelangBarangFragment extends Fragment {
     public static final float MY_BACKOFF_MULT = 2f;
 
     private int PICK_IMAGE_REQUEST = 1;
+    private int CROP_IMAGE_REQUEST = 2;
     private int IMAGE_ARRAY_INDEX = 0;
     private int IMAGE_ALREADY_UPLOADED_INDEX = 1;
     private String itemID;
@@ -84,6 +87,8 @@ public class UserLelangBarangFragment extends Fragment {
     private RecyclerView recyclerView_imageList;
     private ImagePicker imagePicker;
     private DataReceiver imageReceiver;
+
+    private Intent cropIntent;
 
     public UserLelangBarangFragment()
     {
@@ -241,19 +246,70 @@ public class UserLelangBarangFragment extends Fragment {
         return encodedImage;
     }
     private void chooseImage(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
+        Intent galleryIntent = new Intent(getActivity(), GalleryUtil.class);
+        startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
+
+        /*Intent intent = new Intent();
+        intent.setType("image*//*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         Intent chooserIntent = Intent.createChooser(intent, "Select Picture");
         //chooserIntent.putExtra("lol", "LOLOLOL");
-        startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST);
+        startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST);*/
+    }
+    private void otherVersionOfChooseImage()
+    {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+    }
+    private void cropImageURI(Uri path){
+        try {
+            cropIntent = new Intent("com.android.camera.action.CROP");
+
+            cropIntent.setDataAndType(path, "image/*");
+            cropIntent.putExtra("crop", "true");
+            cropIntent.putExtra("outputX", 180);
+            cropIntent.putExtra("outputY", 180);
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("return-data", true);
+
+            startActivityForResult(cropIntent, CROP_IMAGE_REQUEST);
+        } catch(ActivityNotFoundException e) {
+            String errorMessage = "Perangkat Anda Tidak Mendukung Crop";
+            Toast toast = Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+    private void cropImage(String path){
+        try {
+            cropIntent = new Intent("com.android.camera.action.CROP");
+            File f = new File(path);
+            Uri content = Uri.fromFile(f);
+            cropIntent.setDataAndType(content, "image/*");
+            cropIntent.putExtra("crop", "true");
+            cropIntent.putExtra("outputX", 180);
+            cropIntent.putExtra("outputY", 180);
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("return-data", true);
+
+            startActivityForResult(cropIntent, CROP_IMAGE_REQUEST);
+        } catch(ActivityNotFoundException e) {
+            String errorMessage = "Perangkat Anda Tidak Mendukung Crop";
+            Toast toast = Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
-            Uri filepath = data.getData();
-            try {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null){
+            //Uri filePath = data.getData();
+
+            String picturePath = data.getStringExtra("picturePath");
+            //cropImageURI(filePath);
+            cropImage(picturePath);
+            /*try {
                 //Log.v("EXTRA SUCCESS", data.getStringExtra("lol"));
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filepath);
                 if (IMAGE_ARRAY_INDEX == listImages.size() -1) {
@@ -272,6 +328,25 @@ public class UserLelangBarangFragment extends Fragment {
                 //gambarBarang.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
+            }*/
+        }
+        else if (requestCode == CROP_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            if (data != null) {
+                Bundle bundle = data.getExtras();
+                bitmap = bundle.getParcelable("data");
+                if (IMAGE_ARRAY_INDEX == listImages.size() -1) {
+                    listImages.get(IMAGE_ARRAY_INDEX).setIdImage(Integer.toString(IMAGE_ARRAY_INDEX));
+                    listImages.get(IMAGE_ARRAY_INDEX).setBitmap(bitmap);
+                    ImageResources newinit = new ImageResources();
+                    listImages.add(newinit);
+
+                    adapter.updateImageSet();
+                }
+                else {
+                    listImages.get(IMAGE_ARRAY_INDEX).setIdImage(Integer.toString(IMAGE_ARRAY_INDEX));
+                    listImages.get(IMAGE_ARRAY_INDEX).setBitmap(bitmap);
+                    adapter.updateImageSet();
+                }
             }
         }
     }
