@@ -3,7 +3,6 @@ package com.lelangapa.android.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +58,6 @@ public class LoginFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String res = jsonResponse.getString("result");
-                            Log.v("JWT TOKEN", jsonResponse.getString("token"));
                             if (res.equals("1")){
                                 JSONArray userData = jsonResponse.getJSONArray("data");
                                 JSONObject userDataObject = userData.getJSONObject(0);

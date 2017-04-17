@@ -61,10 +61,11 @@
                                 android:layout_height="14dp"
                                 android:layout_gravity="center"/>
                             <TextView
+                                android:id="@+id/fragment_detail_barang_auctioneer_layout_rating_auctioneer_rate"
                                 android:layout_marginRight="8dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="5.0"
+                                android:text="--"
                                 android:textSize="14dp"/>
                             <ImageView
                                 android:src="@drawable/ic_person_detailfragment_rater_64dp"
@@ -72,9 +73,10 @@
                                 android:layout_width="14dp"
                                 android:layout_height="14dp"/>
                             <TextView
+                                android:id="@+id/fragment_detail_barang_auctioneer_layout_rating_auctioneer_total"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="10000"
+                                android:text="--"
                                 android:textSize="14dp"/>
                         </LinearLayout>
                     </LinearLayout>
@@ -99,10 +101,11 @@
                                 android:layout_height="14dp"
                                 android:layout_gravity="center"/>
                             <TextView
+                                android:id="@+id/fragment_detail_barang_auctioneer_layout_rating_winner_rate"
                                 android:layout_marginRight="8dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="5.0"
+                                android:text="--"
                                 android:textSize="14dp"/>
                             <ImageView
                                 android:layout_width="14dp"
@@ -110,9 +113,10 @@
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_person_detailfragment_rater_64dp"/>
                             <TextView
+                                android:id="@+id/fragment_detail_barang_auctioneer_layout_rating_winner_total"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="10000"
+                                android:text="--"
                                 android:textSize="14dp"/>
                         </LinearLayout>
                     </LinearLayout>
