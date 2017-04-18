@@ -59,6 +59,7 @@ public class DaftarTawaranFragment extends Fragment {
 
     private SocketSender socketSender;
     private SocketReceiver onBidSuccessDaftarTawaranReceiver, onBidCancelledDaftarTawaranReceiver, onWinnerSelectedDaftarTawaranReceiver;
+    private DataReceiver onBlockUserReceiver;
 
     private boolean isNoBidIndicatorEnabled;
     //private boolean onPauseWhenSocketAlreadyConnected, onPauseActivity;
@@ -120,6 +121,7 @@ public class DaftarTawaranFragment extends Fragment {
     }
     private void initializeTogglers()
     {
+        blockToggler = new BlockToggler(getActivity(), onBlockUserReceiver, detailItem.getIdbarang(), detailItem.getIdauctioneer(), detailItem.getBidtime());
         cancelToggler = new CancelToggler(getActivity(), socketSender, detailItem.getIdbarang(), detailItem.getBidtime());
         chooseWinnerToggler = new ChooseWinnerToggler(getActivity(), socketSender, detailItem.getIdbarang());
     }
@@ -158,6 +160,27 @@ public class DaftarTawaranFragment extends Fragment {
 
             }
         };
+        onBlockUserReceiver = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                String response = output.toString();
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    if (jsonResponse.getString("status").equals("success")) {
+                        whenUserBlocked();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+    }
+    private void whenUserBlocked()
+    {
+        blockToggler.unshowProgressDialog();
+        swipeRefreshLayout.setEnabled(true);
+        getOfferList();
     }
     private void whenOfferListReceived()
     {
@@ -189,7 +212,7 @@ public class DaftarTawaranFragment extends Fragment {
     }
     private void initializeAdapter()
     {
-        daftarTawaranAdapter = new DaftarTawaranAdapter(getActivity(), listOffer, cancelToggler, chooseWinnerToggler);
+        daftarTawaranAdapter = new DaftarTawaranAdapter(getActivity(), listOffer, blockToggler, cancelToggler, chooseWinnerToggler);
     }
     private void setRecyclerViewProperties()
     {
@@ -349,7 +372,7 @@ public class DaftarTawaranFragment extends Fragment {
     private void getOfferList()
     {
         swipeRefreshLayout.setRefreshing(true);
-        String urlparams = detailItem.getIdbarang() + "/offers?limit=5";
+        String urlparams = detailItem.getIdbarang() + "/offers?limit=50";
         DaftarTawaranAPI.GetOfferListAPI getOfferListAPI
                 = DaftarTawaranAPI.instanceGetOfferList(urlparams, dataReceiver);
         RequestController.getInstance(getActivity()).addToRequestQueue(getOfferListAPI);

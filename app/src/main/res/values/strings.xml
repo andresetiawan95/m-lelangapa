@@ -68,6 +68,10 @@
     <string name="CANCEL_BID_ALERTDIALOGOKBUTTON">YA</string>
     <string name="CANCEL_BID_ALERTDIALOGCANCELBUTTON">TIDAK</string>
 
+    <string name="BLOCK_USER_ALERTDIALOGTITLE">Block pengguna?</string>
+    <string name="BLOCK_USER_ALERTDIALOGMSG">Jika block ini dilakukan, maka pengguna tidak dapat menawar barang anda lagi</string>
+    <string name="BLOCK_USER_ALERTDIALOGOKBUTTON">BLOCK</string>
+    <string name="BLOCK_USER_ALERTDIALOGCANCELBUTTON">TIDAK</string>
 
     <string name="CHATMESSAGE_HINT">Ketik pesan...</string>
 

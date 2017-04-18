@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.fragments.detail.detailtawaran.BlockToggler;
 import com.lelangapa.android.fragments.detail.detailtawaran.CancelToggler;
 import com.lelangapa.android.fragments.detail.detailtawaran.ChooseWinnerToggler;
 import com.lelangapa.android.resources.BiddingResources;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 public class DaftarTawaranAdapter extends RecyclerView.Adapter<DaftarTawaranAdapter.ViewHolder> {
     private Context context;
     private ArrayList<BiddingResources> listOffers;
+    private BlockToggler blockToggler;
     private CancelToggler cancelToggler;
     private ChooseWinnerToggler chooseWinnerToggler;
 
@@ -32,11 +34,13 @@ public class DaftarTawaranAdapter extends RecyclerView.Adapter<DaftarTawaranAdap
     public DaftarTawaranAdapter
             (Context context,
              ArrayList<BiddingResources> list,
+             BlockToggler blockToggler,
              CancelToggler cancelToggler,
              ChooseWinnerToggler chooseWinnerToggler)
     {
         this.context = context;
         this.listOffers = list;
+        this.blockToggler = blockToggler;
         this.cancelToggler = cancelToggler;
         this.chooseWinnerToggler = chooseWinnerToggler;
     }
@@ -75,6 +79,8 @@ public class DaftarTawaranAdapter extends RecyclerView.Adapter<DaftarTawaranAdap
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.daftar_tawaran_block_user:
+                                blockToggler.setBidderIDToBlock(detailOffer.getIdBidder());
+                                blockToggler.showAlertDialog();
                                 return true;
                             case R.id.daftar_tawaran_cancel_offer:
                                 cancelToggler.setBidIDAndBidderID(detailOffer.getIdBid(), detailOffer.getIdBidder());
