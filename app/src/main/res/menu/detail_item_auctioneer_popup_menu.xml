@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/detail_item_auctioneer_choose_offer"
+        app:showAsAction="withText"
+        android:title="Ambil tawaran ini"
+        android:visible="true"/>
+    <item
+        android:id="@+id/detail_item_auctioneer_offer_list"
+        app:showAsAction="withText"
+        android:title="Daftar tawaran masuk"
+        android:visible="true"/>
+    <item
+        android:id="@+id/detail_item_auctioneer_block_list"
+        app:showAsAction="withText"
+        android:title="Daftar hitam"
+        android:visible="true"/>
+    <item
+        android:id="@+id/detail_item_auctioneer_cancel_lelang"
+        app:showAsAction="withText"
+        android:title="Batalkan lelang"
+        android:visible="true"/>
+</menu>

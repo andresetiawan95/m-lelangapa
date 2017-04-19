@@ -73,6 +73,11 @@
     <string name="BLOCK_USER_ALERTDIALOGOKBUTTON">BLOCK</string>
     <string name="BLOCK_USER_ALERTDIALOGCANCELBUTTON">TIDAK</string>
 
+    <string name="UNBLOCK_USER_ALERTDIALOGTITLE">Unblock pengguna?</string>
+    <string name="UNBLOCK_USER_ALERTDIALOGMSG">Pengguna akan dapat memberikan penawaran pada sesi lelang ini</string>
+    <string name="UNBLOCK_USER_ALERTDIALOGOKBUTTON">UNBLOCK</string>
+    <string name="UNBLOCK_USER_ALERTDIALOGCANCELBUTTON">TIDAK</string>
+
     <string name="CHATMESSAGE_HINT">Ketik pesan...</string>
 
     <!-- String resource for spinner on UserPublicActivity (Fragment Feedback)-->
