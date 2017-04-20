@@ -25,7 +25,7 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager_detail_barang"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="170dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
     </LinearLayout>
     <View

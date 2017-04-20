@@ -3,6 +3,7 @@ package com.lelangapa.android.fragments.detail.detailitemowner;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.detail.DetailBarangActivity;
+import com.lelangapa.android.activities.detail.block.BlockActivity;
 import com.lelangapa.android.apicalls.detail.DetailItemAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.apicalls.socket.BiddingSocket;
@@ -427,6 +429,12 @@ public class DetailItemAuctioneerFragment extends Fragment {
                 //showCustomDialog();
                 showFragmentTawaran();
             }
+
+            @Override
+            public void responseBlockListReceived() {
+                showActivityBlockList();
+            }
+
             @Override
             public void responseWinnerChosenReceived(boolean status, String idBid) {
                 JSONObject winnerChosenObject = new JSONObject();
@@ -785,5 +793,17 @@ public class DetailItemAuctioneerFragment extends Fragment {
                 .replace(R.id.fragment_detail_barang_layout, tawaranFragment)
                 .addToBackStack(null)
                 .commit();*/
+    }
+
+    private void showActivityBlockList()
+    {
+        Bundle bundleExtras = new Bundle();
+        bundleExtras.putString("id_item", itemID);
+        bundleExtras.putString("id_auctioneer", detailItem.getIdauctioneer());
+        bundleExtras.putInt("bid_time", detailItem.getBidtime());
+
+        Intent blockIntent = new Intent(getActivity(), BlockActivity.class);
+        blockIntent.putExtras(bundleExtras);
+        startActivity(blockIntent);
     }
 }

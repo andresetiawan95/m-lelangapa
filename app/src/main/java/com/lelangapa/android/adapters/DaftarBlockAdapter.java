@@ -63,7 +63,7 @@ public class DaftarBlockAdapter extends RecyclerView.Adapter<DaftarBlockAdapter.
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.unblock_popup_menu:
-                                unblockToggler.setBidderIDToUnblock(blockResources.getIdBlock());
+                                unblockToggler.setBidderIDToUnblock(blockResources.getIdUserBlocked());
                                 unblockToggler.showAlertDialog();
                                 return true;
                             default:
@@ -71,6 +71,8 @@ public class DaftarBlockAdapter extends RecyclerView.Adapter<DaftarBlockAdapter.
                         }
                     }
                 });
+                popupMenuOptions.inflate(R.menu.unblock_popup_menu);
+                popupMenuOptions.show();
             }
         });
     }

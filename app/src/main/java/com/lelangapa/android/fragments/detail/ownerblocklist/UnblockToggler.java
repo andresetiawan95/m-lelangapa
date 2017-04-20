@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.apicalls.detail.daftartawaran.DaftarTawaranAPI;
+import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.interfaces.DataReceiver;
 
 import java.util.HashMap;
@@ -69,19 +71,21 @@ public class UnblockToggler {
         }
     }
     private void buildRequestBodyData() {
+        unblockData = new HashMap<>();
         unblockData.put("id_item", itemID);
         unblockData.put("id_user_auctioneer", auctioneerID);
         unblockData.put("id_user_blocked", bidderID);
         unblockData.put("bid_time", Integer.toString(bidTime));
     }
     private void showProgressDialog() {
-        progressDialog = ProgressDialog.show(activity, "unblock pengguna", "Harap tunggu");
+        progressDialog = ProgressDialog.show(activity, "Unblock pengguna", "Harap tunggu");
     }
     public void unshowProgressDialog() {
         progressDialog.dismiss();
     }
     private void sendUnblockDataToServer()
     {
-
+        DaftarTawaranAPI.UnblockUser unblockUserAPI = DaftarTawaranAPI.instanceUnblockUser(unblockData, dataReceiver);
+        RequestController.getInstance(activity).addToRequestQueue(unblockUserAPI);
     }
 }

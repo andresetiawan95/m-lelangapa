@@ -70,7 +70,7 @@ public class DaftarTawaranAPI {
     }
     public static class UnblockUser extends StringRequest
     {
-        private HashMap<String, String> data = new HashMap<>();
+        private HashMap<String, String> data;
         private static final String UNBLOCKUSERURL = "https://no-api.lelangapa.com/apis/v1/bids/unblock";
         private UnblockUser(HashMap<String, String> data, final DataReceiver dataReceiver)
         {

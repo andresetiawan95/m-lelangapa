@@ -48,7 +48,7 @@ public class DaftarTawaranFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView imageView_avatar;
     private TextView textView_nama, textView_offer, textView_noBidIndicator;
-    private LinearLayout linearLayout_userProperties;
+    private LinearLayout linearLayout_userProperties, linearLayout_priceProperties;
     private RecyclerView recyclerView;
 
     private DaftarTawaranAdapter daftarTawaranAdapter;
@@ -133,6 +133,9 @@ public class DaftarTawaranFragment extends Fragment {
         textView_noBidIndicator = (TextView) view.findViewById(R.id.fragment_detail_barang_daftar_tawaran_layout_nobidIndicator);
         imageView_avatar = (ImageView) view.findViewById(R.id.fragment_detail_barang_daftar_tawaran_layout_avatar);
         recyclerView = (RecyclerView) view.findViewById(R.id.fragment_detail_barang_daftar_tawaran_layout_recyclerview);
+
+        linearLayout_priceProperties = (LinearLayout) view.findViewById(R.id.fragment_detail_barang_daftar_tawaran_layout_priceproperties);
+        linearLayout_userProperties = (LinearLayout) view.findViewById(R.id.fragment_detail_barang_daftar_tawaran_layout_userproperties);
     }
     private void initializeDataReceiver()
     {
@@ -187,7 +190,11 @@ public class DaftarTawaranFragment extends Fragment {
         swipeRefreshLayout.setRefreshing(false);
         swipeRefreshLayout.setEnabled(false);
         if (!listOffer.isEmpty()) {
-            setupViews();
+            setupViewsWhenBidExist();
+            daftarTawaranAdapter.updateDataset(listOffer);
+        }
+        else {
+            setupViewsWhenBidNotExist();
             daftarTawaranAdapter.updateDataset(listOffer);
         }
     }
@@ -254,15 +261,29 @@ public class DaftarTawaranFragment extends Fragment {
     {
 
     }
-    private void setupViews()
+    private void setupViewsWhenBidExist()
     {
         //BiddingResources topBidder = listOffer.get(0);
+        if (linearLayout_userProperties.getVisibility() == View.GONE &&
+                linearLayout_priceProperties.getVisibility() == View.GONE) {
+            linearLayout_userProperties.setVisibility(View.VISIBLE);
+            linearLayout_priceProperties.setVisibility(View.VISIBLE);
+        }
         textView_nama.setText(listOffer.get(0).getNamaBidder());
         textView_offer.setText(listOffer.get(0).getHargaBid());
         if (isNoBidIndicatorEnabled) {
             textView_noBidIndicator.setVisibility(View.GONE);
             isNoBidIndicatorEnabled = false;
         }
+    }
+    private void setupViewsWhenBidNotExist()
+    {
+        if (textView_noBidIndicator.getVisibility() == View.GONE) {
+            textView_noBidIndicator.setVisibility(View.VISIBLE);
+        }
+        linearLayout_userProperties.setVisibility(View.GONE);
+        linearLayout_priceProperties.setVisibility(View.GONE);
+        isNoBidIndicatorEnabled = true;
     }
     private void whenNewOfferReceived(JSONObject jsonObject)
     {
@@ -286,7 +307,7 @@ public class DaftarTawaranFragment extends Fragment {
                 listOffer.add(0, updateOfferFromExistingBidder);
             }
             daftarTawaranAdapter.updateDataset(listOffer);
-            setupViews();
+            setupViewsWhenBidExist();
         } catch (JSONException e) {
             e.printStackTrace();
         }

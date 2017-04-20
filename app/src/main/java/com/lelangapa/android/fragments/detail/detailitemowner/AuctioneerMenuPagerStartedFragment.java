@@ -23,7 +23,7 @@ public class AuctioneerMenuPagerStartedFragment extends Fragment {
     private TabLayout detailAuctioneerTabLayout;
     private ViewPager detailAuctioneerViewPager;
     private DetailBarangAuctioneerViewPagerAdapter auctioneerViewPagerAdapter;
-    private MenuPagerBiddingStartedFragment biddingStartedFragment;
+    private MenuPagerBiddingStartedFragmentNew biddingStartedFragment;
     private MenuPagerStatisticFragment statisticFragment;
 
     private DetailItemResources detailItem;
@@ -36,7 +36,7 @@ public class AuctioneerMenuPagerStartedFragment extends Fragment {
 
     public AuctioneerMenuPagerStartedFragment()
     {
-        biddingStartedFragment = new MenuPagerBiddingStartedFragment();
+        biddingStartedFragment = new MenuPagerBiddingStartedFragmentNew();
         statisticFragment = new MenuPagerStatisticFragment();
     }
 
@@ -51,6 +51,7 @@ public class AuctioneerMenuPagerStartedFragment extends Fragment {
     {
         View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_auctioneer_layout_started, container, false);
         initializeViews(view);
+        setDetailItemForBiddingStartedFragment();
         setViewPagerAdapter();
         detailAuctioneerTabLayout.setupWithViewPager(detailAuctioneerViewPager);
         return view;
@@ -116,7 +117,10 @@ public class AuctioneerMenuPagerStartedFragment extends Fragment {
     {
         biddingStartedFragment.setAuctioneerResponseReceiver(receiver);
     }
-
+    public void setDetailItemForBiddingStartedFragment()
+    {
+        biddingStartedFragment.setDetailItem(detailItem);
+    }
     /*
     * Viewpager setter method start here
     * */

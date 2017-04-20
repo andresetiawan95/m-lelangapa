@@ -46,6 +46,7 @@
                         android:layout_gravity="center"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/fragment_detail_barang_daftar_tawaran_layout_priceproperties"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
