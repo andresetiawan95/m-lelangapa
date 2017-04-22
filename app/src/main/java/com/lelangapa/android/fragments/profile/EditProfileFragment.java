@@ -8,17 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.ProfileActivity;
 import com.lelangapa.android.apicalls.EditUserProfileAPI;
 import com.lelangapa.android.apicalls.GetUserProfileAPI;
+import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.preferences.SessionManager;
+import com.lelangapa.android.resources.ImageResources;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,26 +40,22 @@ public class EditProfileFragment extends Fragment {
     private EditText editText_editProfile_Telepon;
     private Button editProfile_simpan_btn;
     private SessionManager sessionManager;
-    private DataReceiver uploadUserProfileData;
+    private DataReceiver getUserProfileData, uploadUserProfileData;
     private RequestQueue queue;
     private HashMap<String, String> session;
     private HashMap<String, String> userProfileData;
-    private ProgressBar progressBar_infoakun, progressBar_infokontak;
-    public EditProfileFragment(){}
+    private ProgressBar progressBar_infoakun, progressBar_infokontak, progressBar_avatar;
+
+    private ImageView imageView_avatar;
+    private ImageResources avatar;
+
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_userprofile_editprofile_layout, container, false);
-        editText_editProfile_Nama = (EditText) view.findViewById(R.id.fragment_usereditprofile_name);
-        editText_editProfile_Telepon = (EditText) view.findViewById(R.id.fragment_usereditprofile_phone);
-        editText_editProfile_Email = (EditText) view.findViewById(R.id.fragment_usereditprofile_email);
-        editProfile_simpan_btn = (Button) view.findViewById(R.id.fragment_usereditprofile_simpan_button);
-        progressBar_infoakun = (ProgressBar) view.findViewById(R.id.fragment_userprofile_editprofile_progress_bar_informasiakun);
-        progressBar_infoakun.setVisibility(View.VISIBLE);
-        progressBar_infokontak = (ProgressBar) view.findViewById(R.id.fragment_userprofile_editprofile_progress_bar_informasikontak);
-        progressBar_infokontak.setVisibility(View.VISIBLE);
-        editText_editProfile_Nama.setVisibility(View.INVISIBLE);
-        editText_editProfile_Telepon.setVisibility(View.INVISIBLE);
-        editText_editProfile_Email.setVisibility(View.INVISIBLE);
+        initializeViews(view);
+        initializeDataReceiver();
+        initializeViewVisibilities();
+        setViewOnClickListener();
         sessionManager = new SessionManager(getActivity());
         session = sessionManager.getSession();
         return view;
@@ -65,7 +63,32 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        DataReceiver dataReceiver = new DataReceiver() {
+        getUserProfileData();
+    }
+    private void initializeViews(View view)
+    {
+        editText_editProfile_Nama = (EditText) view.findViewById(R.id.fragment_usereditprofile_name);
+        editText_editProfile_Telepon = (EditText) view.findViewById(R.id.fragment_usereditprofile_phone);
+        editText_editProfile_Email = (EditText) view.findViewById(R.id.fragment_usereditprofile_email);
+        editProfile_simpan_btn = (Button) view.findViewById(R.id.fragment_usereditprofile_simpan_button);
+        progressBar_infoakun = (ProgressBar) view.findViewById(R.id.fragment_userprofile_editprofile_progress_bar_informasiakun);
+        progressBar_infokontak = (ProgressBar) view.findViewById(R.id.fragment_userprofile_editprofile_progress_bar_informasikontak);
+        imageView_avatar = (ImageView) view.findViewById(R.id.fragment_usereditprofile_avatar);
+        progressBar_avatar = (ProgressBar) view.findViewById(R.id.fragment_usereditprofile_avatar_progress_bar);
+    }
+    private void initializeViewVisibilities()
+    {
+        progressBar_infoakun.setVisibility(View.VISIBLE);
+        progressBar_infokontak.setVisibility(View.VISIBLE);
+        editText_editProfile_Nama.setVisibility(View.INVISIBLE);
+        editText_editProfile_Telepon.setVisibility(View.INVISIBLE);
+        editText_editProfile_Email.setVisibility(View.INVISIBLE);
+        imageView_avatar.setVisibility(View.GONE);
+        progressBar_avatar.setVisibility(View.VISIBLE);
+    }
+    private void initializeDataReceiver()
+    {
+        getUserProfileData = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
                 String response = output.toString();
@@ -81,9 +104,9 @@ public class EditProfileFragment extends Fragment {
                     JSONArray responseData = jsonObject.getJSONArray("data");
                     JSONObject userDataObject = responseData.getJSONObject(0);
                     if (userDataObject!=null){
-                        editText_nama = userDataObject.getString("name");
-                        editText_telepon = userDataObject.getString("phone");
-                        editText_email = userDataObject.getString("email");
+                        editText_nama = userDataObject.getString("nama_user_return");
+                        editText_telepon = userDataObject.getString("phone_user_return");
+                        editText_email = userDataObject.getString("email_user_return");
                         editText_editProfile_Nama.setText(editText_nama);
                         editText_editProfile_Telepon.setText(editText_telepon);
                         editText_editProfile_Email.setText(editText_email);
@@ -96,15 +119,22 @@ public class EditProfileFragment extends Fragment {
                 }
             }
         };
-        GetUserProfileAPI getUserProfileAPI = new GetUserProfileAPI(session.get(sessionManager.getKEY_ID()), dataReceiver);
-        queue = Volley.newRequestQueue(getActivity());
-        queue.add(getUserProfileAPI);
+    }
+    private void setViewOnClickListener()
+    {
         editProfile_simpan_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateUserProfileAPI();
             }
         });
+    }
+    private void putUserProfileData(String _userid, String _name, String _phone, String _email){
+        userProfileData = new HashMap<>();
+        userProfileData.put("userid", _userid);
+        userProfileData.put("name", _name);
+        userProfileData.put("phone", _phone);
+        userProfileData.put("email", _email);
     }
     private void updateUserProfileAPI (){
         String editUserProfileNama = editText_editProfile_Nama.getText().toString();
@@ -135,14 +165,16 @@ public class EditProfileFragment extends Fragment {
 
             }
         };
-        EditUserProfileAPI editUserProfileAPI = new EditUserProfileAPI(userProfileData, uploadUserProfileData);
-        queue.add(editUserProfileAPI);
+        editUserProfileData();
     }
-    private void putUserProfileData(String _userid, String _name, String _phone, String _email){
-        userProfileData = new HashMap<>();
-        userProfileData.put("userid", _userid);
-        userProfileData.put("name", _name);
-        userProfileData.put("phone", _phone);
-        userProfileData.put("email", _email);
+    private void getUserProfileData()
+    {
+        GetUserProfileAPI getUserProfileAPI = new GetUserProfileAPI(session.get(sessionManager.getKEY_ID()), getUserProfileData);
+        RequestController.getInstance(getActivity()).addToRequestQueue(getUserProfileAPI);
+    }
+    private void editUserProfileData()
+    {
+        EditUserProfileAPI editUserProfileAPI = new EditUserProfileAPI(userProfileData, uploadUserProfileData);
+        RequestController.getInstance(getActivity()).addToRequestQueue(editUserProfileAPI);
     }
 }

@@ -62,7 +62,7 @@ public class EditAlamatFragment extends Fragment {
                     JSONArray responseData = jsonObject.getJSONArray("data");
                     JSONObject userDataObject = responseData.getJSONObject(0);
                     if (userDataObject!=null){
-                        editText_Alamat.setText(userDataObject.getString("address"));
+                        editText_Alamat.setText(userDataObject.getString("address_user_return"));
                     }
                     else {
                         Toast.makeText(getActivity(), "Tidak ada data", Toast.LENGTH_SHORT).show();

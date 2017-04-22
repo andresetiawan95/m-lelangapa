@@ -31,13 +31,12 @@ public class UserPublicGeraiAdapter extends RecyclerView.Adapter<UserPublicGerai
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         public ImageView imageView_gambarBarang;
-        public TextView textView_namaBarang, textView_namaAuctioneer, textView_hargaAwal;
+        public TextView textView_namaBarang, textView_hargaAwal;
         public ViewHolder (View view)
         {
             super(view);
             imageView_gambarBarang = (ImageView) view.findViewById(R.id.fragment_detail_user_public_gerai_layout_imgview);
             textView_namaBarang = (TextView) view.findViewById(R.id.fragment_detail_user_public_gerai_layout_namabarang);
-            textView_namaAuctioneer = (TextView) view.findViewById(R.id.fragment_detail_user_public_gerai_layout_user);
             textView_hargaAwal = (TextView) view.findViewById(R.id.fragment_detail_user_public_gerai_layout_harga);
         }
     }
@@ -59,7 +58,6 @@ public class UserPublicGeraiAdapter extends RecyclerView.Adapter<UserPublicGerai
             holder.imageView_gambarBarang.setImageResource(R.drawable.ic_insert_photo_grey_128dp);
         }
         holder.textView_namaBarang.setText(detailItem.getNamabarang());
-        holder.textView_namaAuctioneer.setText(detailItem.getNamaauctioneer());
         holder.textView_hargaAwal.setText(detailItem.getHargaawal());
     }
 

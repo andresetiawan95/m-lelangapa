@@ -47,7 +47,7 @@ public class BerandaHomeFragment extends Fragment {
     }
     private void initializeImages()
     {
-        listImages.add(R.drawable.vector_marketplace_nyolong_gambar);
+        listImages.add(R.drawable.ic_insert_photo_grey_128dp);
         listImages.add(R.drawable.ic_insert_photo_grey_128dp);
         listImages.add(R.drawable.ic_insert_photo_grey_128dp);
         listImages.add(R.drawable.ic_insert_photo_grey_128dp);

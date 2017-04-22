@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.lelangapa.android.interfaces.SocketReceiver;
+import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.resources.SocketSSLResources;
 
 import java.io.IOException;
@@ -98,6 +99,7 @@ public class BiddingSocket {
             options.reconnection = true;
             options.sslContext = socketSSLResources.getSSLSocketContext();
             options.hostnameVerifier = socketSSLResources.getHostnameVerifier();
+            options.query = "token=" + SessionManager.getUserTokenStatic();
             mSocket = IO.socket("https://188.166.179.2:15000", options);
         } catch (URISyntaxException e) {
             e.printStackTrace();

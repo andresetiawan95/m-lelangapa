@@ -27,7 +27,7 @@ public class UserGeraiBarangAdapter extends RecyclerView.Adapter<UserGeraiBarang
         this.context = context;
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView namabarang, user, harga, status;
+        public TextView namabarang, user, harga;
         public ImageView gambarbarang;
         public CardView cardview;
         public MyViewHolder(View view){
@@ -35,9 +35,7 @@ public class UserGeraiBarangAdapter extends RecyclerView.Adapter<UserGeraiBarang
             cardview = (CardView) view.findViewById(R.id.fragment_user_gerai_layout_cardview);
             gambarbarang = (ImageView) view.findViewById(R.id.fragment_user_gerai_layout_imgview);
             namabarang = (TextView) view.findViewById(R.id.fragment_user_gerai_layout_namabarang);
-            user = (TextView) view.findViewById(R.id.fragment_user_gerai_layout_user);
             harga = (TextView) view.findViewById(R.id.fragment_user_gerai_layout_harga);
-            status = (TextView) view.findViewById(R.id.fragment_user_gerai_layout_status);
         }
     }
     @Override
@@ -56,8 +54,6 @@ public class UserGeraiBarangAdapter extends RecyclerView.Adapter<UserGeraiBarang
         }
         viewHolder.namabarang.setText(resBarang.getNamabarang());
         viewHolder.harga.setText(resBarang.getHargaawal());
-        viewHolder.user.setText(resBarang.getNamapengguna());
-        viewHolder.status.setText(resBarang.getStatuslelang());
     }
     @Override
     public int getItemCount(){

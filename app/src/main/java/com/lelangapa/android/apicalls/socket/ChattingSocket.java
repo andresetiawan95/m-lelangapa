@@ -3,6 +3,7 @@ package com.lelangapa.android.apicalls.socket;
 import android.app.Activity;
 
 import com.lelangapa.android.interfaces.SocketReceiver;
+import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.resources.SocketSSLResources;
 
 import java.io.IOException;
@@ -65,6 +66,7 @@ public class ChattingSocket {
             options.reconnection = true;
             options.sslContext = socketSSLResources.getSSLSocketContext();
             options.hostnameVerifier = socketSSLResources.getHostnameVerifier();
+            options.query = "token=" + SessionManager.getUserTokenStatic();
             mSocket = IO.socket("https://188.166.179.2:12000", options);
         }
         catch (URISyntaxException e) {

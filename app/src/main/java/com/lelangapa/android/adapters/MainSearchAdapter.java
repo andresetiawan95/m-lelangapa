@@ -26,14 +26,13 @@ public class MainSearchAdapter extends RecyclerView.Adapter<MainSearchAdapter.My
         this.context = context;
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView namabarang, user, harga, status;
+        public TextView namabarang, user, harga;
         public ImageView gambarbarang;
         public MyViewHolder (View view){
             super(view);
             namabarang = (TextView) view.findViewById(R.id.fragment_main_search_layout_namabarang);
             user = (TextView) view.findViewById(R.id.fragment_main_search_layout_user);
             harga = (TextView) view.findViewById(R.id.fragment_main_search_layout_harga);
-            status = (TextView) view.findViewById(R.id.fragment_main_search_layout_status);
             gambarbarang = (ImageView) view.findViewById(R.id.fragment_main_search_layout_imgview);
         }
     }
@@ -57,8 +56,6 @@ public class MainSearchAdapter extends RecyclerView.Adapter<MainSearchAdapter.My
         viewHolder.namabarang.setText(result.getNamabarang());
         viewHolder.user.setText(result.getNamaauctioneer());
         viewHolder.harga.setText(result.getHargaawal());
-        //logic not yet implemented
-        viewHolder.status.setText("active");
     }
     @Override
     public int getItemCount(){
