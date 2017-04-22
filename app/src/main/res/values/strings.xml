@@ -78,6 +78,11 @@
     <string name="UNBLOCK_USER_ALERTDIALOGOKBUTTON">UNBLOCK</string>
     <string name="UNBLOCK_USER_ALERTDIALOGCANCELBUTTON">TIDAK</string>
 
+    <string name="PICK_IMAGE_FROM_TITLE">Pilih Gambar</string>
+    <string name="PICK_IMAGE_FROM_MESSAGE">Pilih sumber gambar untuk digunakan</string>
+    <string name="PICK_IMAGE_FROM_CAMERA_NEUTRALBUTTON">Kamera</string>
+    <string name="PICK_IMAGE_FROM_GALLERY_NEUTRALBUTTON">Galeri</string>
+
     <string name="CHATMESSAGE_HINT">Ketik pesan...</string>
 
     <!-- String resource for spinner on UserPublicActivity (Fragment Feedback)-->
