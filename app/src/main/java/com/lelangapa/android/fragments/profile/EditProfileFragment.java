@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,20 +21,24 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.ProfileActivity;
 import com.lelangapa.android.activities.cropper.GalleryUtil;
 import com.lelangapa.android.apicalls.EditUserProfileAPI;
 import com.lelangapa.android.apicalls.GetUserProfileAPI;
+import com.lelangapa.android.apicalls.profile.AvatarAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
+import com.lelangapa.android.asyncs.GetUserAvatarBMP;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.preferences.SessionManager;
-import com.lelangapa.android.resources.ImageResources;
+import com.lelangapa.android.resources.AvatarResources;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
 
@@ -45,22 +51,27 @@ public class EditProfileFragment extends Fragment {
     private String nama, telepon, email;
     private Button editProfile_simpan_btn;
     private SessionManager sessionManager;
-    private DataReceiver getUserProfileData, uploadUserProfileData;
+    private DataReceiver getUserProfileData, uploadUserProfileData, whenAvatarUploaded, whenAvatarLoaded;
     private HashMap<String, String> session, userProfileData;
     private ProgressBar progressBar_infoakun, progressBar_infokontak, progressBar_avatar;
 
     private ImageView imageView_avatar;
-    private ImageResources avatar;
+    private AvatarResources avatar;
 
     private int CAMERA_REQUEST = 0;
     private int PICK_IMAGE_REQUEST = 1;
     private int CROP_IMAGE_REQUEST = 2;
+    public static final int MY_TIMEOUT = 100000;
+    public static final int MY_RETRY = 2;
+    public static final float MY_BACKOFF_MULT = 2f;
 
     private Intent cropIntent;
     private Uri cameraUri;
 
     private AlertDialog.Builder alertDialogBuilder;
     private AlertDialog alertDialog;
+
+    private HashMap<String, String> imageData;
 
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -95,14 +106,14 @@ public class EditProfileFragment extends Fragment {
             Bundle bundle = data.getExtras();
             Bitmap bitmap = bundle.getParcelable("data");
             avatar.setBitmap(bitmap);
-
+            avatar.setImageChanged(true);
             imageView_avatar.setImageBitmap(avatar.getBitmap());
         }
     }
 
     private void initializeConstant()
     {
-        avatar = new ImageResources();
+        avatar = new AvatarResources();
     }
     private void initializeViews(View view)
     {
@@ -123,10 +134,22 @@ public class EditProfileFragment extends Fragment {
         editText_editProfile_Telepon.setVisibility(View.INVISIBLE);
         editText_editProfile_Email.setVisibility(View.INVISIBLE);
         imageView_avatar.setVisibility(View.GONE);
+        imageView_avatar.setEnabled(false);
         progressBar_avatar.setVisibility(View.VISIBLE);
     }
     private void initializeDataReceiver()
     {
+        whenAvatarLoaded = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                Bitmap loadedAvatar = (Bitmap) output;
+                avatar.setBitmap(loadedAvatar);
+                progressBar_avatar.setVisibility(View.GONE);
+                imageView_avatar.setEnabled(true);
+                imageView_avatar.setVisibility(View.VISIBLE);
+                imageView_avatar.setImageBitmap(loadedAvatar);
+            }
+        };
         getUserProfileData = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
@@ -151,11 +174,14 @@ public class EditProfileFragment extends Fragment {
                         editText_editProfile_Email.setText(email);
 
                         if (userDataObject.getString("avatar_url_return").equals("null")) {
+                            imageView_avatar.setEnabled(true);
                             imageView_avatar.setVisibility(View.VISIBLE);
                             progressBar_avatar.setVisibility(View.GONE);
                         }
                         else {
-                            //masukkan url ke asynctask class untuk ditampilkan
+                            //masukkan url ke asynctask class untuk ditampilkan\
+                            GetUserAvatarBMP getUserAvatarBMP = new GetUserAvatarBMP(whenAvatarLoaded);
+                            getUserAvatarBMP.execute("http://img-s7.lelangapa.com/" + userDataObject.getString("avatar_url_return"));
                         }
                     }
                     else {
@@ -163,6 +189,23 @@ public class EditProfileFragment extends Fragment {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+            }
+        };
+        whenAvatarUploaded = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                String response = output.toString();
+                Log.v("upload-avatar", response);
+                if (response.equals("success")) {
+                    Toast.makeText(getActivity(), "Pengubahan profil telah berhasil", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent (getActivity(), ProfileActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
+                }
+                else {
+                    Toast.makeText(getActivity(), "Upload gagal", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -260,6 +303,14 @@ public class EditProfileFragment extends Fragment {
             toast.show();
         }
     }
+    private String getStringImage(Bitmap bmp)
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
+    }
     private void putUserProfileData(String _userid, String _name, String _phone, String _email){
         userProfileData = new HashMap<>();
         userProfileData.put("userid", _userid);
@@ -284,19 +335,31 @@ public class EditProfileFragment extends Fragment {
                         if (!(oldUserProfileEmail.equals(editUserProfileEmail))){
                             sessionManager.editEmailSessionPreference(editUserProfileEmail);
                         }
-                        Toast.makeText(getActivity(), "Pengubahan profil telah berhasil", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent (getActivity(), ProfileActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        getActivity().startActivity(intent);
-                        getActivity().finish();
+                        if (avatar.isImageChanged()) {
+                            wrapImageAvatarData();
+                            uploadImageToServer();
+                        }
+                        else {
+                            Toast.makeText(getActivity(), "Pengubahan profil telah berhasil", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent (getActivity(), ProfileActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            getActivity().startActivity(intent);
+                            getActivity().finish();
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         };
         editUserProfileData();
+    }
+    private void wrapImageAvatarData()
+    {
+        imageData = new HashMap<>();
+        imageData.put("image", getStringImage(avatar.getBitmap()));
+        imageData.put("id_user", SessionManager.getSessionStatic().get(SessionManager.KEY_ID));
+        imageData.put("ext", "jpg");
     }
     private void getUserProfileData()
     {
@@ -307,5 +370,11 @@ public class EditProfileFragment extends Fragment {
     {
         EditUserProfileAPI editUserProfileAPI = new EditUserProfileAPI(userProfileData, uploadUserProfileData);
         RequestController.getInstance(getActivity()).addToRequestQueue(editUserProfileAPI);
+    }
+    private void uploadImageToServer()
+    {
+        AvatarAPI.UploadAvatar uploadAvatarAPI = AvatarAPI.instanceUploadAvatar(imageData, whenAvatarUploaded);
+        uploadAvatarAPI.setRetryPolicy(new DefaultRetryPolicy(MY_TIMEOUT, MY_RETRY, MY_BACKOFF_MULT));
+        RequestController.getInstance(getActivity()).addToRequestQueue(uploadAvatarAPI);
     }
 }
