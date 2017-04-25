@@ -2,7 +2,10 @@ package com.lelangapa.android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +27,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Pattern;
+
 
 public class LoginFragment extends Fragment {
     private TextView txtRegister;
     private Button btnLogin;
-    private EditText eUsername;
-    private EditText ePassword;
+    private EditText editText_username;
+    private EditText editText_password;
+    private TextInputLayout textInputLayout_username;
+    private TextInputLayout textInputLayout_password;
+    private String username, password;
+    private Pattern regexPattern;
     public LoginFragment(){
-
+        regexPattern = Pattern.compile("[^a-zA-Z0-9@._]");
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -39,8 +48,11 @@ public class LoginFragment extends Fragment {
 //        ((LoginActivity)getActivity()).getSupportActionBar().setTitle("Login");
         btnLogin = (Button) view.findViewById(R.id.fragment_login_button);
         txtRegister = (TextView) view.findViewById(R.id.fragment_login_register_textview);
-        eUsername = (EditText) view.findViewById(R.id.fragment_login_username);
-        ePassword = (EditText) view.findViewById(R.id.fragment_login_password);
+        editText_username = (EditText) view.findViewById(R.id.fragment_login_username);
+        editText_password = (EditText) view.findViewById(R.id.fragment_login_password);
+        textInputLayout_username = (TextInputLayout) view.findViewById(R.id.input_login_layout_username);
+        textInputLayout_password = (TextInputLayout) view.findViewById(R.id.input_login_layout_password);
+        setInputValidation();
 //        ((LoginActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
         return view;
@@ -50,8 +62,8 @@ public class LoginFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view){
-                String username = eUsername.getText().toString();
-                String password = ePassword.getText().toString();
+                String username = editText_username.getText().toString();
+                String password = editText_password.getText().toString();
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -82,9 +94,11 @@ public class LoginFragment extends Fragment {
                         }
                     }
                 };
-                LoginAPI loginAPI = new LoginAPI(username, password, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(getActivity());
-                queue.add(loginAPI);
+                if (validateInput()) {
+                    LoginAPI loginAPI = new LoginAPI(username, password, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(getActivity());
+                    queue.add(loginAPI);
+                }
             }
         });
         txtRegister.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +111,84 @@ public class LoginFragment extends Fragment {
 //                        .commit();
             }
         });
+    }
+    private void setInputValidation()
+    {
+        editText_username.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                username = editText_username.getText().toString().trim();
+                if (username.contains(" ")) {
+                    textInputLayout_username.setErrorEnabled(true);
+                    textInputLayout_username.setError("Tidak boleh mengandung spasi");
+                }
+                if (regexPattern.matcher(username).find()) {
+                    textInputLayout_username.setErrorEnabled(true);
+                    textInputLayout_username.setError("Mengandung karakter tidak valid");
+                }
+                else {
+                    textInputLayout_username.setErrorEnabled(false);
+                    textInputLayout_username.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        editText_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                password = editText_password.getText().toString();
+                if (password.contains(" ")) {
+                    textInputLayout_password.setErrorEnabled(true);
+                    textInputLayout_password.setError("Tidak boleh mengandung spasi");
+                }
+                else if (regexPattern.matcher(password).find()) {
+                    textInputLayout_password.setErrorEnabled(true);
+                    textInputLayout_password.setError("Mengandung karakter tidak valid");
+                }
+                else {
+                    textInputLayout_password.setErrorEnabled(false);
+                    textInputLayout_password.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+    private boolean validateInput()
+    {
+        if (!textInputLayout_username.isErrorEnabled() && !textInputLayout_password.isErrorEnabled()) {
+            if (editText_username.getText().toString().equalsIgnoreCase(""))
+            {
+                textInputLayout_username.setErrorEnabled(true);
+                textInputLayout_username.setError("Tidak boleh kosong");
+                return false;
+            }
+            if (editText_password.getText().toString().equalsIgnoreCase(""))
+            {
+                textInputLayout_password.setErrorEnabled(true);
+                textInputLayout_password.setError("Tidak boleh kosong");
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
