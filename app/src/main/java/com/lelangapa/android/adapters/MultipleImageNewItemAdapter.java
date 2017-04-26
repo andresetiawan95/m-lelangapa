@@ -17,12 +17,12 @@ import java.util.ArrayList;
  * Created by andre on 04/04/17.
  */
 
-public class MultipleImageUploadAdapter extends RecyclerView.Adapter<MultipleImageUploadAdapter.ViewHolder> {
+public class MultipleImageNewItemAdapter extends RecyclerView.Adapter<MultipleImageNewItemAdapter.ViewHolder> {
     private Context context;
     private ArrayList<ImageResources> listImages;
     private ImagePicker imagePicker;
 
-    public MultipleImageUploadAdapter(Context context, ArrayList<ImageResources> list, ImagePicker imagePicker)
+    public MultipleImageNewItemAdapter(Context context, ArrayList<ImageResources> list, ImagePicker imagePicker)
     {
         this.context = context;
         this.listImages = list;
@@ -33,7 +33,7 @@ public class MultipleImageUploadAdapter extends RecyclerView.Adapter<MultipleIma
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_user_lelang_barang_layout_image_items, parent, false);
-        return new MultipleImageUploadAdapter.ViewHolder(itemView);
+        return new MultipleImageNewItemAdapter.ViewHolder(itemView);
     }
 
     @Override

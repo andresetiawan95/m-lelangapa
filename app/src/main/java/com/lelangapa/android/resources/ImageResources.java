@@ -9,17 +9,7 @@ import android.graphics.Bitmap;
 public class ImageResources {
     private String idImage;
     private String base64ImageString;
-    private String imageURL;
     private Bitmap bitmap;
-
-    public String getImageURL() {
-        return imageURL;
-    }
-
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
-    }
-
     public String getIdImage() {
         return idImage;
     }

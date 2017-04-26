@@ -27,21 +27,17 @@
             </android.support.design.widget.TextInputLayout>
         </android.support.v7.widget.CardView>
         <TextView
-            android:text="Foto barang"
+            android:text="Foto barang (maksimal 8 gambar)"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"/>
-        <android.support.v7.widget.CardView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_user_edit_lelang_barang_image_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginBottom="12dp">
-            <ImageView
-                android:id="@+id/fragment_user_edit_lelang_barang_gambar"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:src="@drawable/ic_add_circle"
-                android:layout_height="wrap_content" />
-        </android.support.v7.widget.CardView>
+        </android.support.v7.widget.RecyclerView>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

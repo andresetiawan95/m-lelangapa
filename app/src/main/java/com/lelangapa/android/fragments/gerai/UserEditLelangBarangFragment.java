@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.lelangapa.android.R;
 import com.lelangapa.android.apicalls.gerai.GetItemEditLelangBarangAPI;
+import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.resources.DateTimeConverter;
+import com.lelangapa.android.resources.ItemImageResources;
 import com.lelangapa.android.resources.UserGeraiResources;
 
 import org.json.JSONArray;
@@ -26,10 +26,15 @@ import java.util.ArrayList;
  */
 
 public class UserEditLelangBarangFragment extends Fragment {
-    private ArrayList<UserGeraiResources> dataBarang = new ArrayList<>();
+    private ArrayList<UserGeraiResources> dataBarang;
+    private ArrayList<ItemImageResources> dataImage;
     private String itemID;
     private DataReceiver allDataBarangReceived;
     private DataReceiver dataBarangReceiver;
+    public UserEditLelangBarangFragment()
+    {
+        initializeConstants();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_user_gerai_layout, container, false);
@@ -43,7 +48,7 @@ public class UserEditLelangBarangFragment extends Fragment {
                 String res = output.toString();
                 if (res.equals("success")){
                     UserEditLelangBarangGetDataFragment userEditLelangBarangGetDataFragment = new UserEditLelangBarangGetDataFragment();
-                    userEditLelangBarangGetDataFragment.getDataBarang(dataBarang);
+                    userEditLelangBarangGetDataFragment.setDataBarang(dataBarang, dataImage);
                     getFragmentManager().beginTransaction().replace(R.id.fragment_user_edit_lelang_barang_layout, userEditLelangBarangGetDataFragment)
                             .commit();
                 }
@@ -51,6 +56,11 @@ public class UserEditLelangBarangFragment extends Fragment {
         };
         getDataBarangFromServer(itemID);
         return view;
+    }
+    private void initializeConstants()
+    {
+        dataBarang = new ArrayList<>();
+        dataImage = new ArrayList<>();
     }
     private void getDataBarangFromServer(String itemID){
         dataBarangReceiver = new DataReceiver() {
@@ -83,6 +93,14 @@ public class UserEditLelangBarangFragment extends Fragment {
                     geraiResources.setTanggalselesai(endDate);
                     geraiResources.setJamselesai(endHour);
                     dataBarang.add(geraiResources);
+                    JSONArray imageURLArray = respArrayObject.getJSONArray("url");
+                    for (int i=0;i<imageURLArray.length();i++) {
+                        JSONObject imageURLArrayObject = imageURLArray.getJSONObject(i);
+                        ItemImageResources resources = new ItemImageResources();
+                        resources.setImageURL(imageURLArrayObject.getString("url"));
+                        resources.setUniqueIDImage(imageURLArrayObject.getString("_id"));
+                        dataImage.add(resources);
+                    }
                     allDataBarangReceived.dataReceived("success");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -90,7 +108,6 @@ public class UserEditLelangBarangFragment extends Fragment {
             }
         };
         GetItemEditLelangBarangAPI getItemEditLelangBarangAPI = new GetItemEditLelangBarangAPI(itemID, dataBarangReceiver);
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        queue.add(getItemEditLelangBarangAPI);
+        RequestController.getInstance(getActivity()).addToRequestQueue(getItemEditLelangBarangAPI);
     }
 }

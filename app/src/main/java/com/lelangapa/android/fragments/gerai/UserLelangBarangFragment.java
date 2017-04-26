@@ -27,7 +27,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.UserGeraiActivity;
 import com.lelangapa.android.activities.cropper.GalleryUtil;
-import com.lelangapa.android.adapters.MultipleImageUploadAdapter;
+import com.lelangapa.android.adapters.MultipleImageNewItemAdapter;
 import com.lelangapa.android.apicalls.gerai.SubmitBarangAPI;
 import com.lelangapa.android.apicalls.gerai.SubmitGambarBarangAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
@@ -79,11 +79,12 @@ public class UserLelangBarangFragment extends Fragment {
     private int CROP_IMAGE_REQUEST = 2;
     private int IMAGE_ARRAY_INDEX = 0;
     private int IMAGE_ALREADY_UPLOADED_INDEX = 1;
+    private static final int MAX_IMAGE= 8;
     private String itemID;
 
     private HashMap<String, String> data, dataImage;
     private ArrayList<ImageResources> listImages;
-    private MultipleImageUploadAdapter adapter;
+    private MultipleImageNewItemAdapter adapter;
     private RecyclerView recyclerView_imageList;
     private ImagePicker imagePicker;
     private DataReceiver imageReceiver;
@@ -119,18 +120,35 @@ public class UserLelangBarangFragment extends Fragment {
             public void dataReceived(Object output) {
                 String response = output.toString();
                 if (response.equals("success")){
-                    if (IMAGE_ALREADY_UPLOADED_INDEX == listImages.size() -1) {
-                        progressDialog.dismiss();
-                        Toast.makeText(getActivity(), "Lelang telah disubmit", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getActivity(), UserGeraiActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        getActivity().finish();
+                    if (listImages.size() == MAX_IMAGE) {
+                        if (IMAGE_ALREADY_UPLOADED_INDEX == listImages.size()) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getActivity(), "Lelang telah disubmit", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), UserGeraiActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            getActivity().finish();
+                        }
+                        else {
+                            IMAGE_ALREADY_UPLOADED_INDEX+=1;
+                            wrapImageData(itemID, IMAGE_ALREADY_UPLOADED_INDEX);
+                            sendGambarBarangToServer();
+                        }
                     }
                     else {
-                        IMAGE_ALREADY_UPLOADED_INDEX+=1;
-                        wrapImageData(itemID, IMAGE_ALREADY_UPLOADED_INDEX);
-                        sendGambarBarangToServer();
+                        if (IMAGE_ALREADY_UPLOADED_INDEX == listImages.size() -1) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getActivity(), "Lelang telah disubmit", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), UserGeraiActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            getActivity().finish();
+                        }
+                        else {
+                            IMAGE_ALREADY_UPLOADED_INDEX+=1;
+                            wrapImageData(itemID, IMAGE_ALREADY_UPLOADED_INDEX);
+                            sendGambarBarangToServer();
+                        }
                     }
                 }
             }
@@ -210,7 +228,7 @@ public class UserLelangBarangFragment extends Fragment {
     {
         ImageResources init = new ImageResources();
         listImages.add(init);
-        adapter = new MultipleImageUploadAdapter(getActivity(), listImages, imagePicker);
+        adapter = new MultipleImageNewItemAdapter(getActivity(), listImages, imagePicker);
     }
     private void setRecyclerViewProperties()
     {
@@ -334,7 +352,7 @@ public class UserLelangBarangFragment extends Fragment {
             if (data != null) {
                 Bundle bundle = data.getExtras();
                 bitmap = bundle.getParcelable("data");
-                if (IMAGE_ARRAY_INDEX == listImages.size() -1) {
+                if (IMAGE_ARRAY_INDEX == listImages.size() -1 && listImages.size() < MAX_IMAGE) {
                     listImages.get(IMAGE_ARRAY_INDEX).setIdImage(Integer.toString(IMAGE_ARRAY_INDEX));
                     listImages.get(IMAGE_ARRAY_INDEX).setBitmap(bitmap);
                     ImageResources newinit = new ImageResources();
