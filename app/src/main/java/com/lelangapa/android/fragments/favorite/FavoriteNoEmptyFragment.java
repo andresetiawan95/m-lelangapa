@@ -1,5 +1,6 @@
 package com.lelangapa.android.fragments.favorite;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.activities.detail.DetailBarangActivity;
 import com.lelangapa.android.adapters.UserFavoriteAdapter;
 import com.lelangapa.android.apicalls.favorite.FavoriteAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
@@ -38,6 +40,8 @@ public class FavoriteNoEmptyFragment extends Fragment {
     private DataReceiver unfavoriteReceived, favoriteDataReceiver, whenListFavoriteIsEmptyReceiver;
 
     private String userID;
+    private Bundle bundleExtras;
+    private Intent intent;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -98,7 +102,13 @@ public class FavoriteNoEmptyFragment extends Fragment {
         recyclerView_favorite.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_favorite, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                intent = new Intent(getActivity(), DetailBarangActivity.class);
+                bundleExtras = new Bundle();
+                bundleExtras.putString("auctioneer_id", listBarangFavorit.get(position).getIdUserAuctioneer());
+                bundleExtras.putString("items_id", listBarangFavorit.get(position).getIdItemFavorite());
+                intent.putExtras(bundleExtras);
 
+                startActivity(intent);
             }
 
             @Override

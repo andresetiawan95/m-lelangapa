@@ -172,6 +172,7 @@ public class FavoriteFragment extends Fragment {
                         favoriteResources.setIdFavorite(jsonArrayObject.getString("id_favorite_return"));
                         favoriteResources.setIdItemFavorite(jsonArrayObject.getString("id_item_favorite_return"));
                         favoriteResources.setNamaItemFavorite(jsonArrayObject.getString("nama_item_return"));
+                        favoriteResources.setIdUserAuctioneer(jsonArrayObject.getString("id_user_auctioneer_return"));
                         favoriteResources.setNamaUserAuctioneerItemFavorite(jsonArrayObject.getString("nama_user_auctioneer_return"));
                         favoriteResources.setTimeListedItemFavorite(jsonArrayObject.getString("time_listed_return"));
                         JSONArray favoriteJSONArray = jsonArrayObject.getJSONArray("imageurl");

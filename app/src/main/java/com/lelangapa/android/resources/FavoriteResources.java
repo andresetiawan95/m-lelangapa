@@ -5,7 +5,20 @@ package com.lelangapa.android.resources;
  */
 
 public class FavoriteResources {
-    private String idFavorite, idItemFavorite, namaItemFavorite, namaUserAuctioneerItemFavorite, timeListedItemFavorite, imageURLItem;
+    private String idFavorite;
+    private String idItemFavorite;
+    private String namaItemFavorite;
+    private String idUserAuctioneer;
+    private String namaUserAuctioneerItemFavorite;
+    private String timeListedItemFavorite;
+    private String imageURLItem;
+    public String getIdUserAuctioneer() {
+        return idUserAuctioneer;
+    }
+
+    public void setIdUserAuctioneer(String idUserAuctioneer) {
+        this.idUserAuctioneer = idUserAuctioneer;
+    }
     public void setIdFavorite(String idFavorite)
     {
         this.idFavorite = idFavorite;
