@@ -120,7 +120,7 @@ public class UserLelangBarangFragment extends Fragment {
             public void dataReceived(Object output) {
                 String response = output.toString();
                 if (response.equals("success")){
-                    if (listImages.size() == MAX_IMAGE) {
+                    if (listImages.size() == MAX_IMAGE && listImages.get(MAX_IMAGE-1).getBitmap() != null) {
                         if (IMAGE_ALREADY_UPLOADED_INDEX == listImages.size()) {
                             progressDialog.dismiss();
                             Toast.makeText(getActivity(), "Lelang telah disubmit", Toast.LENGTH_SHORT).show();

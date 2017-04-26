@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +18,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.UserGeraiActivity;
 import com.lelangapa.android.activities.cropper.GalleryUtil;
 import com.lelangapa.android.adapters.MultipleImageEditItemAdapter;
+import com.lelangapa.android.apicalls.gerai.UpdateGambarBarangAPI;
 import com.lelangapa.android.apicalls.gerai.UpdateItemEditLelangBarangAPI;
+import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.asyncs.GetItemImagesBMP;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.ImageLoaderReceiver;
 import com.lelangapa.android.interfaces.ImagePicker;
+import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.resources.DateTimeConverter;
 import com.lelangapa.android.resources.ItemImageResources;
 import com.lelangapa.android.resources.UserGeraiResources;
@@ -50,8 +52,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class UserEditLelangBarangGetDataFragment extends Fragment {
     private ArrayList<UserGeraiResources> dataBarangReceived;
-    private ArrayList<ItemImageResources> dataImageReceived;
-    private HashMap<String, String> dataInput;
+    private ArrayList<ItemImageResources> dataImageReceived, imageToUpload;
+    private HashMap<String, String> dataInput, dataNewImage;
     private ProgressDialog loadingDialog;
     private static final String KEY_IDBARANGUPDATE = "item_id";
     private static final String KEY_NAMABARANG = "name";
@@ -67,6 +69,7 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     private RecyclerView recyclerView_image;
     private ImagePicker imagePicker;
     private ImageLoaderReceiver imageLoaderReceiver;
+    private DataReceiver whenAnImageAlreadyUploaded;
 
     private MultipleImageEditItemAdapter adapter;
 
@@ -91,9 +94,10 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         setImagePicker();
         setDataBarangInfo();
         initializeAdapter();
+        initializeImageReceiver();
         setImageLoaderReceiver();
         setupRecyclerViewProperties();
-        getBitmapListFromAWS();
+        loadExistingImage();
         btnEditBarang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +141,9 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     private void initializeConstants() {
         dataBarangReceived = new ArrayList<>();
         dataImageReceived = new ArrayList<>();
+        imageToUpload = new ArrayList<>();
         dataInput = new HashMap<>();
+        dataNewImage = new HashMap<>();
     }
     private void initializeViews(View view) {
         editText_namabarang = (EditText) view.findViewById(R.id.fragment_user_edit_lelang_barang_nama_barang);
@@ -151,14 +157,26 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         recyclerView_image = (RecyclerView) view.findViewById(R.id.fragment_user_edit_lelang_barang_image_recyclerview);
     }
     private void initializeAdapter() {
-        if (dataImageReceived.size() > 0 ) {
-            adapter = new MultipleImageEditItemAdapter(getActivity(), dataImageReceived, imagePicker);
-        }
-        else {
-            ItemImageResources newInit = new ItemImageResources();
-            dataImageReceived.add(newInit);
-            adapter = new MultipleImageEditItemAdapter(getActivity(), dataImageReceived, imagePicker);
-        }
+        adapter = new MultipleImageEditItemAdapter(getActivity(), dataImageReceived, imagePicker);
+    }
+    private void initializeImageReceiver() {
+        whenAnImageAlreadyUploaded = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                String response = output.toString();
+                if (response.equals("success")) {
+                    Log.v("UPLOADED", "IMAGE IDX " + IMAGE_ALREADY_UPLOADED_INDEX + " UPLOADED");
+                    if (IMAGE_ALREADY_UPLOADED_INDEX == imageToUpload.size()) {
+                        finishActivity();
+                    }
+                    else {
+                        IMAGE_ALREADY_UPLOADED_INDEX += 1;
+                        wrapNewImageData(IMAGE_ALREADY_UPLOADED_INDEX);
+                        uploadEditedImageToServer();
+                    }
+                }
+            }
+        };
     }
     private void setupRecyclerViewProperties() {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -207,6 +225,17 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         }
         getItemImagesBMP.execute(listURL);
     }
+    private void loadExistingImage()
+    {
+        if (dataImageReceived.size() > 0) {
+            getBitmapListFromAWS();
+        }
+        else {
+            ItemImageResources newInit = new ItemImageResources();
+            dataImageReceived.add(newInit);
+            adapter.updateDataSet(dataImageReceived);
+        }
+    }
     private void chooseImage(){
         Intent galleryIntent = new Intent(getActivity(), GalleryUtil.class);
         startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
@@ -235,8 +264,7 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return encodedImage;
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
     private void setDataBarangInfo(){
         String namabarang = dataBarangReceived.get(0).getNamabarang();
@@ -255,6 +283,27 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         editText_tanggalselesai.setText(tanggalselesai);
         editText_jammulai.setText(jammulai);
         editText_jamselesai.setText(jamselesai);
+    }
+    private void generateAllNewImageToUpload()
+    {
+        for (int x=0;x<dataImageReceived.size();x++) {
+            if (dataImageReceived.get(x).isImageChanged()) {
+                imageToUpload.add(dataImageReceived.get(x));
+            }
+        }
+    }
+    private void wrapNewImageData(int index)
+    {
+        dataNewImage.put("image", getStringImage(imageToUpload.get(index-1).getBitmap()));
+        dataNewImage.put("ext", "jpg");
+        dataNewImage.put("id_user", SessionManager.getSessionStatic().get(SessionManager.KEY_ID));
+        dataNewImage.put("itemid", dataBarangReceived.get(0).getIdbarang());
+        if (imageToUpload.get(index-1).getUniqueIDImage() == null) {
+            dataNewImage.put("imageid", "null");
+        }
+        else {
+            dataNewImage.put("imageid", imageToUpload.get(index-1).getUniqueIDImage());
+        }
     }
     private void putFilledData(){
         DateTimeConverter dateTimeConverter = new DateTimeConverter();
@@ -275,12 +324,15 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
                     JSONObject respObject = new JSONObject(response);
                     String res = respObject.getString("status");
                     if (res.equals("success")){
-                        loadingDialog.dismiss();
-                        Toast.makeText(getActivity(), "Info barang berhasil diperbaharui", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getActivity(), UserGeraiActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        getActivity().startActivity(intent);
-                        getActivity().finish();
+                        generateAllNewImageToUpload();
+                        Log.v("ImgToBeUploaded", Integer.toString(imageToUpload.size()));
+                        if (imageToUpload.size() > 0) {
+                            wrapNewImageData(IMAGE_ALREADY_UPLOADED_INDEX);
+                            uploadEditedImageToServer();
+                        }
+                        else {
+                            finishActivity();
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -288,7 +340,18 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
             }
         };
         UpdateItemEditLelangBarangAPI updateItemEditLelangBarang = new UpdateItemEditLelangBarangAPI(dataInput, updatedData);
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        queue.add(updateItemEditLelangBarang);
+        RequestController.getInstance(getActivity()).addToRequestQueue(updateItemEditLelangBarang);
+    }
+    private void uploadEditedImageToServer() {
+        UpdateGambarBarangAPI.UpdateGambar updateGambarAPI = UpdateGambarBarangAPI.instanceUpdateGambar(dataNewImage, whenAnImageAlreadyUploaded);
+        RequestController.getInstance(getActivity()).addToRequestQueue(updateGambarAPI);
+    }
+    private void finishActivity() {
+        loadingDialog.dismiss();
+        Toast.makeText(getActivity(), "Info barang berhasil diperbaharui", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), UserGeraiActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        getActivity().startActivity(intent);
+        getActivity().finish();
     }
 }
