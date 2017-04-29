@@ -6,11 +6,20 @@ package com.lelangapa.android.resources;
 
 public class ItemImageResources extends ImageResources {
     String uniqueIDImage, imageURL;
-    boolean isChanged;
+    boolean isChanged, isMainImage;
     public ItemImageResources()
     {
         isChanged = false;
     }
+
+    public boolean isMainImage() {
+        return isMainImage;
+    }
+
+    public void setMainImage(boolean mainImage) {
+        isMainImage = mainImage;
+    }
+
     public String getUniqueIDImage() {
         return uniqueIDImage;
     }

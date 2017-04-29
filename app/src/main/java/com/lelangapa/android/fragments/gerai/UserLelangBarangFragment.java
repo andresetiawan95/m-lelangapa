@@ -11,15 +11,18 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -33,9 +36,11 @@ import com.lelangapa.android.apicalls.gerai.SubmitGambarBarangAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.ImagePicker;
+import com.lelangapa.android.interfaces.OnItemClickListener;
+import com.lelangapa.android.listeners.RecyclerItemClickListener;
 import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.resources.DateTimeConverter;
-import com.lelangapa.android.resources.ImageResources;
+import com.lelangapa.android.resources.ItemImageResources;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +60,7 @@ import static android.app.Activity.RESULT_OK;
 public class UserLelangBarangFragment extends Fragment {
     private EditText editText_namabarang, editText_deskripsibarang, editText_hargabarang_awal, editText_hargabarang_target, editText_tanggalmulai;
     private EditText editText_jammulai, editText_tanggalselesai, editText_jamselesai;
+    private Spinner spinner_kategori;
     //private ImageView gambarBarang;
     private Button button_lelangBarang;
     private ProgressDialog progressDialog;
@@ -70,6 +76,9 @@ public class UserLelangBarangFragment extends Fragment {
     private static final String KEY_EXPECTEDPRICE = "expected_price";
     private static final String KEY_STARTTIME = "start_time";
     private static final String KEY_ENDTIME = "end_time";
+    private static final String KEY_IDCATEGORY = "id_category";
+    private static final String KEY_NAMAUSER = "nama_user";
+    private static final String KEY_NAMACATEGORY = "nama_category";
     private static final String KEY_IMAGE = "image";
     public static final int MY_TIMEOUT = 100000;
     public static final int MY_RETRY = 2;
@@ -80,16 +89,18 @@ public class UserLelangBarangFragment extends Fragment {
     private int IMAGE_ARRAY_INDEX = 0;
     private int IMAGE_ALREADY_UPLOADED_INDEX = 1;
     private static final int MAX_IMAGE= 8;
+    private static int MAIN_IMAGE_INDEX;
     private String itemID;
 
     private HashMap<String, String> data, dataImage;
-    private ArrayList<ImageResources> listImages;
+    private ArrayList<ItemImageResources> listImages;
     private MultipleImageNewItemAdapter adapter;
     private RecyclerView recyclerView_imageList;
     private ImagePicker imagePicker;
     private DataReceiver imageReceiver;
 
     private Intent cropIntent;
+    private PopupMenu popupMenu_image;
 
     public UserLelangBarangFragment()
     {
@@ -170,6 +181,7 @@ public class UserLelangBarangFragment extends Fragment {
         editText_tanggalselesai = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_tanggal_selesai);
         editText_jammulai = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_jam_mulai);
         editText_jamselesai = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_jam_selesai);
+        spinner_kategori = (Spinner) view.findViewById(R.id.fragment_user_lelang_barang_kategori);
         //gambarBarang = (ImageView) view.findViewById(R.id.fragment_user_lelang_barang_gambar);
         recyclerView_imageList = (RecyclerView) view.findViewById(R.id.fragment_user_lelang_barang_image_recyclerview);
     }
@@ -226,7 +238,7 @@ public class UserLelangBarangFragment extends Fragment {
     }
     private void initializeAdapter()
     {
-        ImageResources init = new ImageResources();
+        ItemImageResources init = new ItemImageResources();
         listImages.add(init);
         adapter = new MultipleImageNewItemAdapter(getActivity(), listImages, imagePicker);
     }
@@ -235,6 +247,18 @@ public class UserLelangBarangFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView_imageList.setLayoutManager(layoutManager);
         recyclerView_imageList.setAdapter(adapter);
+        recyclerView_imageList.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_imageList, new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {}
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+                if (!listImages.get(position).isMainImage() && listImages.get(position).getIdImage() != null) {
+                    chooseMainImagePopupMenu(view, position);
+                    showPopupMenu();
+                }
+            }
+        }));
     }
     private void wrapFilledItemData(){
         DateTimeConverter dateTimeConverter = new DateTimeConverter();
@@ -245,6 +269,9 @@ public class UserLelangBarangFragment extends Fragment {
         data.put(KEY_EXPECTEDPRICE, editText_hargabarang_target.getText().toString());
         data.put(KEY_STARTTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalmulai.getText().toString() + " " + editText_jammulai.getText().toString() + ":00"));
         data.put(KEY_ENDTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalselesai.getText().toString() + " " + editText_jamselesai.getText().toString() + ":00"));
+        data.put(KEY_IDCATEGORY, Integer.toString(spinner_kategori.getSelectedItemPosition() +1));
+        data.put(KEY_NAMACATEGORY, spinner_kategori.getSelectedItem().toString());
+        data.put(KEY_NAMAUSER, session.get(SessionManager.KEY_NAME));
         //data.put(KEY_IMAGE, getStringImage(bitmap));
         progressDialog = ProgressDialog.show(getActivity(), "Sedang diproses..","Harap tunggu...");
         sendLelangData();
@@ -255,6 +282,7 @@ public class UserLelangBarangFragment extends Fragment {
         dataImage.put("ext", "jpg");
         dataImage.put("id_user", session.get(sessionManager.getKEY_ID()));
         dataImage.put("itemid", itemID);
+        dataImage.put("is_main_image", Boolean.toString(listImages.get(index-1).isMainImage()));
     }
     public String getStringImage(Bitmap bmp){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -318,6 +346,35 @@ public class UserLelangBarangFragment extends Fragment {
             toast.show();
         }
     }
+    private void chooseMainImagePopupMenu(View view, final int position)
+    {
+        popupMenu_image = new PopupMenu(getActivity(), view);
+        popupMenu_image.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.set_main_image_popup_menu :
+                        listImages.get(MAIN_IMAGE_INDEX).setMainImage(false);
+                        listImages.get(position).setMainImage(true);
+
+                        ItemImageResources temp1 = listImages.get(MAIN_IMAGE_INDEX);
+                        ItemImageResources temp2 = listImages.get(position);
+                        listImages.set(MAIN_IMAGE_INDEX, temp2);
+                        listImages.set(position, temp1);
+
+                        adapter.updateImageSet();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+    }
+    private void showPopupMenu()
+    {
+        popupMenu_image.inflate(R.menu.item_image_popup_menu);
+        popupMenu_image.show();
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
@@ -355,7 +412,12 @@ public class UserLelangBarangFragment extends Fragment {
                 if (IMAGE_ARRAY_INDEX == listImages.size() -1 && listImages.size() < MAX_IMAGE) {
                     listImages.get(IMAGE_ARRAY_INDEX).setIdImage(Integer.toString(IMAGE_ARRAY_INDEX));
                     listImages.get(IMAGE_ARRAY_INDEX).setBitmap(bitmap);
-                    ImageResources newinit = new ImageResources();
+                    if (listImages.size() == 1) {
+                        //ketika gambar pertama dipilih, langsung jadi gambar utama
+                        listImages.get(IMAGE_ARRAY_INDEX).setMainImage(true);
+                        MAIN_IMAGE_INDEX = IMAGE_ARRAY_INDEX;
+                    }
+                    ItemImageResources newinit = new ItemImageResources();
                     listImages.add(newinit);
 
                     adapter.updateImageSet();

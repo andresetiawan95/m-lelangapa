@@ -99,6 +99,7 @@ public class UserEditLelangBarangFragment extends Fragment {
                         ItemImageResources resources = new ItemImageResources();
                         resources.setImageURL(imageURLArrayObject.getString("url"));
                         resources.setUniqueIDImage(imageURLArrayObject.getString("_id"));
+                        resources.setMainImage(imageURLArrayObject.getBoolean("is_main_image"));
                         dataImage.add(resources);
                     }
                     allDataBarangReceived.dataReceived("success");

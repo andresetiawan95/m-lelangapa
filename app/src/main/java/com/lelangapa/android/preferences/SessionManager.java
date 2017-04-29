@@ -17,7 +17,7 @@ public class SessionManager {
     private static final String IS_LOGGED_IN = "isLoggedIn";
     private static final String SESSION_PREFERENCES = "sessionPreference";
     private static final String KEY_USERNAME = "username";
-    private static final String KEY_NAME = "name";
+    public static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
     public static final String KEY_ID ="id";
     private static final String DUMMY_ID = "0";

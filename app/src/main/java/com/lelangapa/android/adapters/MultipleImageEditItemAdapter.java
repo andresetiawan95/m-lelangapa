@@ -43,18 +43,40 @@ public class MultipleImageEditItemAdapter extends RecyclerView.Adapter<MultipleI
         ItemImageResources resources = listImages.get(position);
         if (resources.getImageURL() != null && resources.getBitmap() == null) {
             whenURLExistAndBitmapNULL(holder.imageView_image, holder.progressBar_loading);
+
+            holder.view_isMainImage.setEnabled(false);
+            holder.view_isMainImage.setVisibility(View.GONE);
         }
         else if (resources.getImageURL() != null && resources.getBitmap() != null) {
             whenURLExistAndBitmapExist(holder.imageView_image, holder.progressBar_loading, resources.getBitmap());
             setupImageViewListener(holder.imageView_image, holder.getAdapterPosition());
+            if (resources.isMainImage()) {
+                holder.view_isMainImage.setEnabled(true);
+                holder.view_isMainImage.setVisibility(View.VISIBLE);
+            }
+            else {
+                holder.view_isMainImage.setEnabled(false);
+                holder.view_isMainImage.setVisibility(View.GONE);
+            }
         }
         else if (resources.getImageURL() == null && resources.getBitmap() != null) {
             whenURLNULLAndBitmapExist(holder.imageView_image, holder.progressBar_loading, resources.getBitmap());
             setupImageViewListener(holder.imageView_image, holder.getAdapterPosition());
+            if (resources.isMainImage()) {
+                holder.view_isMainImage.setEnabled(true);
+                holder.view_isMainImage.setVisibility(View.VISIBLE);
+            }
+            else {
+                holder.view_isMainImage.setEnabled(false);
+                holder.view_isMainImage.setVisibility(View.GONE);
+            }
         }
         else if (resources.getImageURL() == null && resources.getBitmap() == null) {
             whenURLNULLAndBitmapNULL(holder.imageView_image, holder.progressBar_loading);
             setupImageViewListener(holder.imageView_image, holder.getAdapterPosition());
+
+            holder.view_isMainImage.setEnabled(false);
+            holder.view_isMainImage.setVisibility(View.GONE);
         }
     }
 
@@ -67,11 +89,13 @@ public class MultipleImageEditItemAdapter extends RecyclerView.Adapter<MultipleI
     {
         public ImageView imageView_image;
         public ProgressBar progressBar_loading;
+        public View view_isMainImage;
         public ViewHolder (View view)
         {
             super(view);
             imageView_image = (ImageView) view.findViewById(R.id.fragment_user_edit_lelang_barang_layout_image_items_gambar);
             progressBar_loading = (ProgressBar) view.findViewById(R.id.fragment_user_edit_lelang_barang_layout_image_items_loading);
+            view_isMainImage = view.findViewById(R.id.fragment_user_edit_lelang_barang_layout_image_items_main_image);
         }
     }
 

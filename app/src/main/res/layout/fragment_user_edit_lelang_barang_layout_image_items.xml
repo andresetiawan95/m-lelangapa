@@ -21,5 +21,10 @@
             android:layout_width="wrap_content"
             android:src="@drawable/ic_add_box_grey_48dp"
             android:layout_height="wrap_content" />
+        <View
+            android:id="@+id/fragment_user_edit_lelang_barang_layout_image_items_main_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_item_main_image_border"/>
     </android.support.v7.widget.CardView>
 </LinearLayout>

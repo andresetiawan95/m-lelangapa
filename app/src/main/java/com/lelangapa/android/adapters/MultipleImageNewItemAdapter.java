@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.interfaces.ImagePicker;
-import com.lelangapa.android.resources.ImageResources;
+import com.lelangapa.android.resources.ItemImageResources;
 
 import java.util.ArrayList;
 
@@ -19,10 +19,10 @@ import java.util.ArrayList;
 
 public class MultipleImageNewItemAdapter extends RecyclerView.Adapter<MultipleImageNewItemAdapter.ViewHolder> {
     private Context context;
-    private ArrayList<ImageResources> listImages;
+    private ArrayList<ItemImageResources> listImages;
     private ImagePicker imagePicker;
 
-    public MultipleImageNewItemAdapter(Context context, ArrayList<ImageResources> list, ImagePicker imagePicker)
+    public MultipleImageNewItemAdapter(Context context, ArrayList<ItemImageResources> list, ImagePicker imagePicker)
     {
         this.context = context;
         this.listImages = list;
@@ -38,12 +38,20 @@ public class MultipleImageNewItemAdapter extends RecyclerView.Adapter<MultipleIm
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        ImageResources imageResources = listImages.get(position);
+        ItemImageResources imageResources = listImages.get(position);
         if (imageResources.getBitmap() != null) {
             holder.imageView_image.setImageBitmap(imageResources.getBitmap());
         }
         else {
             holder.imageView_image.setImageResource(R.drawable.ic_add_box_grey_48dp);
+        }
+        if (imageResources.isMainImage()) {
+            holder.view_isMainImage.setEnabled(true);
+            holder.view_isMainImage.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.view_isMainImage.setEnabled(false);
+            holder.view_isMainImage.setVisibility(View.GONE);
         }
         holder.imageView_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,10 +69,12 @@ public class MultipleImageNewItemAdapter extends RecyclerView.Adapter<MultipleIm
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         public ImageView imageView_image;
+        public View view_isMainImage;
         public ViewHolder(View view)
         {
             super(view);
             imageView_image = (ImageView) view.findViewById(R.id.fragment_user_lelang_barang_layout_image_items_gambar);
+            view_isMainImage = view.findViewById(R.id.fragment_user_lelang_barang_layout_image_items_main_image);
         }
     }
 
