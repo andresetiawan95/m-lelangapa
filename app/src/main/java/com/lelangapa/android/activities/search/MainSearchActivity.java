@@ -1,9 +1,9 @@
 package com.lelangapa.android.activities.search;
 
+import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +14,11 @@ import android.widget.TextView;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.fragments.search.MainSearchTextChangeFragment;
+import com.lelangapa.android.fragments.search.MainSearchTextEmptyFragment;
 import com.lelangapa.android.fragments.search.MainSearchTextSubmitFragment;
+import com.lelangapa.android.preferences.sqlites.SQLiteHandler;
+
+import java.util.ArrayList;
 
 /**
  * Created by andre on 15/12/16.
@@ -22,23 +26,34 @@ import com.lelangapa.android.fragments.search.MainSearchTextSubmitFragment;
 
 public class MainSearchActivity extends AppCompatActivity {
     private TextView textView;
+    private MainSearchTextEmptyFragment textEmptyFragment;
     private MainSearchTextChangeFragment textChangeFragment;
     private MainSearchTextSubmitFragment textSubmitFragment;
     private SearchView searchView;
     private Fragment currentFragment;
+
     private boolean switchToTextChangeFragment;
     private boolean switchToTextQuerySubmitFragment;
+    private ArrayList<String> listKeywords;
+
+    private SQLiteHandler dbhandler;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         initializeConstants();
         setContentView(R.layout.activity_main_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        textChangeFragment = new MainSearchTextChangeFragment();
-        textSubmitFragment = new MainSearchTextSubmitFragment();
+        initializeFragments();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setupStarterFragment();
 //        handleIntent(getIntent());
+    }
+    @Override
+    protected void onDestroy()
+    {
+        dbhandler.close();
+        super.onDestroy();
     }
     /*@Override
     protected void onNewIntent(Intent intent){
@@ -55,6 +70,20 @@ public class MainSearchActivity extends AppCompatActivity {
         currentFragment = null;
         switchToTextChangeFragment = false;
         switchToTextQuerySubmitFragment = false;
+        dbhandler = new SQLiteHandler(this);
+        listKeywords = new ArrayList<>();
+    }
+    private void initializeFragments() {
+        textEmptyFragment = new MainSearchTextEmptyFragment();
+        textChangeFragment = new MainSearchTextChangeFragment();
+        textSubmitFragment = new MainSearchTextSubmitFragment();
+    }
+    private void setupStarterFragment() {
+        loadAllKeywordsFromDB();
+        textEmptyFragment.setListKeyword(listKeywords);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_main_search_textchange, textEmptyFragment, "FRAGMENT_TEXT_EMPTY")
+                .commit();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -86,32 +115,36 @@ public class MainSearchActivity extends AppCompatActivity {
                     switchToTextQuerySubmitFragment=true;
                     switchToTextChangeFragment=false;
                 }
-                else
-                {
-
-                }
-
                 /*String done = query + " - submitted";
                 textView.setText(done);*/
+                dbhandler.addNewKeyword(query);
                 searchView.clearFocus();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (!switchToTextChangeFragment){
-                    currentFragment = getFragmentManager().findFragmentByTag("FRAGMENT_TEXT_CHANGE");
-                    if (currentFragment==null)
-                    {
-                        textChangeFragment.setTextInit(newText);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_main_search_textchange, textChangeFragment, "FRAGMENT_TEXT_CHANGE")
-                                .commit();
-                    }
-                    switchToTextChangeFragment = true;
+                if (newText.trim().isEmpty()) {
+                    setupStarterFragment();
+                    switchToTextChangeFragment = false;
                     switchToTextQuerySubmitFragment = false;
                 }
                 else {
-                    textChangeFragment.changeText(newText);
+                    if (!switchToTextChangeFragment){
+                        currentFragment = getFragmentManager().findFragmentByTag("FRAGMENT_TEXT_CHANGE");
+                        if (currentFragment==null)
+                        {
+                            textChangeFragment.setTextInit(newText);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_main_search_textchange, textChangeFragment, "FRAGMENT_TEXT_CHANGE")
+                                    .commit();
+                        }
+                        switchToTextChangeFragment = true;
+                        switchToTextQuerySubmitFragment = false;
+                    }
+                    else {
+                        textChangeFragment.changeText(newText);
+                    }
+
                 }
                 //Toast.makeText(MainSearchActivity.this, newText, Toast.LENGTH_SHORT).show();
                 return false;
@@ -119,5 +152,9 @@ public class MainSearchActivity extends AppCompatActivity {
         });
         //searchView.setIconifiedByDefault(false);
         return super.onCreateOptionsMenu(menu);
+    }
+    private void loadAllKeywordsFromDB()
+    {
+        listKeywords = dbhandler.getAllTopFiveKeywords();
     }
 }

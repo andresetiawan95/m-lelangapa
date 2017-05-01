@@ -459,6 +459,10 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
                 if (NEW_MAIN_IMAGE == null) editMainImageInServer("null");
                 else editMainImageInServer(NEW_MAIN_IMAGE);
             }
+            else if (NEW_MAIN_IMAGE.equals(INITIAL_UNIQUE_ID_IMAGE) && dataImageReceived.get(0).isImageChanged()) {
+                Log.v("NEW IMAGE", "NEW IMAGE COYYYZZZ");
+                editMainImageInServer(NEW_MAIN_IMAGE);
+            }
             else finishActivity();
         }
         else {
