@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.lelangapa.android.R;
 import com.lelangapa.android.apicalls.search.MainSearchAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
+import com.lelangapa.android.apicalls.singleton.SearchQuery;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.resources.DetailItemResources;
 
@@ -31,6 +32,18 @@ public class MainSearchTextSubmitFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_main_search_textsubmit_layout, container, false);
+        initializeDataReceivers();
+        getItemSearchResultOnQuery(query);
+        return view;
+    }
+    public void submitQuery(String query){
+        this.query = query;
+    }
+    public void clearListBarang(){
+        this.searchResult.clear();
+    }
+    private void initializeDataReceivers()
+    {
         resultReceived = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
@@ -54,50 +67,38 @@ public class MainSearchTextSubmitFragment extends Fragment {
                 }
             }
         };
-        getItemSearchResultOnQuery(query);
-        return view;
-    }
-    public void submitQuery(String query){
-        this.query = query;
-    }
-    public void clearListBarang(){
-        this.searchResult.clear();
-    }
-    private void getItemSearchResultOnQuery(String query){
         queryReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
                 String result = output.toString();
                 try {
                     JSONObject searchJSON = new JSONObject(result);
-                    String resStatus = searchJSON.getString("status");
-                    if (resStatus.equals("success")){
-                        JSONArray searchArray = searchJSON.getJSONArray("data");
-                        for (int i=0;i<searchArray.length();i++){
-                            JSONObject searchResultObj = searchArray.getJSONObject(i);
-                            DetailItemResources searchProperty = new DetailItemResources();
-                            searchProperty.setIdbarang(searchResultObj.getString("items_id"));
-                            searchProperty.setIdauctioneer(searchResultObj.getString("auctioneer_id"));
-                            searchProperty.setNamabarang(searchResultObj.getString("items_name"));
-                            searchProperty.setNamaauctioneer(searchResultObj.getString("user_name"));
-                            searchProperty.setHargaawal(searchResultObj.getString("starting_price"));
-                            searchProperty.setHargatarget(searchResultObj.getString("expected_price"));
-                            JSONArray searchPropertyImageArray = searchResultObj.getJSONArray("url");
-                            for (int x=0;x<searchPropertyImageArray.length();x++) {
-                                JSONObject searchPropertyImageObj = searchPropertyImageArray.getJSONObject(x);
-                                searchProperty.setUrlgambarbarang("http://img-s7.lelangapa.com/" + searchPropertyImageObj.getString("url"));
-                            }
-                            searchResult.add(searchProperty);
+                    JSONArray searchArray = searchJSON.getJSONArray("result");
+                    for (int i=0;i<searchArray.length();i++){
+                        JSONObject searchResultObj = searchArray.getJSONObject(i).getJSONObject("_source");
+                        DetailItemResources searchProperty = new DetailItemResources();
+                        searchProperty.setIdbarang(searchResultObj.getString("id_item"));
+                        searchProperty.setIdauctioneer(searchResultObj.getString("id_user"));
+                        searchProperty.setNamabarang(searchResultObj.getString("title"));
+                        searchProperty.setNamaauctioneer(searchResultObj.getString("nama_user"));
+                        searchProperty.setHargaawal(searchResultObj.getString("starting_price"));
+                        searchProperty.setHargatarget(searchResultObj.getString("expected_price"));
+                        if (searchResultObj.has("main_image_url")) {
+                            searchProperty.setUrlgambarbarang("http://img-s7.lelangapa.com/" + searchResultObj.getString("main_image_url"));
                         }
-                        resultReceived.dataReceived("done");
+                        searchResult.add(searchProperty);
                     }
+                    resultReceived.dataReceived("done");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         };
-        MainSearchAPI mainSearchAPI = new MainSearchAPI(query, queryReceiver);
-        RequestController.getInstance(getActivity()).addToRequestQueue(mainSearchAPI);
+    }
+    private void getItemSearchResultOnQuery(String query){
+        MainSearchAPI.QueryKey queryKeyAPI =
+                MainSearchAPI.queryKeyInstance(SearchQuery.getInstance().insertQuery(query).insertFromAndSize(0, 10).buildQuery(), queryReceiver);
+        RequestController.getInstance(getActivity()).addToRequestQueue(queryKeyAPI);
         //RequestQueue queue = Volley.newRequestQueue(getActivity());
         //queue.add(mainSearchAPI);
     }
