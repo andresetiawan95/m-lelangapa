@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -99,6 +100,7 @@ public class MainSearchActivity extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         searchView.onActionViewExpanded();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -135,7 +137,8 @@ public class MainSearchActivity extends AppCompatActivity {
                         if (currentFragment==null)
                         {
                             textChangeFragment.setTextInit(newText);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_main_search_textchange, textChangeFragment, "FRAGMENT_TEXT_CHANGE")
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_main_search_textchange, textChangeFragment, "FRAGMENT_TEXT_CHANGE")
                                     .commit();
                         }
                         switchToTextChangeFragment = true;

@@ -85,6 +85,8 @@ public class MainSearchTextSubmitFragment extends Fragment {
                         searchProperty.setNamaauctioneer(searchResultObj.getString("nama_user"));
                         searchProperty.setHargaawal(searchResultObj.getString("starting_price"));
                         searchProperty.setHargatarget(searchResultObj.getString("expected_price"));
+                        searchProperty.setIdkategori(searchResultObj.getString("id_category"));
+                        searchProperty.setNamakategori(searchResultObj.getString("nama_category"));
                         if (searchResultObj.has("main_image_url")) {
                             searchProperty.setUrlgambarbarang("http://img-s7.lelangapa.com/" + searchResultObj.getString("main_image_url"));
                         }

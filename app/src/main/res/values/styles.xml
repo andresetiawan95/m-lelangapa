@@ -38,6 +38,8 @@
 
     <style name="SearchViewNoIconStyle" parent="Widget.AppCompat.SearchView">
         <item name="searchHintIcon">@null</item>
+        <item name="submitBackground">@android:color/transparent</item>
+        <item name="queryBackground">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

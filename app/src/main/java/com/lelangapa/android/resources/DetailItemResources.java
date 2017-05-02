@@ -7,7 +7,8 @@ import java.util.ArrayList;
  */
 
 public class DetailItemResources {
-    private String namabarang, namaauctioneer, idauctioneer, hargaawal, hargatarget, statuslelang, namabidder, hargabid, urlgambarbarang, idbarang, deskripsibarang, tanggalmulai, tanggalselesai, jammulai, jamselesai;
+    private String namabarang, namaauctioneer, idauctioneer, hargaawal, hargatarget, statuslelang, namabidder,
+            hargabid, urlgambarbarang, idbarang, deskripsibarang, tanggalmulai, tanggalselesai, jammulai, jamselesai, idkategori, namakategori;
     private String tanggaljammulai, tanggaljamselesai;
     private Long tanggaljammulai_ms, tanggaljamselesai_ms;
     private Integer itembidstatus;
@@ -153,5 +154,21 @@ public class DetailItemResources {
 
     public void setListImageURL(ArrayList<String> listImageURL) {
         this.listImageURL = listImageURL;
+    }
+
+    public String getIdkategori() {
+        return idkategori;
+    }
+
+    public void setIdkategori(String idkategori) {
+        this.idkategori = idkategori;
+    }
+
+    public String getNamakategori() {
+        return namakategori;
+    }
+
+    public void setNamakategori(String namakategori) {
+        this.namakategori = namakategori;
     }
 }
