@@ -53,6 +53,7 @@ public class MainSearchTextSubmitFragment extends Fragment {
                     if(!searchResult.isEmpty())
                     {
                         MainSearchTextSubmitNoEmptyFragment noEmptyFragment = new MainSearchTextSubmitNoEmptyFragment();
+                        noEmptyFragment.setQueryParams(query);
                         noEmptyFragment.setSearchResult(searchResult);
                         getActivity().getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_main_search_textchange, noEmptyFragment)
@@ -101,7 +102,7 @@ public class MainSearchTextSubmitFragment extends Fragment {
     }
     private void getItemSearchResultOnQuery(String query){
         MainSearchAPI.QueryKey queryKeyAPI =
-                MainSearchAPI.queryKeyInstance(SearchQuery.getInstance().insertQuery(query).insertFromAndSize(0, 10).buildQuery(), queryReceiver);
+                MainSearchAPI.queryKeyInstance(SearchQuery.getInstance().insertQuery(query).insertFromAndSize(0, 4).buildQuery(), queryReceiver);
         RequestController.getInstance(getActivity()).addToRequestQueue(queryKeyAPI);
         //RequestQueue queue = Volley.newRequestQueue(getActivity());
         //queue.add(mainSearchAPI);
