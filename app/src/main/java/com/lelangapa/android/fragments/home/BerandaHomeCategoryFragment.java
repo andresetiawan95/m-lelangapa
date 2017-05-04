@@ -1,5 +1,6 @@
 package com.lelangapa.android.fragments.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,7 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.activities.category.ItemCategoryActivity;
 import com.lelangapa.android.adapters.category.HomeCategoryAdapter;
+import com.lelangapa.android.interfaces.OnItemClickListener;
+import com.lelangapa.android.listeners.RecyclerItemClickListener;
 
 /**
  * Created by andre on 11/04/17.
@@ -20,6 +24,10 @@ public class BerandaHomeCategoryFragment extends Fragment {
     private RecyclerView recyclerView_category;
     private HomeCategoryAdapter adapter;
 
+    private String[] categoryResource;
+
+    private Bundle categoryBundleExtras;
+    private Intent categoryIntent;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -35,7 +43,7 @@ public class BerandaHomeCategoryFragment extends Fragment {
     }
     private void setAdapter()
     {
-        String[] categoryResource = getActivity().getResources().getStringArray(R.array.categories);
+        categoryResource = getActivity().getResources().getStringArray(R.array.categories);
         adapter = new HomeCategoryAdapter(getActivity(), categoryResource);
     }
     private void setRecyclerViewProperties()
@@ -50,5 +58,21 @@ public class BerandaHomeCategoryFragment extends Fragment {
         recyclerView_category.setItemAnimator(new DefaultItemAnimator());
         recyclerView_category.setFocusable(false);
         recyclerView_category.setAdapter(adapter);
+        recyclerView_category.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_category, new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                categoryBundleExtras = new Bundle();
+                categoryBundleExtras.putString("id_category", Integer.toString(position+1));
+                categoryBundleExtras.putString("nama_category", categoryResource[position]);
+                categoryIntent = new Intent(getActivity(), ItemCategoryActivity.class);
+                categoryIntent.putExtras(categoryBundleExtras);
+                startActivity(categoryIntent);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
     }
 }

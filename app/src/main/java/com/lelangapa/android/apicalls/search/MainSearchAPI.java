@@ -40,7 +40,47 @@ public class MainSearchAPI {
             return data;
         }
     }
+    public static class QueryBulkCategory extends StringRequest {
+        private static final String QUERY_URL = "https://src-api.lelangapa.com/apis/search/category";
+        private static HashMap<String, String> data;
+        private QueryBulkCategory(HashMap<String, String> data, final DataReceiver dataReceiver) {
+            super(Method.POST, QUERY_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    dataReceiver.dataReceived(response);
+                }
+            }, null);
+            QueryBulkCategory.data = data;
+        }
+        @Override
+        public HashMap<String, String> getParams(){
+            return data;
+        }
+    }
+    public static class QueryKeyWithParams extends StringRequest {
+        private static final String QUERY_URL = "https://src-api.lelangapa.com/apis/search/filter";
+        private static HashMap<String, String> data;
+        private QueryKeyWithParams(HashMap<String, String> data, final DataReceiver dataReceiver) {
+            super(Method.POST, QUERY_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    dataReceiver.dataReceived(response);
+                }
+            }, null);
+            QueryKeyWithParams.data = data;
+        }
+        @Override
+        public HashMap<String, String> getParams(){
+            return data;
+        }
+    }
     public static QueryKey queryKeyInstance(HashMap<String, String> data, DataReceiver dataReceiver) {
         return new QueryKey(data, dataReceiver);
+    }
+    public static QueryBulkCategory bulkInstance(HashMap<String, String> data, DataReceiver dataReceiver) {
+        return new QueryBulkCategory(data, dataReceiver);
+    }
+    public static QueryKeyWithParams queryParamsInstance(HashMap<String, String> data, DataReceiver dataReceiver) {
+        return new QueryKeyWithParams(data, dataReceiver);
     }
 }

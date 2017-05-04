@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.detail.DetailBarangActivity;
@@ -36,6 +38,7 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
     private ArrayList<DetailItemResources> searchResult;
     private RecyclerView searchResultRecycleView;
     private MainSearchAdapter searchAdapter;
+    private FrameLayout frameLayout_Filter;
 
     private DataReceiver whenNewSearchDataIsLoaded;
     private JSONObject newSearchJSON;
@@ -51,6 +54,7 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
     {
         View view = inflater.inflate(R.layout.fragment_main_search_textsubmit_layout_noempty, container, false);
         initializeViews(view);
+        initializeClickListener();
         initializeDataReceivers();
         initializeAdapters();
         setRecyclerViewProperties();
@@ -63,6 +67,15 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
     }
     private void initializeViews(View view) {
         searchResultRecycleView = (RecyclerView) view.findViewById(R.id.fragment_main_search_layout_recyclerview);
+        frameLayout_Filter = (FrameLayout) view.findViewById(R.id.fragment_main_search_layout_filter);
+    }
+    private void initializeClickListener() {
+        frameLayout_Filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Filter di klik", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private void initializeDataReceivers() {
         whenNewSearchDataIsLoaded = new DataReceiver() {

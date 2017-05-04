@@ -1,5 +1,7 @@
 package com.lelangapa.android.apicalls.singleton;
 
+import org.json.JSONArray;
+
 import java.util.HashMap;
 
 /**
@@ -23,6 +25,10 @@ public class SearchQuery {
     public SearchQuery insertFromAndSize(int from, int size) {
         searchQuery.query.put("from", Integer.toString(from));
         searchQuery.query.put("size", Integer.toString(size));
+        return searchQuery;
+    }
+    public SearchQuery insertFilterParams(JSONArray params) {
+        searchQuery.query.put("params", params.toString());
         return searchQuery;
     }
     public HashMap<String, String> buildQuery() {
