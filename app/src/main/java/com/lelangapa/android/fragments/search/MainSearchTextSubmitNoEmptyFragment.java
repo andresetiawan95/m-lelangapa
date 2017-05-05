@@ -1,5 +1,6 @@
 package com.lelangapa.android.fragments.search;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.detail.DetailBarangActivity;
+import com.lelangapa.android.activities.search.MainSearchActivity;
+import com.lelangapa.android.activities.search.filter.FilterSearchActivity;
 import com.lelangapa.android.adapters.MainSearchAdapter;
 import com.lelangapa.android.apicalls.search.MainSearchAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
@@ -40,12 +43,14 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
     private MainSearchAdapter searchAdapter;
     private FrameLayout frameLayout_Filter;
 
-    private DataReceiver whenNewSearchDataIsLoaded;
+    private DataReceiver whenNewSearchDataIsLoaded, whenFilterChoosen;
     private JSONObject newSearchJSON;
     private JSONArray newSearchJSONArray;
     private static int PAGE_NOW;
-    private static String queryString;
+    private static String queryString, paramsString;
     private String jsonResponse;
+    private static final int REQUEST_FILTER = 1;
+    private static boolean IS_FILTER_APPLIED;
 
     private EndlessRecyclerViewScrollListener scrollListener;
 
@@ -53,6 +58,7 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_main_search_textsubmit_layout_noempty, container, false);
+        noAppliedFilter();
         initializeViews(view);
         initializeClickListener();
         initializeDataReceivers();
@@ -61,9 +67,38 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
         return view;
     }
     @Override
+    public void onResume() {
+        super.onResume();
+        ((MainSearchActivity) getActivity()).clearSearchViewFocus();
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_FILTER && resultCode == Activity.RESULT_OK && data!= null) {
+            paramsString = data.getExtras().getString("params");
+            boolean is_specified = data.getExtras().getBoolean("is_filter_specified");
+            Toast.makeText(getActivity(), paramsString, Toast.LENGTH_SHORT).show();
+            /*if (is_specified) {
+                filterApplied();
+                loadNewFilteredDataFromServer(0);
+            }
+            else {
+                noAppliedFilter();
+                loadNewDataFromServer(0);
+            }*/
+        }
+    }
+    @Override
     public void onDestroy() {
         scrollListener.resetState();
+        noAppliedFilter();
         super.onDestroy();
+    }
+    private void noAppliedFilter() {
+        IS_FILTER_APPLIED = false;
+    }
+    private void filterApplied() {
+        IS_FILTER_APPLIED = true;
     }
     private void initializeViews(View view) {
         searchResultRecycleView = (RecyclerView) view.findViewById(R.id.fragment_main_search_layout_recyclerview);
@@ -73,7 +108,8 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
         frameLayout_Filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Filter di klik", Toast.LENGTH_SHORT).show();
+                Intent filterIntent = new Intent(getActivity(), FilterSearchActivity.class);
+                startActivityForResult(filterIntent, REQUEST_FILTER);
             }
         });
     }
@@ -107,6 +143,12 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        };
+        whenFilterChoosen = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+
             }
         };
     }
@@ -158,5 +200,17 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
                 MainSearchAPI.queryKeyInstance(SearchQuery.getInstance()
                         .insertQuery(queryString).insertFromAndSize((PAGE_NOW * 4), 4).buildQuery(), whenNewSearchDataIsLoaded);
         RequestController.getInstance(getActivity()).addToRequestQueue(queryKeyAPI);
+    }
+    private void loadNewFilteredDataFromServer(int pg) {
+        PAGE_NOW = pg;
+        MainSearchAPI.QueryKeyWithParams paramsAPI =
+                MainSearchAPI.queryParamsInstance(
+                        SearchQuery.getInstance()
+                                .insertQuery(queryString)
+                                .insertFromAndSize(pg * 4, 4)
+                                .insertFilterParams(paramsString)
+                                .buildQuery()
+                        , whenFilterChoosen);
+        RequestController.getInstance(getActivity()).addToRequestQueue(paramsAPI);
     }
 }

@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ import com.lelangapa.android.R;
 import com.lelangapa.android.fragments.search.MainSearchTextChangeFragment;
 import com.lelangapa.android.fragments.search.MainSearchTextEmptyFragment;
 import com.lelangapa.android.fragments.search.MainSearchTextSubmitFragment;
+import com.lelangapa.android.preferences.FilterManager;
 import com.lelangapa.android.preferences.sqlites.SQLiteHandler;
 
 import java.util.ArrayList;
@@ -31,19 +33,23 @@ public class MainSearchActivity extends AppCompatActivity {
     private MainSearchTextChangeFragment textChangeFragment;
     private MainSearchTextSubmitFragment textSubmitFragment;
     private SearchView searchView;
+    private CoordinatorLayout coordinatorLayout;
     private Fragment currentFragment;
 
     private boolean switchToTextChangeFragment;
     private boolean switchToTextQuerySubmitFragment;
     private ArrayList<String> listKeywords;
+    private static final int REQUEST_FILTER=1;
 
     private SQLiteHandler dbhandler;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         initializeConstants();
+        initializeFilterManager();
         setContentView(R.layout.activity_main_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.activity_main_search_coordinatorLayout);
         initializeFragments();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -79,6 +85,9 @@ public class MainSearchActivity extends AppCompatActivity {
         textChangeFragment = new MainSearchTextChangeFragment();
         textSubmitFragment = new MainSearchTextSubmitFragment();
     }
+    private void initializeFilterManager() {
+        FilterManager.initialize(this);
+    }
     private void setupStarterFragment() {
         loadAllKeywordsFromDB();
         textEmptyFragment.setListKeyword(listKeywords);
@@ -109,6 +118,7 @@ public class MainSearchActivity extends AppCompatActivity {
                     currentFragment = getFragmentManager().findFragmentByTag("FRAGMENT_TEXT_SUBMIT");
                     if (currentFragment==null)
                     {
+                        FilterManager.destoryFilter();
                         textSubmitFragment.submitQuery(query);
                         textSubmitFragment.clearListBarang();
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_main_search_textchange, textSubmitFragment, "FRAGMENT_TEXT_SUBMIT")
@@ -159,5 +169,9 @@ public class MainSearchActivity extends AppCompatActivity {
     private void loadAllKeywordsFromDB()
     {
         listKeywords = dbhandler.getAllTopFiveKeywords();
+    }
+
+    public void clearSearchViewFocus() {
+        coordinatorLayout.requestFocus();
     }
 }

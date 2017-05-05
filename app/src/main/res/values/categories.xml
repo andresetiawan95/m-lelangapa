@@ -19,4 +19,25 @@
         <item>Souvenir, Kado &amp; Hadiah</item>
         <item>Produk Lainnya</item>
     </string-array>
+
+    <string-array name="categories_filter">
+        <item>Semua Kategori</item>
+        <item>Handphone &amp; Aksesoris</item>
+        <item>Komputer &amp; Aksesoris</item>
+        <item>Elektronik</item>
+        <item>Kamera</item>
+        <item>Otomotif</item>
+        <item>Koleksi</item>
+        <item>Fashion Pria</item>
+        <item>Fashion Wanita</item>
+        <item>Kecantikan</item>
+        <item>Buku</item>
+        <item>Alat Musik</item>
+        <item>Olahraga</item>
+        <item>Kesehatan</item>
+        <item>Aksesoris Wanita</item>
+        <item>Film, Musik &amp; Game</item>
+        <item>Souvenir, Kado &amp; Hadiah</item>
+        <item>Produk Lainnya</item>
+    </string-array>
 </resources>

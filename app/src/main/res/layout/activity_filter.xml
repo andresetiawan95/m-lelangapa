@@ -2,18 +2,16 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:id="@+id/activity_main_search_coordinatorLayout"
+    android:id="@+id/activity_filter"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:focusable="false"
-    android:focusableInTouchMode="true">
+    android:layout_height="match_parent" >
     <include
         layout="@layout/toolbar" />
     <FrameLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:id="@+id/fragment_main_search_textchange"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/fragment_filter_layout"
+        android:layout_width="match_parent" android:layout_height="match_parent">
     </FrameLayout>
+
 </android.support.design.widget.CoordinatorLayout>
