@@ -65,8 +65,8 @@ public class BiddingFragment extends Fragment {
         textView_hargaBid = (TextView) view.findViewById(R.id.fragment_detail_barang_bid_hargabid);
         editText_inputPriceBid = (EditText) view.findViewById(R.id.fragment_detail_barang_bid_pricetextbox);
         button_submitBid = (Button) view.findViewById(R.id.fragment_detail_barang_bid_submitbutton);
-        progressBar_indicator = (ProgressBar) view.findViewById(R.id.fragment_detail_barang_bid_indicator_progress_bar);
-        textView_indicator = (TextView) view.findViewById(R.id.fragment_detail_barang_bid_indicator);
+        //progressBar_indicator = (ProgressBar) view.findViewById(R.id.fragment_detail_barang_bid_indicator_progress_bar);
+        //textView_indicator = (TextView) view.findViewById(R.id.fragment_detail_barang_bid_indicator);
     }
     public void setDetailItem(DetailItemResources detailItem)
     {
@@ -88,14 +88,14 @@ public class BiddingFragment extends Fragment {
             textView_namaBidder.setText(detailItem.getNamabidder());
             textView_hargaBid.setText(detailItem.getHargabid());
         }
-        updateProgressBarIndicator();
+        //updateProgressBarIndicator();
     }
     public void changeNamaBidderAndHargaBid(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
         displayBidInformation();
     }
-    private void updateProgressBarIndicator()
+    /*private void updateProgressBarIndicator()
     {
         progressBar_indicator.setProgress(calculateProgress());
         textView_indicator.setText(decimalFormatter.format(calculateIndicatorPercentage()));
@@ -111,5 +111,5 @@ public class BiddingFragment extends Fragment {
         offerPriceGap = Long.valueOf(detailItem.getHargabid()) - Long.valueOf(detailItem.getHargaawal());
         startAndTargetPriceGap = Long.valueOf(detailItem.getHargatarget()) - Long.valueOf(detailItem.getHargaawal());
         return (((double)offerPriceGap / (double)startAndTargetPriceGap) * (double)100);
-    }
+    }*/
 }

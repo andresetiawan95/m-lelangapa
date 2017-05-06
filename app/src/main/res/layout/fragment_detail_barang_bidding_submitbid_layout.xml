@@ -76,7 +76,7 @@
             android:text="TAWAR"/>
 
     </LinearLayout>
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                 android:id="@+id/fragment_detail_barang_bid_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="--"
+                android:text="&#45;&#45;"
                 android:textAppearance="?android:textAppearance" />
             <TextView
                 android:layout_width="wrap_content"
@@ -102,5 +102,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="false"/>
-    </LinearLayout>
+    </LinearLayout>-->
 </LinearLayout>

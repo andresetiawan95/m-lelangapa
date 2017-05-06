@@ -7,11 +7,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_main_search_layout_recyclerview"
+    <FrameLayout
+        android:id="@+id/fragment_main_search_layout_search_result"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:layout_height="match_parent" />
     <LinearLayout
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"

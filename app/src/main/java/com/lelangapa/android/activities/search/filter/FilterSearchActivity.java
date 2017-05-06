@@ -43,26 +43,27 @@ public class FilterSearchActivity extends AppCompatActivity {
                 .replace(R.id.fragment_filter_layout, filterSearchFragment)
                 .commit();
     }
-    public void whenFilterSubmitted(String params, boolean specified) {
+    public void whenFilterSubmitted(String params) {
         Intent resultIntent = new Intent();
-        Bundle resultBundle = new Bundle();
-        resultBundle.putString("params", params);
-        resultBundle.putBoolean("is_filter_specified", specified);
-        resultIntent.putExtras(resultBundle);
+        resultIntent.putExtra("params", params);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
-            FilterManager.destoryFilter();
+            if (!FilterManager.IS_FILTER_SPECIFIED) {
+                FilterManager.destoryFilter();
+            }
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
     @Override
     public void onBackPressed() {
-        FilterManager.destoryFilter();
+        if (!FilterManager.IS_FILTER_SPECIFIED) {
+            FilterManager.destoryFilter();
+        }
         super.onBackPressed();
     }
 }

@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Created by andre on 01/05/17.
  */
 
-public class MainSearchTextEmptyFragment extends Fragment {
+public class SearchTextEmptyFragment extends Fragment {
     private ArrayList<String> listKeyword;
     private ListView listView_keywordHistory;
     private ArrayAdapter adapter;

@@ -15,9 +15,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.lelangapa.android.R;
-import com.lelangapa.android.fragments.search.MainSearchTextChangeFragment;
-import com.lelangapa.android.fragments.search.MainSearchTextEmptyFragment;
-import com.lelangapa.android.fragments.search.MainSearchTextSubmitFragment;
+import com.lelangapa.android.fragments.search.SearchTextChangeFragment;
+import com.lelangapa.android.fragments.search.SearchTextEmptyFragment;
+import com.lelangapa.android.fragments.search.SearchTextSubmitFragment;
 import com.lelangapa.android.preferences.FilterManager;
 import com.lelangapa.android.preferences.sqlites.SQLiteHandler;
 
@@ -29,9 +29,9 @@ import java.util.ArrayList;
 
 public class MainSearchActivity extends AppCompatActivity {
     private TextView textView;
-    private MainSearchTextEmptyFragment textEmptyFragment;
-    private MainSearchTextChangeFragment textChangeFragment;
-    private MainSearchTextSubmitFragment textSubmitFragment;
+    private SearchTextEmptyFragment textEmptyFragment;
+    private SearchTextChangeFragment textChangeFragment;
+    private SearchTextSubmitFragment textSubmitFragment;
     private SearchView searchView;
     private CoordinatorLayout coordinatorLayout;
     private Fragment currentFragment;
@@ -81,9 +81,9 @@ public class MainSearchActivity extends AppCompatActivity {
         listKeywords = new ArrayList<>();
     }
     private void initializeFragments() {
-        textEmptyFragment = new MainSearchTextEmptyFragment();
-        textChangeFragment = new MainSearchTextChangeFragment();
-        textSubmitFragment = new MainSearchTextSubmitFragment();
+        textEmptyFragment = new SearchTextEmptyFragment();
+        textChangeFragment = new SearchTextChangeFragment();
+        textSubmitFragment = new SearchTextSubmitFragment();
     }
     private void initializeFilterManager() {
         FilterManager.initialize(this);

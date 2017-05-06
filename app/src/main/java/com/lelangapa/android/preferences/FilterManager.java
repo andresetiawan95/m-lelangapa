@@ -17,10 +17,12 @@ public class FilterManager {
     private static final String FILTER_PREFERENCE_KEY = "filter_preference";
     public static final String KEY_ID_CATEGORY = "id_category";
     private static final String DUMMY_CATEGORY = "0";
+    public static boolean IS_FILTER_SPECIFIED;
 
     public static void initialize(Context context) {
         if (filterPreferences == null)
             filterPreferences = context.getSharedPreferences(FILTER_PREFERENCE_KEY, Context.MODE_PRIVATE);
+        IS_FILTER_SPECIFIED = false;
     }
 
     public static void insertFilter(String category) {
@@ -39,5 +41,6 @@ public class FilterManager {
         editor = filterPreferences.edit();
         editor.clear();
         editor.apply();
+        IS_FILTER_SPECIFIED = false;
     }
 }

@@ -23,12 +23,12 @@ import java.util.ArrayList;
  * Created by andre on 17/12/16.
  */
 
-public class MainSearchTextSubmitFragment extends Fragment {
+public class SearchTextSubmitFragment extends Fragment {
     private String query;
     private DataReceiver queryReceiver;
     private DataReceiver resultReceived;
     private ArrayList<DetailItemResources> searchResult = new ArrayList<>();
-    public MainSearchTextSubmitFragment(){}
+    public SearchTextSubmitFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_main_search_textsubmit_layout, container, false);
@@ -52,7 +52,7 @@ public class MainSearchTextSubmitFragment extends Fragment {
                 {
                     if(!searchResult.isEmpty())
                     {
-                        MainSearchTextSubmitNoEmptyFragment noEmptyFragment = new MainSearchTextSubmitNoEmptyFragment();
+                        SearchWithResultFragment noEmptyFragment = new SearchWithResultFragment();
                         noEmptyFragment.setQueryParams(query);
                         noEmptyFragment.setSearchResult(searchResult);
                         getActivity().getSupportFragmentManager().beginTransaction()
@@ -62,7 +62,7 @@ public class MainSearchTextSubmitFragment extends Fragment {
                     else
                     {
                         //jika hasil pencarian tidak ada
-                        MainSearchTextSubmitEmptyFragment emptyFragment = new MainSearchTextSubmitEmptyFragment();
+                        SearchNoResultFragment emptyFragment = new SearchNoResultFragment();
                         getActivity().getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_main_search_textchange, emptyFragment)
                                 .commit();

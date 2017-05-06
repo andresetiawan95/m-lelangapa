@@ -13,10 +13,10 @@ import com.lelangapa.android.R;
  * Created by andre on 17/12/16.
  */
 
-public class MainSearchTextChangeFragment extends Fragment {
+public class SearchTextChangeFragment extends Fragment {
     private TextView textChangeTextView;
     private String textInit;
-    public MainSearchTextChangeFragment(){}
+    public SearchTextChangeFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_main_search_textchange_layout, container, false);

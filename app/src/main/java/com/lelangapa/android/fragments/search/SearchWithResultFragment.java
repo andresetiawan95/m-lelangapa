@@ -4,27 +4,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.lelangapa.android.R;
-import com.lelangapa.android.activities.detail.DetailBarangActivity;
 import com.lelangapa.android.activities.search.MainSearchActivity;
 import com.lelangapa.android.activities.search.filter.FilterSearchActivity;
-import com.lelangapa.android.adapters.MainSearchAdapter;
 import com.lelangapa.android.apicalls.search.MainSearchAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.apicalls.singleton.SearchQuery;
+import com.lelangapa.android.fragments.search.result.ResultEmpty;
+import com.lelangapa.android.fragments.search.result.ResultNoEmpty;
 import com.lelangapa.android.interfaces.DataReceiver;
-import com.lelangapa.android.interfaces.OnItemClickListener;
-import com.lelangapa.android.listeners.RecyclerItemClickListener;
-import com.lelangapa.android.modifiedviews.EndlessRecyclerViewScrollListener;
+import com.lelangapa.android.interfaces.OnLoadMore;
+import com.lelangapa.android.preferences.FilterManager;
 import com.lelangapa.android.resources.DetailItemResources;
 
 import org.json.JSONArray;
@@ -37,33 +33,31 @@ import java.util.ArrayList;
  * Created by Andre on 12/17/2016.
  */
 
-public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
+public class SearchWithResultFragment extends Fragment {
     private ArrayList<DetailItemResources> searchResult;
-    private RecyclerView searchResultRecycleView;
-    private MainSearchAdapter searchAdapter;
     private FrameLayout frameLayout_Filter;
+    private ResultEmpty resultEmpty;
+    private ResultNoEmpty resultNoEmpty;
 
     private DataReceiver whenNewSearchDataIsLoaded, whenFilterChoosen;
+    private OnLoadMore onLoadMore;
     private JSONObject newSearchJSON;
     private JSONArray newSearchJSONArray;
     private static int PAGE_NOW;
     private static String queryString, paramsString;
     private String jsonResponse;
     private static final int REQUEST_FILTER = 1;
-    private static boolean IS_FILTER_APPLIED;
-
-    private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_main_search_textsubmit_layout_noempty, container, false);
-        noAppliedFilter();
         initializeViews(view);
+        initializeChildFragments();
         initializeClickListener();
         initializeDataReceivers();
-        initializeAdapters();
-        setRecyclerViewProperties();
+        initializeOnLoadMore();
+        setupInitialFragment();
         return view;
     }
     @Override
@@ -75,33 +69,25 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_FILTER && resultCode == Activity.RESULT_OK && data!= null) {
-            paramsString = data.getExtras().getString("params");
-            boolean is_specified = data.getExtras().getBoolean("is_filter_specified");
-            Toast.makeText(getActivity(), paramsString, Toast.LENGTH_SHORT).show();
-            /*if (is_specified) {
-                filterApplied();
-                loadNewFilteredDataFromServer(0);
+            paramsString = data.getStringExtra("params");
+            //Toast.makeText(getActivity(), paramsString + " " + FilterManager.IS_FILTER_SPECIFIED, Toast.LENGTH_SHORT).show();
+            if (FilterManager.IS_FILTER_SPECIFIED) {
+                invalidateAllData();
+                PAGE_NOW = 0; //load data dari mulai awal
+                loadNewFilteredDataFromServer(PAGE_NOW);
             }
             else {
-                noAppliedFilter();
-                loadNewDataFromServer(0);
-            }*/
+                invalidateAllData();
+                PAGE_NOW = 0; //load data dari mulai awal
+                loadNewDataFromServer(PAGE_NOW);
+            }
         }
     }
     @Override
     public void onDestroy() {
-        scrollListener.resetState();
-        noAppliedFilter();
         super.onDestroy();
     }
-    private void noAppliedFilter() {
-        IS_FILTER_APPLIED = false;
-    }
-    private void filterApplied() {
-        IS_FILTER_APPLIED = true;
-    }
     private void initializeViews(View view) {
-        searchResultRecycleView = (RecyclerView) view.findViewById(R.id.fragment_main_search_layout_recyclerview);
         frameLayout_Filter = (FrameLayout) view.findViewById(R.id.fragment_main_search_layout_filter);
     }
     private void initializeClickListener() {
@@ -137,55 +123,52 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
                         }
                         searchResult.add(searchProperty);
                     }
-                    if (newSearchJSONArray.length() > 0) {
-                        searchAdapter.notifyItemRangeInserted((4 * PAGE_NOW), 4);
-                    }
+                    loadLogic();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         };
-        whenFilterChoosen = new DataReceiver() {
+    }
+    private void initializeChildFragments() {
+        resultEmpty = new ResultEmpty();
+        resultNoEmpty = new ResultNoEmpty();
+    }
+    private void initializeOnLoadMore() {
+        onLoadMore = new OnLoadMore() {
             @Override
-            public void dataReceived(Object output) {
-
+            public void loadPage(int page) {
+                if (FilterManager.IS_FILTER_SPECIFIED) loadNewFilteredDataFromServer(page);
+                else loadNewDataFromServer(page);
             }
         };
     }
-    private void initializeAdapters() {
-        searchAdapter = new MainSearchAdapter(getActivity(), searchResult);
+    private void setupInitialFragment() {
+        resultNoEmpty.setSearchResult(searchResult);
+        resultNoEmpty.setLoadMoreInterface(onLoadMore);
+        setupFragment(resultNoEmpty, "RESULT_NO_EMPTY");
     }
-    private void setRecyclerViewProperties() {
-        GridLayoutManager searchLayoutManager = new GridLayoutManager(getActivity(), 2);
-        scrollListener = new EndlessRecyclerViewScrollListener(searchLayoutManager) {
-            @Override
-            public void onLoadMore(final int page, int totalItemsCount, RecyclerView view) {
-                view.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadNewDataFromServer(page);
-                    }
-                });
+    private void setupFragment(Fragment fragment, String tag) {
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragment_main_search_layout_search_result, fragment, tag)
+                .commit();
+    }
+    private void invalidateAllData() {
+        searchResult.clear();
+        resultNoEmpty.invalidateData();
+    }
+    private void loadLogic() {
+        if (newSearchJSONArray.length() > 0) {
+            if (PAGE_NOW == 0) {
+                setupFragment(resultNoEmpty, "RESULT_NO_EMPTY");
             }
-        };
-        searchResultRecycleView.setLayoutManager(searchLayoutManager);
-        searchResultRecycleView.setAdapter(searchAdapter);
-        searchResultRecycleView.setItemAnimator(new DefaultItemAnimator());
-        searchResultRecycleView.addOnScrollListener(scrollListener);
-        searchResultRecycleView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), searchResultRecycleView, new OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), DetailBarangActivity.class);
-                Bundle bundleExtras = new Bundle();
-                bundleExtras.putString("auctioneer_id", searchResult.get(position).getIdauctioneer());
-                bundleExtras.putString("items_id", searchResult.get(position).getIdbarang());
-                intent.putExtras(bundleExtras);
-                //intent.putExtra("items_id", searchResult.get(position).getIdbarang());
-                startActivity(intent);
+            resultNoEmpty.notifyWhenNewItemInserted(PAGE_NOW * 4);
+        }
+        else {
+            if (PAGE_NOW == 0) {
+                setupFragment(resultEmpty, "RESULT_EMPTY");
             }
-            @Override
-            public void onLongItemClick(View view, int position) {}
-        }));
+        }
     }
     public void setQueryParams(String query) {
         queryString = query;
@@ -195,6 +178,7 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
         this.searchResult = searchResult;
     }
     private void loadNewDataFromServer(int pg) {
+        Log.v("LOAD PAGE ", "PAGE KE " + pg);
         PAGE_NOW = pg;
         MainSearchAPI.QueryKey queryKeyAPI =
                 MainSearchAPI.queryKeyInstance(SearchQuery.getInstance()
@@ -202,15 +186,16 @@ public class MainSearchTextSubmitNoEmptyFragment extends Fragment {
         RequestController.getInstance(getActivity()).addToRequestQueue(queryKeyAPI);
     }
     private void loadNewFilteredDataFromServer(int pg) {
+        Log.v("LOAD PAGE ", "PAGE KE " + pg);
         PAGE_NOW = pg;
         MainSearchAPI.QueryKeyWithParams paramsAPI =
                 MainSearchAPI.queryParamsInstance(
                         SearchQuery.getInstance()
                                 .insertQuery(queryString)
-                                .insertFromAndSize(pg * 4, 4)
+                                .insertFromAndSize(PAGE_NOW * 4, 4)
                                 .insertFilterParams(paramsString)
                                 .buildQuery()
-                        , whenFilterChoosen);
+                        , whenNewSearchDataIsLoaded);
         RequestController.getInstance(getActivity()).addToRequestQueue(paramsAPI);
     }
 }

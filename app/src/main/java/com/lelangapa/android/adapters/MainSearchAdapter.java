@@ -40,7 +40,7 @@ public class MainSearchAdapter extends RecyclerView.Adapter<MainSearchAdapter.My
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_main_search_textsubmit_carditems, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_main_search_with_result_items, parent, false);
         return new MainSearchAdapter.MyViewHolder(itemView);
     }
     @Override

@@ -77,6 +77,9 @@ public class FilterSearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //susun jsonarray berdasarkan filter yang sudah dipilih
+                if (!FilterManager.getFilter().get(FilterManager.KEY_ID_CATEGORY).equals("0")) FilterManager.IS_FILTER_SPECIFIED = true;
+                else FilterManager.IS_FILTER_SPECIFIED = false;
+
                 buildParamsJSONObjectAndSendResult();
             }
         });
@@ -133,16 +136,14 @@ public class FilterSearchFragment extends Fragment {
         }
     }
     private void buildParamsJSONObjectAndSendResult() {
-        boolean IS_FILTER_NOT_SPECIFIED = false;
         JSONArray params = new JSONArray();
         JSONObject paramsObject = new JSONObject();
         try {
-            paramsObject.put(FilterManager.KEY_ID_CATEGORY, FilterManager.getFilter().get(FilterManager.KEY_ID_CATEGORY));
-            params.put(paramsObject);
-            if (paramsObject.getString(FilterManager.KEY_ID_CATEGORY).equals("0")) {
-                IS_FILTER_NOT_SPECIFIED = true;
+            if (FilterManager.IS_FILTER_SPECIFIED) {
+                paramsObject.put(FilterManager.KEY_ID_CATEGORY, FilterManager.getFilter().get(FilterManager.KEY_ID_CATEGORY));
+                params.put(paramsObject);
             }
-            ((FilterSearchActivity) getActivity()).whenFilterSubmitted(params.toString(), IS_FILTER_NOT_SPECIFIED);
+            ((FilterSearchActivity) getActivity()).whenFilterSubmitted(params.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

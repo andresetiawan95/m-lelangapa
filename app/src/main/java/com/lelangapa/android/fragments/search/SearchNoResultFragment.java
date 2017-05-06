@@ -12,9 +12,9 @@ import com.lelangapa.android.R;
  * Created by andre on 01/05/17.
  */
 
-public class MainSearchTextSubmitEmptyFragment extends Fragment {
+public class SearchNoResultFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main_search_textsubmit_layout_empty, container, false);
+        return inflater.inflate(R.layout.fragment_main_search_no_result_layout, container, false);
     }
 }
