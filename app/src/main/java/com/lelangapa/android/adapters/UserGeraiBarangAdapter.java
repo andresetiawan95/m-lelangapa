@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.resources.PriceFormatter;
 import com.lelangapa.android.resources.UserGeraiResources;
 import com.squareup.picasso.Picasso;
 
@@ -53,7 +54,7 @@ public class UserGeraiBarangAdapter extends RecyclerView.Adapter<UserGeraiBarang
             viewHolder.gambarbarang.setImageResource(R.drawable.ic_insert_photo_grey_128dp);
         }
         viewHolder.namabarang.setText(resBarang.getNamabarang());
-        viewHolder.harga.setText(resBarang.getHargaawal());
+        viewHolder.harga.setText(PriceFormatter.formatPrice(resBarang.getHargaawal()));
     }
     @Override
     public int getItemCount(){

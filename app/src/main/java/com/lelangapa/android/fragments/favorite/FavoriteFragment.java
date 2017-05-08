@@ -106,23 +106,28 @@ public class FavoriteFragment extends Fragment {
             public void dataReceived(Object output) {
                 String response = output.toString();
                 if (response.equals("done")) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    if (listItemFavorites.isEmpty()) {
-                        //FavoriteEmptyFragment emptyFragment = new FavoriteEmptyFragment();
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_user_favorite_layout, emptyFragment)
-                                .commit();
+                    if (isResumed()) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        if (listItemFavorites.isEmpty()) {
+                            //FavoriteEmptyFragment emptyFragment = new FavoriteEmptyFragment();
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_user_favorite_layout, emptyFragment)
+                                    .commit();
+                        }
+                        else {
+                            //attach fragment recyclerview
+                            //FavoriteNoEmptyFragment noEmptyFragment = new FavoriteNoEmptyFragment();
+                            swipeRefreshLayout.setEnabled(false);
+                            noEmptyFragment.setItemFavoriteList(listItemFavorites);
+                            noEmptyFragment.setUserID(userID);
+                            noEmptyFragment.setWhenListFavoriteIsEmptyReceiver(whenListFavoriteIsEmptyReceiver);
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_user_favorite_layout, noEmptyFragment)
+                                    .commit();
+                        }
                     }
                     else {
-                        //attach fragment recyclerview
-                        //FavoriteNoEmptyFragment noEmptyFragment = new FavoriteNoEmptyFragment();
-                        swipeRefreshLayout.setEnabled(false);
-                        noEmptyFragment.setItemFavoriteList(listItemFavorites);
-                        noEmptyFragment.setUserID(userID);
-                        noEmptyFragment.setWhenListFavoriteIsEmptyReceiver(whenListFavoriteIsEmptyReceiver);
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_user_favorite_layout, noEmptyFragment)
-                                .commit();
+                        Log.v("NOT VISIBLE", "FRAGMENT DIED");
                     }
                 }
             }

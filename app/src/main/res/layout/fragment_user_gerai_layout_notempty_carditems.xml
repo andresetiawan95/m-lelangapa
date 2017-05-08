@@ -42,7 +42,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -58,6 +59,12 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimaryDark"/>
                 </LinearLayout>
+                <ImageView
+                    android:id="@+id/fragment_user_gerai_layout_option"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:src="@drawable/ic_more_option_vertical_grey_24dp"/>
             </LinearLayout>
         </RelativeLayout>
 

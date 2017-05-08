@@ -75,6 +75,7 @@ public class UserEditLelangBarangFragment extends Fragment {
                     UserGeraiResources geraiResources = new UserGeraiResources();
                     geraiResources.setIdbarang(respArrayObject.getString("items_id"));
                     geraiResources.setNamabarang(respArrayObject.getString("items_name"));
+                    geraiResources.setIdkategori(respArrayObject.getString("id_category"));
                     geraiResources.setDeskripsibarang(respArrayObject.getString("item_description"));
                     geraiResources.setHargaawal(respArrayObject.getString("starting_price"));
                     geraiResources.setHargatarget(respArrayObject.getString("expected_price"));

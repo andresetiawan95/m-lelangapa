@@ -3,6 +3,7 @@ package com.lelangapa.android.activities.category;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.fragments.home.category.ItemCategoryFragment;
@@ -37,5 +38,12 @@ public class ItemCategoryActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_item_category_layout, itemCategoryFragment)
                 .commit();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            super.onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

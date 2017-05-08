@@ -45,4 +45,7 @@ public class RequestController {
         Log.v("CLEARD", "CACHE CLEARED");
         getRequestQueue().add(req);
     }
+    public void cancelAllRequest(String tag) {
+        mRequestQueue.cancelAll(tag);
+    }
 }

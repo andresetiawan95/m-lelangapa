@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.resources.DetailItemResources;
+import com.lelangapa.android.resources.PriceFormatter;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class UserPublicGeraiAdapter extends RecyclerView.Adapter<UserPublicGerai
             holder.imageView_gambarBarang.setImageResource(R.drawable.ic_insert_photo_grey_128dp);
         }
         holder.textView_namaBarang.setText(detailItem.getNamabarang());
-        holder.textView_hargaAwal.setText(detailItem.getHargaawal());
+        holder.textView_hargaAwal.setText(PriceFormatter.formatPrice(detailItem.getHargaawal()));
     }
 
     @Override

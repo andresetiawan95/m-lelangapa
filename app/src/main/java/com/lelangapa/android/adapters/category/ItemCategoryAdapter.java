@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.resources.DetailItemResources;
+import com.lelangapa.android.resources.PriceFormatter;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
         }
         holder.namabarang.setText(resources.getNamabarang());
         holder.user.setText(resources.getNamaauctioneer());
-        holder.harga.setText(resources.getHargaawal());
+        holder.harga.setText(PriceFormatter.formatPrice(resources.getHargaawal()));
         holder.kategori.setText(resources.getNamakategori());
     }
 

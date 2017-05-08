@@ -33,10 +33,9 @@ import com.lelangapa.android.activities.profile.chat.UserChatActivity;
 import com.lelangapa.android.activities.search.MainSearchActivity;
 import com.lelangapa.android.apicalls.notification.NotificationAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
+import com.lelangapa.android.fragments.HomeFragment;
 import com.lelangapa.android.fragments.home.BerandaHomeFragment;
 import com.lelangapa.android.fragments.home.PromoHomeFragment;
-import com.lelangapa.android.fragments.HomeFragment;
-import com.lelangapa.android.fragments.home.TrendingHomeFragment;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.services.NotifConfig;
@@ -212,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
     private void setUpViewPager(ViewPager viewPager){
         HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new BerandaHomeFragment(), getResources().getString(R.string.HOME));
-        adapter.addFragment(new TrendingHomeFragment(), getResources().getString(R.string.TRENDING));
         adapter.addFragment(new PromoHomeFragment(), getResources().getString(R.string.PROMO));
         int limit = adapter.getCount() > 1 ? adapter.getCount() - 1 : 1;
         viewPager.setAdapter(adapter);

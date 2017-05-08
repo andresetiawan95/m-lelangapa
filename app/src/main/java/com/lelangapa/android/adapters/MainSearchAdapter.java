@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.resources.DetailItemResources;
+import com.lelangapa.android.resources.PriceFormatter;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class MainSearchAdapter extends RecyclerView.Adapter<MainSearchAdapter.My
         }
         viewHolder.namabarang.setText(result.getNamabarang());
         viewHolder.user.setText(result.getNamaauctioneer());
-        viewHolder.harga.setText(result.getHargaawal());
+        viewHolder.harga.setText(PriceFormatter.formatPrice(result.getHargaawal()));
         viewHolder.kategori.setText(result.getNamakategori());
     }
     @Override

@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import com.lelangapa.android.listeners.RecyclerItemClickListener;
 import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.resources.DateTimeConverter;
 import com.lelangapa.android.resources.ItemImageResources;
+import com.lelangapa.android.resources.NumberTextWatcher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,8 +60,8 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class UserLelangBarangFragment extends Fragment {
-    private EditText editText_namabarang, editText_deskripsibarang, editText_hargabarang_awal, editText_hargabarang_target, editText_tanggalmulai;
-    private EditText editText_jammulai, editText_tanggalselesai, editText_jamselesai;
+    private EditText editText_namabarang, editText_deskripsibarang, editText_hargabarang_awal, editText_hargabarang_target;
+    private TextView textView_tanggalmulai, textView_jammulai, textView_tanggalselesai, textView_jamselesai;
     private Spinner spinner_kategori;
     //private ImageView gambarBarang;
     private Button button_lelangBarang;
@@ -98,6 +100,7 @@ public class UserLelangBarangFragment extends Fragment {
     private RecyclerView recyclerView_imageList;
     private ImagePicker imagePicker;
     private DataReceiver imageReceiver;
+    private DateTimeConverter dateTimeConverter;
 
     private Intent cropIntent;
     private PopupMenu popupMenu_image;
@@ -111,6 +114,7 @@ public class UserLelangBarangFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_lelang_barang_layout, container, false);
         initializeSession();
         initializeViews(view);
+        initializeTextChangeListenerOnPrice();
         initializeImageReceiver();
         setImagePicker();
         setupViews();
@@ -123,6 +127,7 @@ public class UserLelangBarangFragment extends Fragment {
         data = new HashMap<>();
         dataImage = new HashMap<>();
         listImages = new ArrayList<>();
+        dateTimeConverter = new DateTimeConverter();
     }
     private void initializeImageReceiver()
     {
@@ -177,13 +182,17 @@ public class UserLelangBarangFragment extends Fragment {
         editText_deskripsibarang = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_deskripsi_barang);
         editText_hargabarang_awal = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_harga_awal_barang);
         editText_hargabarang_target = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_harga_target_barang);
-        editText_tanggalmulai = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_tanggal_mulai);
-        editText_tanggalselesai = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_tanggal_selesai);
-        editText_jammulai = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_jam_mulai);
-        editText_jamselesai = (EditText) view.findViewById(R.id.fragment_user_lelang_barang_jam_selesai);
+        textView_tanggalmulai = (TextView) view.findViewById(R.id.fragment_user_lelang_barang_tanggal_mulai);
+        textView_tanggalselesai = (TextView) view.findViewById(R.id.fragment_user_lelang_barang_tanggal_selesai);
+        textView_jammulai = (TextView) view.findViewById(R.id.fragment_user_lelang_barang_jam_mulai);
+        textView_jamselesai = (TextView) view.findViewById(R.id.fragment_user_lelang_barang_jam_selesai);
         spinner_kategori = (Spinner) view.findViewById(R.id.fragment_user_lelang_barang_kategori);
         //gambarBarang = (ImageView) view.findViewById(R.id.fragment_user_lelang_barang_gambar);
         recyclerView_imageList = (RecyclerView) view.findViewById(R.id.fragment_user_lelang_barang_image_recyclerview);
+    }
+    private void initializeTextChangeListenerOnPrice() {
+        editText_hargabarang_awal.addTextChangedListener(new NumberTextWatcher(editText_hargabarang_awal));
+        editText_hargabarang_target.addTextChangedListener(new NumberTextWatcher(editText_hargabarang_target));
     }
     private void setupViews()
     {
@@ -193,28 +202,28 @@ public class UserLelangBarangFragment extends Fragment {
                 chooseImage();
             }
         });*/
-        editText_tanggalmulai.setOnClickListener(new View.OnClickListener() {
+        textView_tanggalmulai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectDate(editText_tanggalmulai);
+                selectDate(textView_tanggalmulai);
             }
         });
-        editText_tanggalselesai.setOnClickListener(new View.OnClickListener() {
+        textView_tanggalselesai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectDate(editText_tanggalselesai);
+                selectDate(textView_tanggalselesai);
             }
         });
-        editText_jammulai.setOnClickListener(new View.OnClickListener() {
+        textView_jammulai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectHour(editText_jammulai);
+                selectHour(textView_jammulai);
             }
         });
-        editText_jamselesai.setOnClickListener(new View.OnClickListener() {
+        textView_jamselesai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectHour(editText_jamselesai);
+                selectHour(textView_jamselesai);
             }
         });
         button_lelangBarang.setOnClickListener(new View.OnClickListener() {
@@ -261,14 +270,13 @@ public class UserLelangBarangFragment extends Fragment {
         }));
     }
     private void wrapFilledItemData(){
-        DateTimeConverter dateTimeConverter = new DateTimeConverter();
         data.put("id_user", session.get(sessionManager.getKEY_ID()));
         data.put(KEY_NAMABARANG, editText_namabarang.getText().toString());
         data.put(KEY_DESCBARANG, editText_deskripsibarang.getText().toString());
-        data.put(KEY_STARTINGPRICE, editText_hargabarang_awal.getText().toString());
-        data.put(KEY_EXPECTEDPRICE, editText_hargabarang_target.getText().toString());
-        data.put(KEY_STARTTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalmulai.getText().toString() + " " + editText_jammulai.getText().toString() + ":00"));
-        data.put(KEY_ENDTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalselesai.getText().toString() + " " + editText_jamselesai.getText().toString() + ":00"));
+        data.put(KEY_STARTINGPRICE, editText_hargabarang_awal.getText().toString().trim().replaceAll("[^0-9]",""));
+        data.put(KEY_EXPECTEDPRICE, editText_hargabarang_target.getText().toString().trim().replaceAll("[^0-9]",""));
+        data.put(KEY_STARTTIME, dateTimeConverter.convertInputLocalTime(textView_tanggalmulai.getText().toString() + " " + textView_jammulai.getText().toString() + ":00"));
+        data.put(KEY_ENDTIME, dateTimeConverter.convertInputLocalTime(textView_tanggalselesai.getText().toString() + " " + textView_jamselesai.getText().toString() + ":00"));
         data.put(KEY_IDCATEGORY, Integer.toString(spinner_kategori.getSelectedItemPosition() +1));
         data.put(KEY_NAMACATEGORY, spinner_kategori.getSelectedItem().toString());
         data.put(KEY_NAMAUSER, session.get(SessionManager.KEY_NAME));
@@ -430,7 +438,7 @@ public class UserLelangBarangFragment extends Fragment {
             }
         }
     }
-    private void selectDate(final EditText editText){
+    private void selectDate(final TextView textView){
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
@@ -439,19 +447,19 @@ public class UserLelangBarangFragment extends Fragment {
         DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                editText.setText(year + "-" + (month+1) + "-" + dayOfMonth);
+                textView.setText(dateTimeConverter.convertUserDateInput(dayOfMonth + "-" + (month+1) + "-" + year));
             }
         }, year, month, day);
         datePickerDialog.show();
     }
-    private void selectHour(final EditText editText){
+    private void selectHour(final TextView textView){
         Calendar calendar = Calendar.getInstance();
         hour = calendar.get(Calendar.HOUR_OF_DAY);
         minute = calendar.get(Calendar.MINUTE);
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                editText.setText(String.format("%02d:%02d", hourOfDay, minute));
+                textView.setText(String.format("%02d:%02d", hourOfDay, minute));
             }
         }, hour, minute, false);
         timePickerDialog.show();

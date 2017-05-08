@@ -6,6 +6,7 @@ package com.lelangapa.android.resources;
 
 public class UserGeraiResources {
     private String namabarang, namapengguna, hargaawal, hargatarget, statuslelang, urlgambarbarang, idbarang, deskripsibarang, tanggalmulai, tanggalselesai, jammulai, jamselesai;
+    private String idkategori, namakategori;
     public UserGeraiResources(){}
     public void setIdbarang(String id){
         idbarang = id;
@@ -72,5 +73,20 @@ public class UserGeraiResources {
     }
     public String getJamselesai(){
         return jamselesai;
+    }
+    public String getIdkategori() {
+        return idkategori;
+    }
+
+    public void setIdkategori(String idkategori) {
+        this.idkategori = idkategori;
+    }
+
+    public String getNamakategori() {
+        return namakategori;
+    }
+
+    public void setNamakategori(String namakategori) {
+        this.namakategori = namakategori;
     }
 }

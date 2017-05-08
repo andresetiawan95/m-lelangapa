@@ -1,6 +1,8 @@
 package com.lelangapa.android.fragments.gerai;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,8 +19,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.lelangapa.android.R;
@@ -37,6 +42,8 @@ import com.lelangapa.android.listeners.RecyclerItemClickListener;
 import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.resources.DateTimeConverter;
 import com.lelangapa.android.resources.ItemImageResources;
+import com.lelangapa.android.resources.NumberTextWatcher;
+import com.lelangapa.android.resources.PriceFormatter;
 import com.lelangapa.android.resources.UserGeraiResources;
 
 import org.json.JSONException;
@@ -45,6 +52,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
@@ -72,13 +80,14 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     private static final String KEY_NAMAUSER = "nama_user";
     private static final String KEY_NAMACATEGORY = "nama_category";
     private static final String KEY_IMAGE = "image";
-    private EditText editText_namabarang, editText_deskripsibarang, editText_hargabarang_awal, editText_hargabarang_target, editText_tanggalmulai,
-            editText_jammulai, editText_tanggalselesai, editText_jamselesai ;
+    private EditText editText_namabarang, editText_deskripsibarang, editText_hargabarang_awal, editText_hargabarang_target;
+    private TextView textView_tanggalmulai, textView_jammulai, textView_tanggalselesai, textView_jamselesai;
 
     private RecyclerView recyclerView_image;
     private ImagePicker imagePicker;
     private ImageLoaderReceiver imageLoaderReceiver;
     private DataReceiver whenAnImageAlreadyUploaded, whenMainImageAlreadyEdited;
+    private DateTimeConverter dateTimeConverter;
 
     private MultipleImageEditItemAdapter adapter;
 
@@ -89,6 +98,7 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     private static final int MAX_IMAGE = 8;
     private static int MAIN_IMAGE_INDEX = 0;
     private static String INITIAL_UNIQUE_ID_IMAGE = null;
+    private static int year, month, day, hour, minute;
 
     private Intent cropIntent;
     private Bitmap bitmap;
@@ -104,6 +114,8 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         Button btnEditBarang = (Button) getActivity().findViewById(R.id.fragment_user_edit_lelang_barang_jual_button);
         btnEditBarang.setVisibility(View.VISIBLE);
         initializeViews(view);
+        initializeTextChangeListenerOnPrice();
+        initializeDateTimeOnClickListeners();
         takeMainImageAsFirstImage();
         setInitialUniqueIdImage();
         setImagePicker();
@@ -162,18 +174,49 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         imageToUpload = new ArrayList<>();
         dataInput = new HashMap<>();
         dataNewImage = new HashMap<>();
+        dateTimeConverter = new DateTimeConverter();
     }
     private void initializeViews(View view) {
         editText_namabarang = (EditText) view.findViewById(R.id.fragment_user_edit_lelang_barang_nama_barang);
         editText_deskripsibarang = (EditText) view.findViewById(R.id.fragment_user_edit_lelang_barang_deskripsi_barang);
         editText_hargabarang_awal = (EditText) view.findViewById(R.id.fragment_user_edit_lelang_barang_harga_awal_barang);
         editText_hargabarang_target = (EditText) view.findViewById(R.id.fragment_user_edit_lelang_barang_harga_target_barang);
-        editText_tanggalmulai = (EditText) view.findViewById(R.id.fragment_user_edit_lelang_barang_tanggal_mulai);
-        editText_tanggalselesai = (EditText) view.findViewById(R.id.fragment_user_edit_lelang_barang_tanggal_selesai);
-        editText_jammulai = (EditText) view.findViewById(R.id.fragment_user_edit_lelang_barang_jam_mulai);
-        editText_jamselesai = (EditText) view.findViewById(R.id.fragment_user_edit_lelang_barang_jam_selesai);
+        textView_tanggalmulai = (TextView) view.findViewById(R.id.fragment_user_edit_lelang_barang_tanggal_mulai);
+        textView_tanggalselesai = (TextView) view.findViewById(R.id.fragment_user_edit_lelang_barang_tanggal_selesai);
+        textView_jammulai = (TextView) view.findViewById(R.id.fragment_user_edit_lelang_barang_jam_mulai);
+        textView_jamselesai = (TextView) view.findViewById(R.id.fragment_user_edit_lelang_barang_jam_selesai);
         spinner_kategori = (Spinner) view.findViewById(R.id.fragment_user_edit_lelang_barang_kategori);
         recyclerView_image = (RecyclerView) view.findViewById(R.id.fragment_user_edit_lelang_barang_image_recyclerview);
+    }
+    private void initializeTextChangeListenerOnPrice() {
+        editText_hargabarang_awal.addTextChangedListener(new NumberTextWatcher(editText_hargabarang_awal));
+        editText_hargabarang_target.addTextChangedListener(new NumberTextWatcher(editText_hargabarang_target));
+    }
+    private void initializeDateTimeOnClickListeners() {
+        textView_tanggalmulai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectDate(textView_tanggalmulai);
+            }
+        });
+        textView_tanggalselesai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectDate(textView_tanggalselesai);
+            }
+        });
+        textView_jammulai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectTime(textView_jammulai);
+            }
+        });
+        textView_jamselesai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectTime(textView_jamselesai);
+            }
+        });
     }
     private void takeMainImageAsFirstImage() {
         if (dataImageReceived.size() > 0) {
@@ -239,8 +282,11 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
 
             @Override
             public void onLongItemClick(View view, int position) {
-                chooseMainImagePopupMenu(view, position);
-                showPopupMenu();
+                if (!dataImageReceived.get(position).isMainImage() &&
+                        (dataImageReceived.get(position).getIdImage() != null || dataImageReceived.get(position).getUniqueIDImage() != null)) {
+                    chooseMainImagePopupMenu(view, position);
+                    showPopupMenu();
+                }
             }
         }));
     }
@@ -358,21 +404,25 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     }
     private void setDataBarangInfo(){
         String namabarang = dataBarangReceived.get(0).getNamabarang();
+        String idcategory = dataBarangReceived.get(0).getIdkategori();
         String deskripsibarang = dataBarangReceived.get(0).getDeskripsibarang();
-        String hargabarangawal = dataBarangReceived.get(0).getHargaawal();
-        String hargabarangtarget = dataBarangReceived.get(0).getHargatarget();
+        String hargabarangawal = PriceFormatter.formatPrice(dataBarangReceived.get(0).getHargaawal());
+        String hargabarangtarget = PriceFormatter.formatPrice(dataBarangReceived.get(0).getHargatarget());
         String tanggalmulai = dataBarangReceived.get(0).getTanggalmulai();
         String tanggalselesai = dataBarangReceived.get(0).getTanggalselesai();
         String jammulai = dataBarangReceived.get(0).getJammulai();
         String jamselesai = dataBarangReceived.get(0).getJamselesai();
         editText_namabarang.setText(namabarang);
+        if (!idcategory.equals("null")) {
+            spinner_kategori.setSelection(Integer.parseInt(idcategory) - 1);
+        }
         editText_deskripsibarang.setText(deskripsibarang);
         editText_hargabarang_awal.setText(hargabarangawal);
         editText_hargabarang_target.setText(hargabarangtarget);
-        editText_tanggalmulai.setText(tanggalmulai);
-        editText_tanggalselesai.setText(tanggalselesai);
-        editText_jammulai.setText(jammulai);
-        editText_jamselesai.setText(jamselesai);
+        textView_tanggalmulai.setText(tanggalmulai);
+        textView_tanggalselesai.setText(tanggalselesai);
+        textView_jammulai.setText(jammulai);
+        textView_jamselesai.setText(jamselesai);
     }
     private void generateAllNewImageToUpload()
     {
@@ -402,10 +452,10 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         dataInput.put(KEY_IDBARANGUPDATE, dataBarangReceived.get(0).getIdbarang());
         dataInput.put(KEY_NAMABARANG, editText_namabarang.getText().toString());
         dataInput.put(KEY_DESCBARANG, editText_deskripsibarang.getText().toString());
-        dataInput.put(KEY_STARTINGPRICE, editText_hargabarang_awal.getText().toString());
-        dataInput.put(KEY_EXPECTEDPRICE, editText_hargabarang_target.getText().toString());
-        dataInput.put(KEY_STARTTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalmulai.getText().toString() + " "+ editText_jammulai.getText().toString()+ ":00"));
-        dataInput.put(KEY_ENDTIME, dateTimeConverter.convertInputLocalTime(editText_tanggalselesai.getText().toString() + " "+ editText_jamselesai.getText().toString()+ ":00"));
+        dataInput.put(KEY_STARTINGPRICE, editText_hargabarang_awal.getText().toString().trim().replaceAll("[^0-9]",""));
+        dataInput.put(KEY_EXPECTEDPRICE, editText_hargabarang_target.getText().toString().trim().replaceAll("[^0-9]",""));
+        dataInput.put(KEY_STARTTIME, dateTimeConverter.convertInputLocalTime(textView_tanggalmulai.getText().toString() + " "+ textView_jammulai.getText().toString()+ ":00"));
+        dataInput.put(KEY_ENDTIME, dateTimeConverter.convertInputLocalTime(textView_tanggalselesai.getText().toString() + " "+ textView_jamselesai.getText().toString()+ ":00"));
         dataInput.put(KEY_IDCATEGORY, Integer.toString(spinner_kategori.getSelectedItemPosition() +1));
         dataInput.put(KEY_NAMACATEGORY, spinner_kategori.getSelectedItem().toString());
         dataInput.put(KEY_NAMAUSER, SessionManager.getSessionStatic().get(SessionManager.KEY_NAME));
@@ -440,6 +490,31 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     private void uploadEditedImageToServer() {
         UpdateGambarBarangAPI.UpdateGambar updateGambarAPI = UpdateGambarBarangAPI.instanceUpdateGambar(dataNewImage, whenAnImageAlreadyUploaded);
         RequestController.getInstance(getActivity()).addToRequestQueue(updateGambarAPI);
+    }
+    private void selectDate(final TextView textView) {
+        Calendar calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                textView.setText(dateTimeConverter.convertUserDateInput(dayOfMonth + "-" + (month+1) + "-" + year));
+            }
+        }, year, month, day);
+        datePickerDialog.show();
+    }
+    private void selectTime(final TextView textView) {
+        Calendar calendar = Calendar.getInstance();
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                textView.setText(String.format("%02d:%02d", hourOfDay, minute));
+            }
+        }, hour, minute, false);
+        timePickerDialog.show();
     }
     private void finishActivity() {
         loadingDialog.dismiss();

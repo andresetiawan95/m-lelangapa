@@ -15,9 +15,11 @@ import java.util.TimeZone;
  */
 
 public class DateTimeConverter {
-    private String inputDateFormat = "yyyy-MM-dd HH:mm:ss";
+    private String formatWhenUserInputDate = "dd-MM-yyyy";
+    private String formatWhenUserInputTime = "HH:mm";
+    private String inputDateFormat = "dd-MM-yyyy HH:mm:ss";
     private String dateFormatForServer = "yyyy-MM-dd'T'HH:mm:ss";
-    private String outputServerFormat = "yyyy-MM-dd'T'HH:mm.SSS'Z'";
+    private String outputFromServerForUserFormat = "dd-MM-yyyy'T'HH:mm.SSS'Z'";
     private String outputIndonesiaFormat = "dd-MM-yyyy HH:mm";
 //    private String outputDateFormatFromServer = "yyyy-MM-dd'T'HH:mm:ss'.000Z'";
 //    private String outputDateFormatPreprocessUTC = "yyyy-MM-dd HH:mm:ss '+0000'";
@@ -44,7 +46,7 @@ public class DateTimeConverter {
         //menggunakan joda time
         DateTime now = new DateTime(time, DateTimeZone.UTC);
         DateTime toLocalTime = now.withZone(DateTimeZone.getDefault());
-        DateTimeFormatter dmf = DateTimeFormat.forPattern(outputServerFormat);
+        DateTimeFormatter dmf = DateTimeFormat.forPattern(outputFromServerForUserFormat);
         return dmf.print(toLocalTime);
     }
     public String convertUTCToLocalTimeIndonesiaFormat (String time)
@@ -70,6 +72,12 @@ public class DateTimeConverter {
     {
         DateTime dateTime = new DateTime(time, DateTimeZone.UTC);
         return dateTime.getMillis();
+    }
+    public String convertUserDateInput(String time) {
+
+        DateTimeFormatter dmf = DateTimeFormat.forPattern(formatWhenUserInputDate);
+        DateTime dateTime = dmf.parseDateTime(time);
+        return dmf.print(dateTime);
     }
     /*
     public void convertUTCToLocalTimeOld (String time)
