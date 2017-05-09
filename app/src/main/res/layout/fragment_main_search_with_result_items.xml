@@ -27,11 +27,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp">
-                <TextView
+                <com.lelangapa.android.modifiedviews.ExpandableTextViewWithLine
                     android:id="@+id/fragment_main_search_layout_namabarang"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:text="Judul 1"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:textAppearance="?android:textAppearance"/>
 
                 <TextView

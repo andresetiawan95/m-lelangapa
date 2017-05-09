@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
     <View
         android:layout_width="match_parent"
@@ -9,7 +11,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="wrap_content"
         android:background="@color/backgroundLayoutWhiteColor">
         <TextView
             android:layout_margin="8dp"
@@ -18,12 +20,22 @@
             android:text="Deskripsi"
             android:textAppearance="?android:textAppearance"
             android:textSize="18dp"/>
-        <TextView
+        <com.lelangapa.android.modifiedviews.ExpandableTextViewWithLine
             android:id="@+id/fragment_detail_barang_deskripsi_isideskripsi"
             android:layout_margin="8dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:maxLines="3"
+            android:ellipsize="end"
+            app:animation_duration="700"
             android:text="Lorem ipsum dolor si amet"/>
+        <ImageView
+            android:id="@+id/fragment_detail_barang_deskripsi_expand_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_expand_more_grey_128dp"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
