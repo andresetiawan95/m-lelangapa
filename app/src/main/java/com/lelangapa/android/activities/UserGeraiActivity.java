@@ -18,18 +18,27 @@ import com.lelangapa.android.fragments.gerai.UserGeraiFragment;
 
 public class UserGeraiActivity extends AppCompatActivity {
     private FloatingActionButton geraiFloatingButton;
+    private UserGeraiFragment userGeraiFragment;
     @Override
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        initializeViews();
+        initializeFragments();
+        initializeOnClickListener();
+        setupFragment();
+    }
+    private void initializeViews() {
         setContentView(R.layout.activity_gerai);
         geraiFloatingButton = (FloatingActionButton) findViewById(R.id.add_gerai_floating_button);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Gerai");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_user_gerai_layout, new UserGeraiFragment())
-                .commit();
+    }
+    private void initializeFragments() {
+        userGeraiFragment = new UserGeraiFragment();
+    }
+    private void initializeOnClickListener() {
         geraiFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,6 +46,11 @@ public class UserGeraiActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    private void setupFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_user_gerai_layout, userGeraiFragment)
+                .commit();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

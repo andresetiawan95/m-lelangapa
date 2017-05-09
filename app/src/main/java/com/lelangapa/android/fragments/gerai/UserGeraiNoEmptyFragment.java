@@ -14,7 +14,6 @@ import com.lelangapa.android.R;
 import com.lelangapa.android.activities.gerai.UserEditLelangBarangActivity;
 import com.lelangapa.android.adapters.UserGeraiBarangAdapter;
 import com.lelangapa.android.interfaces.OnItemClickListener;
-import com.lelangapa.android.listeners.RecyclerItemClickListener;
 import com.lelangapa.android.resources.UserGeraiResources;
 
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 public class UserGeraiNoEmptyFragment extends Fragment {
     private ArrayList<UserGeraiResources> dataBarang;
     private UserGeraiBarangAdapter barangAdapter;
+    private OnItemClickListener onItemClickListener;
     public UserGeraiNoEmptyFragment(){}
     public void setDataBarang(ArrayList<UserGeraiResources> barang){
         this.dataBarang = barang;
@@ -33,8 +33,9 @@ public class UserGeraiNoEmptyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_user_gerai_layout_notempty, container, false);
+        setOnItemClickListener();
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_user_gerai_layout_recyclerview);
-        barangAdapter = new UserGeraiBarangAdapter(getActivity(), dataBarang);
+        barangAdapter = new UserGeraiBarangAdapter(getActivity(), dataBarang, onItemClickListener);
         RecyclerView.LayoutManager upLayoutManager = new GridLayoutManager(getActivity(), 2);
         /*
         * {
@@ -48,7 +49,7 @@ public class UserGeraiNoEmptyFragment extends Fragment {
         recyclerView.setAdapter(barangAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new OnItemClickListener() {
+        /*recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 //Toast.makeText(getActivity(), dataBarang.get(position).getNamabarang(), Toast.LENGTH_SHORT).show();
@@ -63,7 +64,22 @@ public class UserGeraiNoEmptyFragment extends Fragment {
             public void onLongItemClick(View view, int position) {
 
             }
-        }));
+        }));*/
         return view;
+    }
+    private void setOnItemClickListener() {
+        onItemClickListener = new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getActivity(), UserEditLelangBarangActivity.class);
+                intent.putExtra("items_id", dataBarang.get(position).getIdbarang());
+                getActivity().startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        };
     }
 }

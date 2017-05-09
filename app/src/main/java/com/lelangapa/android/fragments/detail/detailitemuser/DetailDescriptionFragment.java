@@ -44,6 +44,7 @@ public class DetailDescriptionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 textView_isiDeskripsi.toggle();
+                imageView_expandToggler.setImageResource(textView_isiDeskripsi.isExpanded() ? R.drawable.ic_expand_more_grey_128dp : R.drawable.ic_expand_less_grey_128dp);
             }
         });
     }
