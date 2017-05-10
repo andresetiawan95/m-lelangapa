@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.gerai.UserLelangBarangActivity;
+import com.lelangapa.android.fragments.gerai.UserGeraiEmptyFragment;
 import com.lelangapa.android.fragments.gerai.UserGeraiFragment;
 
 /**
@@ -19,6 +20,7 @@ import com.lelangapa.android.fragments.gerai.UserGeraiFragment;
 public class UserGeraiActivity extends AppCompatActivity {
     private FloatingActionButton geraiFloatingButton;
     private UserGeraiFragment userGeraiFragment;
+    private UserGeraiEmptyFragment emptyFragment;
     @Override
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -36,6 +38,7 @@ public class UserGeraiActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     private void initializeFragments() {
+        emptyFragment = new UserGeraiEmptyFragment();
         userGeraiFragment = new UserGeraiFragment();
     }
     private void initializeOnClickListener() {
@@ -50,6 +53,11 @@ public class UserGeraiActivity extends AppCompatActivity {
     private void setupFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_user_gerai_layout, userGeraiFragment)
+                .commit();
+    }
+    public void whenItemsNowEmpty() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_user_gerai_layout, emptyFragment)
                 .commit();
     }
     @Override

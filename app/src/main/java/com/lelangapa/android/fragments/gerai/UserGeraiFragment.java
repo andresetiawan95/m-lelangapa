@@ -41,7 +41,6 @@ public class UserGeraiFragment extends Fragment {
         this.inflater = in;
         this.container = con;
         view = inflater.inflate(R.layout.fragment_user_gerai_layout, container, false);
-        getBarangOnUserID(session.get(sessionManager.getKEY_ID()));
         received = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
@@ -63,6 +62,7 @@ public class UserGeraiFragment extends Fragment {
                 }
             }
         };
+        getBarangOnUserID(session.get(sessionManager.getKEY_ID()));
         return view;
     }
     private void getBarangOnUserID(String userID){

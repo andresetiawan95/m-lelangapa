@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.fragments.gerai.toggler.DeleteToggler;
 import com.lelangapa.android.interfaces.OnItemClickListener;
 import com.lelangapa.android.resources.PriceFormatter;
 import com.lelangapa.android.resources.UserGeraiResources;
@@ -27,11 +28,14 @@ public class UserGeraiBarangAdapter extends RecyclerView.Adapter<UserGeraiBarang
     private ArrayList<UserGeraiResources> dataBarang;
     private Context context;
     private OnItemClickListener onItemClickListener;
+    private DeleteToggler deleteToggler;
     private PopupMenu popupMenuOptions;
-    public UserGeraiBarangAdapter (Context context, ArrayList<UserGeraiResources> dataBarang, OnItemClickListener onItemClickListener){
+    public UserGeraiBarangAdapter (Context context, ArrayList<UserGeraiResources> dataBarang,
+                                   OnItemClickListener onItemClickListener, DeleteToggler deleteToggler){
         this.dataBarang = dataBarang;
         this.context = context;
         this.onItemClickListener = onItemClickListener;
+        this.deleteToggler = deleteToggler;
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView namabarang, user, harga;
@@ -54,7 +58,7 @@ public class UserGeraiBarangAdapter extends RecyclerView.Adapter<UserGeraiBarang
     }
     @Override
     public void onBindViewHolder(final MyViewHolder viewHolder, int position){
-        UserGeraiResources resBarang = dataBarang.get(position);
+        final UserGeraiResources resBarang = dataBarang.get(position);
         if (resBarang.getUrlgambarbarang()!=null) {
             Picasso.with(context).load(resBarang.getUrlgambarbarang()).into(viewHolder.gambarbarang);
         }
@@ -76,7 +80,14 @@ public class UserGeraiBarangAdapter extends RecyclerView.Adapter<UserGeraiBarang
                 popupMenuOptions.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        return false;
+                        switch (item.getItemId()) {
+                            case R.id.gerai_item_delete :
+                                deleteToggler.setItemIDToBeDeleted(resBarang.getIdbarang());
+                                deleteToggler.showAlertDialog();
+                                return true;
+                            default:
+                                return false;
+                        }
                     }
                 });
                 popupMenuOptions.inflate(R.menu.gerai_item_popup_menu);

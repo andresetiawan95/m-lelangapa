@@ -79,6 +79,15 @@
     <string name="UNBLOCK_USER_ALERTDIALOGOKBUTTON">UNBLOCK</string>
     <string name="UNBLOCK_USER_ALERTDIALOGCANCELBUTTON">TIDAK</string>
 
+    <string name="DELETE_ITEM_GERAI_ALERTDIALOGTITLE">Hapus item?</string>
+    <string name="DELETE_ITEM_GERAI_ALERTDIALOGMSG">Hapus item ini dari gerai anda? Anda tidak dapat lagi mengembalikan item yang sudah dihapus</string>
+    <string name="DELETE_ITEM_GERAI_ALERTDIALOGOKBUTTON">OK</string>
+    <string name="DELETE_ITEM_GERAI_ALERTDIALOGCANCELBUTTON">CANCEL</string>
+
+    <string name="DELETE_ITEM_GERAI_DONE_ALERTDIALOGTITLE">Item telah dihapus</string>
+    <string name="DELETE_ITEM_GERAI_DONE_ALERTDIALOGMSG">Item telah dihapus dari gerai anda.</string>
+    <string name="DELETE_ITEM_GERAI_DONE_ALERTDIALOGOKBUTTON">OK</string>
+
     <string name="PICK_IMAGE_FROM_TITLE">Pilih Gambar</string>
     <string name="PICK_IMAGE_FROM_MESSAGE">Pilih sumber gambar untuk digunakan</string>
     <string name="PICK_IMAGE_FROM_CAMERA_NEUTRALBUTTON">Kamera</string>
