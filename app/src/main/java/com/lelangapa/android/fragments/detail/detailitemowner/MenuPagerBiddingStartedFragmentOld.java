@@ -16,7 +16,7 @@ import com.lelangapa.android.resources.BiddingResources;
  * Created by andre on 25/01/17.
  */
 
-public class MenuPagerBiddingStartedFragment extends Fragment {
+public class MenuPagerBiddingStartedFragmentOld extends Fragment {
     private TextView textView_namaBidder, textView_hargaBid;
     private Button button_ambilTawaran, button_daftarTawaran, button_hentikanLelang;
 

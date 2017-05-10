@@ -5,9 +5,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.fragments.detail.detailitemowner.winnerstatus.ChosenFragment;
+import com.lelangapa.android.fragments.detail.detailitemowner.winnerstatus.UnchosenFragment;
 import com.lelangapa.android.resources.BiddingResources;
 
 /**
@@ -16,33 +18,49 @@ import com.lelangapa.android.resources.BiddingResources;
 
 public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
     private BiddingResources itemBiddingResources;
-    private TextView textView_namaBidder, textView_hargaBid;
+    private ProgressBar progressBar;
 
+    private ChosenFragment chosenFragment;
+    private UnchosenFragment unchosenFragment;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_finished_auctioneer_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_finished_auctioneer_layout_new, container, false);
         initializeViews(view);
-        setTextViews();
+        initializeFragment();
+        setupFragment();
         return view;
     }
 
     private void initializeViews(View view)
     {
-        textView_namaBidder = (TextView) view.findViewById(R.id.fragment_detail_barang_bidding_finished_auctioneer_nama);
-        textView_hargaBid = (TextView) view.findViewById(R.id.fragment_detail_barang_bidding_finished_auctioneer_hargabid);
+        progressBar = (ProgressBar) view.findViewById(R.id.fragment_detail_barang_bidding_finished_auctioneer_indicator_progress_bar);
+    }
+    private void initializeFragment() {
+        chosenFragment = new ChosenFragment();
+        unchosenFragment = new UnchosenFragment();
     }
     public void setBidderInformation(BiddingResources itemBiddingResources)
     {
         this.itemBiddingResources = itemBiddingResources;
-        if (textView_namaBidder != null && textView_hargaBid != null)
-        {
-            setTextViews();
+    }
+    private void setupFragment() {
+        if (itemBiddingResources.isWinnerStatus()) {
+            chosenFragment.setBidderInformation(itemBiddingResources);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail_barang_bidding_finished_auctioneer_fragment, chosenFragment)
+                    .commit();
+        }
+        else {
+            unchosenFragment.setBidderInformation(itemBiddingResources);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail_barang_bidding_finished_auctioneer_fragment, unchosenFragment)
+                    .commit();
         }
     }
-    private void setTextViews()
+/*    private void setTextViews()
     {
         textView_namaBidder.setText(itemBiddingResources.getNamaBidder());
         textView_hargaBid.setText(itemBiddingResources.getHargaBid());
-    }
+    }*/
 }

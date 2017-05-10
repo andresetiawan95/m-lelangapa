@@ -11,7 +11,7 @@ public class AuctioneerMenuPagerFragment extends Fragment {
     private ViewPager detailAuctioneerViewPager;
     private DetailBarangAuctioneerViewPagerAdapter auctioneerViewPagerAdapter;
     private MenuPagerBiddingNotStartedFragment biddingNotStartedFragment;
-    private MenuPagerBiddingStartedFragment biddingStartedFragment;
+    private MenuPagerBiddingStartedFragmentOld biddingStartedFragment;
     private MenuPagerBiddingFinishedNoBidFragment biddingFinishedNoBidFragment;
     private MenuPagerBiddingFinishedWithBidderFragment biddingFinishedWithBidderFragment;
     private MenuPagerStatisticFragment statisticFragment;
@@ -27,7 +27,7 @@ public class AuctioneerMenuPagerFragment extends Fragment {
     public AuctioneerMenuPagerFragment()
     {
         biddingNotStartedFragment = new MenuPagerBiddingNotStartedFragment();
-        biddingStartedFragment = new MenuPagerBiddingStartedFragment();
+        biddingStartedFragment = new MenuPagerBiddingStartedFragmentOld();
         biddingFinishedNoBidFragment = new MenuPagerBiddingFinishedNoBidFragment();
         biddingFinishedWithBidderFragment = new MenuPagerBiddingFinishedWithBidderFragment();
         statisticFragment = new MenuPagerStatisticFragment();

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/detail_item_auctioneer_chosen_offer_list"
+        android:title="Daftar tawaran"
+        app:showAsAction="withText"
+        android:visible="true"
+        />
+</menu>

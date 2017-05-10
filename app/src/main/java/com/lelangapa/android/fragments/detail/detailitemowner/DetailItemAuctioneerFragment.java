@@ -715,6 +715,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
                             itemBidResources.setIdBid(itemDataObject.getString("bid_id_q"));
                             itemBidResources.setNamaBidder(itemDataObject.getString("bidder_name"));
                             itemBidResources.setHargaBid(itemDataObject.getString("item_bid_price"));
+                            itemBidResources.setWinnerStatus(itemDataObject.getBoolean("winner_status"));
 
                             JSONArray detailUrlGambarItemArray = itemDataObject.getJSONArray("url");
                             JSONArray biddingPeringkatArray = itemDataObject.getJSONArray("peringkat");

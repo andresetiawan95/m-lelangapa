@@ -7,6 +7,7 @@ package com.lelangapa.android.resources;
 public class BiddingResources {
     private String idBidder, namaBidder, hargaBid, avatarBidderUrl;
     private String idBid;
+    private boolean winnerStatus;
     public void setIdBidder(String idBidder)
     {
         this.idBidder = idBidder;
@@ -46,5 +47,13 @@ public class BiddingResources {
     public String getAvatarBidderUrl()
     {
         return avatarBidderUrl;
+    }
+
+    public boolean isWinnerStatus() {
+        return winnerStatus;
+    }
+
+    public void setWinnerStatus(boolean winnerStatus) {
+        this.winnerStatus = winnerStatus;
     }
 }
