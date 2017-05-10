@@ -8,6 +8,7 @@
     <string name="action_favorite">Favorite</string>
     <string name="action_unfavorite">Unfavorite</string>
     <string name="action_chat">Chat</string>
+    <string name="action_edit">Edit</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--Home Activity-->
@@ -87,6 +88,10 @@
     <string name="DELETE_ITEM_GERAI_DONE_ALERTDIALOGTITLE">Item telah dihapus</string>
     <string name="DELETE_ITEM_GERAI_DONE_ALERTDIALOGMSG">Item telah dihapus dari gerai anda.</string>
     <string name="DELETE_ITEM_GERAI_DONE_ALERTDIALOGOKBUTTON">OK</string>
+
+    <string name="CANNOT_EDIT_ALERTDIALOGTITLE">Edit gagal</string>
+    <string name="CANNOT_EDIT_ALERTDIALOGMSG">Edit barang tidak dimungkinkan karena lelang sedang berlangsung</string>
+    <string name="CANNOT_EDIT_ALERTDIALOGOKBUTTON">OK</string>
 
     <string name="PICK_IMAGE_FROM_TITLE">Pilih Gambar</string>
     <string name="PICK_IMAGE_FROM_MESSAGE">Pilih sumber gambar untuk digunakan</string>

@@ -11,12 +11,16 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.detail.DetailBarangActivity;
 import com.lelangapa.android.activities.detail.block.BlockActivity;
+import com.lelangapa.android.activities.gerai.UserEditLelangBarangActivity;
 import com.lelangapa.android.apicalls.detail.DetailItemAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.apicalls.socket.BiddingSocket;
@@ -75,8 +79,10 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private FragmentManager fragmentManager;
 
-    //nyoba
-    private boolean isChangeTawaranFragment = false;
+    private boolean isChangeTawaranFragment = false, isDoneLoaded, isIntentToEdit;
+
+    private AlertDialog.Builder editAlertDialogBuilder;
+    private AlertDialog editAlertDialog;
 
     public DetailItemAuctioneerFragment()
     {
@@ -90,8 +96,9 @@ public class DetailItemAuctioneerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         initializeConstants();
-
+        createAlertDialogCannotEditBuilder();
         initializeSocketReceiver();
         initializeSocket();
         initializeDataReceiver();
@@ -138,6 +145,35 @@ public class DetailItemAuctioneerFragment extends Fragment {
         onDestroyConfiguration();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.activity_detail_auctioneer_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem editMenu = menu.findItem(R.id.detail_edit);
+        if (isDoneLoaded) {
+            editMenu.setEnabled(true);
+            editMenu.setVisible(true);
+        }
+        else {
+            editMenu.setEnabled(false);
+            editMenu.setVisible(false);
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.detail_edit) {
+            if (detailItem.getItembidstatus() == 1) {
+                showAlertCannotEdit();
+            }
+            else {
+                intentToEditBarang();
+            }
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
     /*
     * Lifecycle method ends here
     * ==========================
@@ -160,6 +196,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
         activityContext = getActivity();
         fragmentManager = getChildFragmentManager();
         listImageURL = new ArrayList<>();
+        isDoneLoaded = false;
+        isIntentToEdit = false;
     }
     private void initializeFragments()
     {
@@ -326,6 +364,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
                         setDataToChildFragments(detailItem, itemBidResources);
                         setChildFragments(detailItem.getItembidstatus());
                     }
+                    isDoneLoaded = true;
+                    getActivity().invalidateOptionsMenu();
                     ((DetailBarangActivity) getActivity()).changeActionBarTitle(detailItem.getNamabarang());
                 }
             }
@@ -375,6 +415,17 @@ public class DetailItemAuctioneerFragment extends Fragment {
                     itemBidResources.setIdBidder(socketResponse.getString("bidder_id_return"));
                     itemBidResources.setNamaBidder(socketResponse.getString("bidder_name_return"));
                     itemBidResources.setHargaBid(socketResponse.getString("bid_price_return"));
+
+                    boolean isExtendTriggerActive = socketResponse.getBoolean("extend_trigger");
+                    if (isExtendTriggerActive)
+                    {
+                        detailItem.setTanggaljamselesai(socketResponse.getString("end_time_item_return"));
+                        detailItem.setTanggaljamselesai_ms(socketResponse.getLong("end_time_item_return_milisecond"));
+                        serverDateTimeMillisecond = socketResponse.getLong("server_time_in_millisecond");
+                        waktuBidStartedFragment.setDetailItem(detailItem);
+                        waktuBidStartedFragment.setServerTime(serverDateTimeMillisecond);
+                        waktuBidStartedFragment.cancelAndStartNewTimerWhenTimeExtended();
+                    }
 
                     menuPagerStartedFragment.setBidderInformation(itemBidResources);
                     menuPagerStartedFragment.setStatisticInformation(detailItem.getHargaawal(), detailItem.getHargatarget(), itemBidResources.getHargaBid());
@@ -472,7 +523,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         else if (onPauseActivity)
         {
             Log.v("Masuk onPauseActivity", "MASUK SINIIIIIIIIII");
-            if (!biddingAlreadyDone && !isChangeTawaranFragment) getDetailItem(itemID);
+            if ((!biddingAlreadyDone && !isChangeTawaranFragment) || (biddingAlreadyDone && isIntentToEdit)) getDetailItem(itemID);
         }
 
         if (biddingSocket != null && !biddingSocket.IS_JOINED_STATUS && !biddingInformation.equals("finish") && !isChangeTawaranFragment)
@@ -536,6 +587,16 @@ public class DetailItemAuctioneerFragment extends Fragment {
             menuPagerNotStartedFragment.setFragmentValue(startTime_ms, serverDateTimeMillisecond, timeTriggerReceived);
             menuPagerNotStartedFragment.setStatisticInformation(detailItem.getHargaawal(), detailItem.getHargatarget(), itemBidResources.getHargaBid());
             waktuBidNotStartedFragment.setDetailItem(detailItem);
+
+            //nyoba
+            if (isIntentToEdit && !biddingAlreadyDone) {
+                menuPagerNotStartedFragment.restartTimerWhenItemEdited();
+                isIntentToEdit = false;
+            }
+            else if (isIntentToEdit && biddingAlreadyDone) {
+                isIntentToEdit = false;
+                biddingAlreadyDone = false;
+            }
         }
         else if (detailItem.getItembidstatus() == 1)
         {
@@ -805,5 +866,21 @@ public class DetailItemAuctioneerFragment extends Fragment {
         Intent blockIntent = new Intent(getActivity(), BlockActivity.class);
         blockIntent.putExtras(bundleExtras);
         startActivity(blockIntent);
+    }
+    private void createAlertDialogCannotEditBuilder() {
+        editAlertDialogBuilder = new AlertDialog.Builder(getActivity());
+        editAlertDialogBuilder.setTitle(R.string.CANNOT_EDIT_ALERTDIALOGTITLE)
+                .setMessage(R.string.CANNOT_EDIT_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.CANNOT_EDIT_ALERTDIALOGOKBUTTON, null);
+    }
+    private void showAlertCannotEdit() {
+        editAlertDialog = editAlertDialogBuilder.create();
+        editAlertDialog.show();
+    }
+    private void intentToEditBarang() {
+        isIntentToEdit = true;
+        Intent intent = new Intent(getActivity(), UserEditLelangBarangActivity.class);
+        intent.putExtra("items_id", detailItem.getIdbarang());
+        getActivity().startActivity(intent);
     }
 }

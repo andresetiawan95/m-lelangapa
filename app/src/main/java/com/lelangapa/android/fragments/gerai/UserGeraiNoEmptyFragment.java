@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.UserGeraiActivity;
-import com.lelangapa.android.activities.gerai.UserEditLelangBarangActivity;
+import com.lelangapa.android.activities.detail.DetailBarangActivity;
 import com.lelangapa.android.adapters.UserGeraiBarangAdapter;
 import com.lelangapa.android.apicalls.gerai.GetBarangGeraiUserAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
@@ -172,8 +172,11 @@ public class UserGeraiNoEmptyFragment extends Fragment {
         onItemClickListener = new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), UserEditLelangBarangActivity.class);
-                intent.putExtra("items_id", dataBarang.get(position).getIdbarang());
+                Intent intent = new Intent(getActivity(), DetailBarangActivity.class);
+                Bundle bundleExtras = new Bundle();
+                bundleExtras.putString("items_id", dataBarang.get(position).getIdbarang());
+                bundleExtras.putString("auctioneer_id", SessionManager.getSessionStatic().get(SessionManager.KEY_ID));
+                intent.putExtras(bundleExtras);
                 getActivity().startActivity(intent);
             }
 

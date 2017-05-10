@@ -27,7 +27,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.lelangapa.android.R;
-import com.lelangapa.android.activities.UserGeraiActivity;
 import com.lelangapa.android.activities.cropper.GalleryUtil;
 import com.lelangapa.android.adapters.MultipleImageEditItemAdapter;
 import com.lelangapa.android.apicalls.gerai.UpdateGambarBarangAPI;
@@ -519,9 +518,9 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     private void finishActivity() {
         loadingDialog.dismiss();
         Toast.makeText(getActivity(), "Info barang berhasil diperbaharui", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getActivity(), UserGeraiActivity.class);
+        /*Intent intent = new Intent(getActivity(), UserGeraiActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        getActivity().startActivity(intent);
+        getActivity().startActivity(intent);*/
         getActivity().finish();
     }
 

@@ -103,6 +103,10 @@ public class AuctioneerMenuPagerNotStartedFragment extends Fragment {
     {
         statisticFragment.setStatisticInformation(hargaAwal, hargaEkspektasi, hargaTawaran);
     }
+
+    public void restartTimerWhenItemEdited() {
+        biddingNotStartedFragment.restartTimerWhenItemEdited();
+    }
     /*
     * Set detail item value method end here
     * */

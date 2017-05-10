@@ -20,6 +20,7 @@ import java.text.NumberFormat;
 
 public class MenuPagerBiddingNotStartedFragment extends Fragment {
     private TextView textView_timeCountdown;
+    private CountDownTimer countDownTimer;
 
     private DataReceiver triggerStarted;
     private Long serverTimeNow_milisecond, startTime_milisecond, timeCountDown;
@@ -72,7 +73,7 @@ public class MenuPagerBiddingNotStartedFragment extends Fragment {
     private void setCountDownTimer()
     {
         final long timeLeft = startTime_milisecond - serverTimeNow_milisecond;
-        CountDownTimer countDownTimer = new CountDownTimer(timeLeft, 1000) {
+        countDownTimer = new CountDownTimer(timeLeft, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timeCountDown = millisUntilFinished;
@@ -94,6 +95,10 @@ public class MenuPagerBiddingNotStartedFragment extends Fragment {
             }
         };
         countDownTimer.start();
+    }
+    public void restartTimerWhenItemEdited() {
+        countDownTimer.cancel();
+        setCountDownTimer();
     }
     /*
     * Countdown method end here
