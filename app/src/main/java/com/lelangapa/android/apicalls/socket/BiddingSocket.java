@@ -30,6 +30,7 @@ public class BiddingSocket {
     private SocketReceiver socketBidSuccessReceiver;
     private SocketReceiver socketBidFailedReceiver;
     private SocketReceiver socketAuctionCancelled;
+    private SocketReceiver socketBidCancelled;
     private SocketReceiver socketWinnerSelected;
 
     private SocketReceiver socketBidSuccessFromDetailTawaran;
@@ -78,9 +79,12 @@ public class BiddingSocket {
     {
         this.socketBidFailedReceiver = socketReceiverFailed;
     }
-    public void setSocketAuctionCancelled(SocketReceiver socketBidCancelled)
+    public void setSocketAuctionCancelled(SocketReceiver socketAuctionCancelled)
     {
-        this.socketAuctionCancelled = socketBidCancelled;
+        this.socketAuctionCancelled = socketAuctionCancelled;
+    }
+    public void setSocketBidCancelled(SocketReceiver socketBidCancelled) {
+        this.socketBidCancelled = socketBidCancelled;
     }
     public void setSocketWinnerSelected(SocketReceiver socketWinnerSelected)
     {
@@ -222,6 +226,7 @@ public class BiddingSocket {
                     Log.v("Cancel bid success", "cancel bid success");
                     if (IS_CHANGE_TO_DETAIL_TAWARAN_FRAGMENT)
                         socketBidCancelledFromDetailTawaran.socketReceived("cancelbidsuccess", args[0]);
+                    else socketBidCancelled.socketReceived("cancelbidsuccess", args[0]);
                 }
             });
         }

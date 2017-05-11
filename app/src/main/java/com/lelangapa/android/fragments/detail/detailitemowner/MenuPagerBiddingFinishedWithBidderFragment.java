@@ -85,6 +85,7 @@ public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
     private void setupFragment() {
         if (itemBiddingResources.isWinnerStatus()) {
             chosenFragment.setBidderInformation(itemBiddingResources);
+            chosenFragment.setAuctioneerResponseReceiver(auctioneerResponseReceiver);
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_barang_bidding_finished_auctioneer_fragment, chosenFragment)
                     .commit();

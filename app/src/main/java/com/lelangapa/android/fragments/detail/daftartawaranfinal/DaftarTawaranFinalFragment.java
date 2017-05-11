@@ -105,6 +105,12 @@ public class DaftarTawaranFinalFragment extends Fragment {
         swipeRefreshLayout.setEnabled(false);
         if (leadBidder.isWinnerStatus()) {
             //ke after chosen fragment
+            setWinnerOnOfferList();
+            afterChosenFragment.setListOffer(listOffer);
+            afterChosenFragment.setLeadBidder(leadBidder);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_daftar_tawaran_final_layout, afterChosenFragment)
+                    .commit();
         }
         else {
             //ke before chosen fragment
@@ -113,6 +119,14 @@ public class DaftarTawaranFinalFragment extends Fragment {
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_daftar_tawaran_final_layout, beforeChosenFragment)
                     .commit();
+        }
+    }
+    private void setWinnerOnOfferList() {
+        for (int x=0;x<listOffer.size();x++) {
+            if (listOffer.get(x).getIdBid().equals(leadBidder.getIdBid())) {
+                listOffer.get(x).setWinnerStatus(true);
+                break;
+            }
         }
     }
     private void getOfferListFromServer() {

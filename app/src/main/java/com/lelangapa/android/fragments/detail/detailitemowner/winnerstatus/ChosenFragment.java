@@ -1,6 +1,5 @@
 package com.lelangapa.android.fragments.detail.detailitemowner.winnerstatus;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
@@ -12,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.android.R;
-import com.lelangapa.android.activities.detail.DaftarTawaranFinalActivity;
+import com.lelangapa.android.interfaces.AuctioneerResponseReceiver;
 import com.lelangapa.android.resources.BiddingResources;
 
 /**
@@ -26,6 +25,7 @@ public class ChosenFragment extends Fragment {
     private PopupMenu popupMenuOptions;
 
     private BiddingResources biddingResources;
+    private AuctioneerResponseReceiver auctioneerResponseReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class ChosenFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.detail_item_auctioneer_chosen_offer_list:
-                        intentToDaftarTawaran();
+                        auctioneerResponseReceiver.responseDaftarTawaranReceived();
                         return true;
                     default:
                         return false;
@@ -68,14 +68,13 @@ public class ChosenFragment extends Fragment {
     public void setBidderInformation(BiddingResources resources) {
         this.biddingResources = resources;
     }
+    public void setAuctioneerResponseReceiver(AuctioneerResponseReceiver receiver) {
+        this.auctioneerResponseReceiver = receiver;
+    }
     private void showInformation() {
         if (textView_namaBidder!=null && textView_hargaBid!=null) {
             textView_namaBidder.setText(biddingResources.getNamaBidder());
             textView_hargaBid.setText(biddingResources.getHargaBid());
         }
-    }
-    private void intentToDaftarTawaran() {
-        Intent intent = new Intent(getActivity(), DaftarTawaranFinalActivity.class);
-        startActivity(intent);
     }
 }

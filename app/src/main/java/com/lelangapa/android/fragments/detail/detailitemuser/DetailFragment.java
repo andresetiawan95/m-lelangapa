@@ -77,7 +77,8 @@ public class DetailFragment extends Fragment {
     private String itemID, biddingInformation, favoriteID;
     private BiddingSocket biddingSocket;
     private Socket socketBinder;
-    private SocketReceiver socketConnected, socketDisconnected, socketBidSuccessReceiver, socketBidFailedReceiver, socketBidCancelledReceiver, socketWinnerSelectedReceiver;
+    private SocketReceiver socketConnected, socketDisconnected, socketBidSuccessReceiver, socketBidFailedReceiver,
+            socketAuctionCancelledReceiver, socketBidCancelledReceiver, socketWinnerSelectedReceiver;
 
     private ArrayList<BiddingResources> biddingPeringkatList;
     private ArrayList<String> listImageURL;
@@ -172,6 +173,7 @@ public class DetailFragment extends Fragment {
                 socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
                 socketBinder.on("winnerchosen", biddingSocket.onWinnerSelected);
                 socketBinder.on("cancelsuccess", biddingSocket.onAuctionCancelled);
+                socketBinder.on("cancelbidsuccess", biddingSocket.onBidCancelled);
             }
         }
         else if (onPauseActivity)
@@ -398,7 +400,8 @@ public class DetailFragment extends Fragment {
             biddingSocket.setSocketConnected(socketConnected);
             biddingSocket.setSocketBidSuccessReceiver(socketBidSuccessReceiver);
             biddingSocket.setSocketBidFailedReceiver(socketBidFailedReceiver);
-            biddingSocket.setSocketAuctionCancelled(socketBidCancelledReceiver);
+            biddingSocket.setSocketAuctionCancelled(socketAuctionCancelledReceiver);
+            biddingSocket.setSocketBidCancelled(socketBidCancelledReceiver);
             biddingSocket.setSocketWinnerSelected(socketWinnerSelectedReceiver);
             socketBinder = biddingSocket.getSocket();
             /*if (!socketBinder.connected())
@@ -425,6 +428,7 @@ public class DetailFragment extends Fragment {
             socketBinder.on("bidfailed", biddingSocket.onSubmitBidFailed);
             socketBinder.on("winnerselected", biddingSocket.onWinnerSelected);
             socketBinder.on("cancelsuccess", biddingSocket.onAuctionCancelled);
+            socketBinder.on("cancelbidsuccess", biddingSocket.onBidCancelled);
         }
     }
     private void disconnectSocket()
@@ -437,6 +441,7 @@ public class DetailFragment extends Fragment {
             socketBinder.off("bidfailed", biddingSocket.onSubmitBidFailed);
             socketBinder.off("winnerchosen", biddingSocket.onWinnerSelected);
             socketBinder.off("cancelsuccess", biddingSocket.onAuctionCancelled);
+            socketBinder.off("cancelbidsuccess", biddingSocket.onBidCancelled);
         }
     }
     private void setSocketReceiver()
@@ -528,10 +533,16 @@ public class DetailFragment extends Fragment {
         /*
         * Untuk sementara, bid cancelled dan winner selected akan mengeluarkan alert dialog dulu
         * */
-        socketBidCancelledReceiver = new SocketReceiver() {
+        socketAuctionCancelledReceiver = new SocketReceiver() {
             @Override
             public void socketReceived(Object status, Object response) {
                 setAlertDialogBidCancelled();
+            }
+        };
+        socketBidCancelledReceiver = new SocketReceiver() {
+            @Override
+            public void socketReceived(Object status, Object response) {
+                getDetailItem(itemID);
             }
         };
         socketWinnerSelectedReceiver = new SocketReceiver() {
