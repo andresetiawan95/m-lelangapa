@@ -45,4 +45,7 @@
 
     <color name="feedbackStatusReviewDone">#5fbf44</color>
     <color name="feedbackStatusReviewUndone">#616161</color>
+
+    <color name="colorWarningAlertBackground">#ffb129</color>
+    <color name="colorOKAlertBackground">#5fbf44</color>
 </resources>

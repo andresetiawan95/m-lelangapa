@@ -122,6 +122,7 @@ public class AuctioneerMenuPagerFinishedFragment extends Fragment {
     private void setBidderInformation(BiddingResources itemBiddingResources)
     {
         biddingFinishedWithBidderFragment.setBidderInformation(itemBiddingResources);
+        biddingFinishedWithBidderFragment.setItemID(detailItem.getIdbarang());
     }
 
     /*

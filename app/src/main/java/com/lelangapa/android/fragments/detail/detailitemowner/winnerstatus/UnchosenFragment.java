@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.interfaces.AuctioneerResponseReceiver;
 import com.lelangapa.android.resources.BiddingResources;
 
 /**
@@ -24,6 +25,7 @@ public class UnchosenFragment extends Fragment {
     private PopupMenu popupMenuOptions;
 
     private BiddingResources biddingResources;
+    private AuctioneerResponseReceiver auctioneerResponseReceiver;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_finished_auctioneer_layout_unchosen, container, false);
@@ -55,6 +57,7 @@ public class UnchosenFragment extends Fragment {
                     case R.id.detail_item_auctioneer_unchosen_take_this:
                         return true;
                     case R.id.detail_item_auctioneer_unchosen_offer_list:
+                        auctioneerResponseReceiver.responseDaftarTawaranReceived();
                         return true;
                     default:
                         return false;
@@ -65,6 +68,9 @@ public class UnchosenFragment extends Fragment {
     }
     public void setBidderInformation(BiddingResources resources) {
         this.biddingResources = resources;
+    }
+    public void setAuctioneerResponseReceiver(AuctioneerResponseReceiver receiver) {
+        this.auctioneerResponseReceiver = receiver;
     }
     private void showInformation() {
         if (textView_namaBidder!=null && textView_hargaBid!=null) {
