@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lelangapa.android.R;
+import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.resources.BiddingResources;
 import com.lelangapa.android.resources.DetailItemResources;
 import com.lelangapa.android.viewpagers.DetailBarangAuctioneerViewPagerAdapter;
@@ -105,10 +106,10 @@ public class AuctioneerMenuPagerFinishedFragment extends Fragment {
         setFragmentAndTitleListDetailItemAuctioneer();
     }*/
 
-    public void setFragmentValue(BiddingResources itemBidResources)
+    public void setFragmentValue(BiddingResources itemBidResources, DataReceiver dataReceiver)
     {
         String namaBidder = itemBiddingResources.getNamaBidder();
-        if (!namaBidder.equals("nouser")) setBidderInformation(itemBidResources);
+        if (!namaBidder.equals("nouser")) setBidderInformation(itemBidResources, dataReceiver);
     }
 
     public void setStatisticInformation(String hargaAwal, String hargaEkspektasi, String hargaTawaran)
@@ -119,10 +120,11 @@ public class AuctioneerMenuPagerFinishedFragment extends Fragment {
     * Set detail item value method end here
     * */
 
-    private void setBidderInformation(BiddingResources itemBiddingResources)
+    private void setBidderInformation(BiddingResources itemBiddingResources, DataReceiver dataReceiver)
     {
         biddingFinishedWithBidderFragment.setBidderInformation(itemBiddingResources);
         biddingFinishedWithBidderFragment.setItemID(detailItem.getIdbarang());
+        biddingFinishedWithBidderFragment.setDataReceiverWhenWinnerChosen(dataReceiver);
     }
 
     /*

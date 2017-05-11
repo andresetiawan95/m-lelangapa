@@ -8,12 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.detail.DaftarTawaranFinalActivity;
+import com.lelangapa.android.fragments.detail.daftartawaranfinal.ChooseWinnerToggler;
 import com.lelangapa.android.fragments.detail.detailitemowner.winnerstatus.ChosenFragment;
 import com.lelangapa.android.fragments.detail.detailitemowner.winnerstatus.UnchosenFragment;
 import com.lelangapa.android.interfaces.AuctioneerResponseReceiver;
+import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.resources.BiddingResources;
 
 /**
@@ -24,6 +27,8 @@ public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
     private BiddingResources itemBiddingResources;
     private ProgressBar progressBar;
     private AuctioneerResponseReceiver auctioneerResponseReceiver;
+    private DataReceiver whenWinnerChosen;
+    private ChooseWinnerToggler chooseWinnerToggler;
 
     private static final int REQUEST_DAFTAR_TAWARAN = 1;
     private String itemID;
@@ -35,6 +40,7 @@ public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
     {
         View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_finished_auctioneer_layout_new, container, false);
         initializeViews(view);
+        initializeToggler();
         initializeFragment();
         setAuctioneerResponseReceiver();
         setupFragment();
@@ -44,13 +50,26 @@ public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_DAFTAR_TAWARAN && resultCode == Activity.RESULT_OK && data!=null) {
             //ubah data2 di itemBiddingResource dengan bundle yang sudah dikirim
+            Bundle bundleReceived = data.getExtras();
+            //BiddingResources selectedBidder = new BiddingResources();
+            itemBiddingResources.setIdBid(bundleReceived.getString("id_bid"));
+            itemBiddingResources.setIdBidder(bundleReceived.getString("id_bidder"));
+            itemBiddingResources.setHargaBid(bundleReceived.getString("harga_bid"));
+            itemBiddingResources.setNamaBidder(bundleReceived.getString("nama_bidder"));
+            itemBiddingResources.setWinnerStatus(bundleReceived.getBoolean("winner_status"));
             //setupFragment lagi
+            Toast.makeText(getActivity(), itemBiddingResources.getIdBid() + " " + itemBiddingResources.getNamaBidder(), Toast.LENGTH_SHORT).show();
+            whenWinnerChosen.dataReceived("done");
+            //changeFragmentWhenWinnerSelected(selectedBidder);
         }
     }
 
     private void initializeViews(View view)
     {
         progressBar = (ProgressBar) view.findViewById(R.id.fragment_detail_barang_bidding_finished_auctioneer_indicator_progress_bar);
+    }
+    private void initializeToggler() {
+        chooseWinnerToggler = new ChooseWinnerToggler(getActivity(), whenWinnerChosen);
     }
     private void initializeFragment() {
         chosenFragment = new ChosenFragment();
@@ -64,7 +83,12 @@ public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
             @Override
             public void responseWinnerChosenReceived(boolean status, String idBid) {
                 //implemented later
-            }
+                if (status) {
+                    chooseWinnerToggler.setInformation(itemBiddingResources.getIdBid(),
+                            itemBiddingResources.getNamaBidder(), itemBiddingResources.getHargaBid());
+                    chooseWinnerToggler.showAlertDialog();
+                }
+            }         
 
             @Override
             public void responseDaftarTawaranReceived() {
@@ -78,9 +102,13 @@ public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
     public void setBidderInformation(BiddingResources itemBiddingResources)
     {
         this.itemBiddingResources = itemBiddingResources;
+        if (chosenFragment!=null && unchosenFragment!=null) setupFragment();
     }
     public void setItemID(String itemID) {
         this.itemID = itemID;
+    }
+    public void setDataReceiverWhenWinnerChosen(DataReceiver receiver) {
+        this.whenWinnerChosen = receiver;
     }
     private void setupFragment() {
         if (itemBiddingResources.isWinnerStatus()) {

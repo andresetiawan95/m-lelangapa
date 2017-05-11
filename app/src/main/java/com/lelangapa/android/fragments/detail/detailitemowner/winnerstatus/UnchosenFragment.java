@@ -55,6 +55,7 @@ public class UnchosenFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.detail_item_auctioneer_unchosen_take_this:
+                        auctioneerResponseReceiver.responseWinnerChosenReceived(true, biddingResources.getIdBid());
                         return true;
                     case R.id.detail_item_auctioneer_unchosen_offer_list:
                         auctioneerResponseReceiver.responseDaftarTawaranReceived();

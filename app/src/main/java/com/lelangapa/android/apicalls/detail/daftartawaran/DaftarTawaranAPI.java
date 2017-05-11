@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.preferences.SessionManager;
@@ -97,6 +98,39 @@ public class DaftarTawaranAPI {
             return data;
         }
     }
+    public static class SelectWinner extends StringRequest
+    {
+        private HashMap<String, String> data;
+        private static final String SELECTWINNERBYAPIURL = "https://no-api.lelangapa.com/apis/v1/bids/select/winner";
+        private SelectWinner(HashMap<String, String> data, final DataReceiver dataReceiver) {
+            super(Method.POST, SELECTWINNERBYAPIURL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    dataReceiver.dataReceived(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+            this.data = data;
+        }
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError
+        {
+            Map<String, String> params = new HashMap<>();
+            if (SessionManager.isLoggedInStatic()) {
+                params.put("token", SessionManager.getUserTokenStatic());
+                Log.v("HEADER", params.toString());
+            }
+            return params;
+        }
+        @Override
+        public HashMap<String, String> getParams(){
+            return data;
+        }
+    }
     public static GetOfferListAPI instanceGetOfferList(String urlparams, DataReceiver dataReceiver) {
         return new GetOfferListAPI(urlparams, dataReceiver);
     }
@@ -105,5 +139,8 @@ public class DaftarTawaranAPI {
     }
     public static UnblockUser instanceUnblockUser(HashMap<String, String> data, DataReceiver dataReceiver) {
         return new UnblockUser(data, dataReceiver);
+    }
+    public static SelectWinner instanceSelectWinner(HashMap<String, String> data, DataReceiver dataReceiver) {
+        return new SelectWinner(data, dataReceiver);
     }
 }

@@ -46,6 +46,21 @@
     <string name="DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGMSG">Lelang telah dibatalkan oleh pelelang. Seluruh penawaran telah dibatalkan</string>
     <string name="DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGBUTTON">OK</string>
 
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_ASK_ALERTDIALOGTITLE">Pilih pemenang?</string>
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_ASK_ALERTDIALOGMSG1">Apakah anda yakin memilih </string>
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_ASK_ALERTDIALOGMSG2"> dengan tawaran senilai </string>
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_ASK_ALERTDIALOGMSG3"> sebagai pemenang terpilih?</string>
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_ASK_ALERTDIALOGOKBUTTON">OK</string>
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_ASK_ALERTDIALOGCANCELBUTTON">TIDAK</string>
+
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_SUCCESS_ALERTDIALOGTITLE">Pemenang berhasil dipilih</string>
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_SUCCESS_ALERTDIALOGMGS">Pemenang sudah berhasil dipilih</string>
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_SUCCESS_ALERTDIALOGOKBUTTON">OK</string>
+
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_FAILED_ALERTDIALOGTITLE">Pemenang gagal dipilih</string>
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_FAILED_ALERTDIALOGMGS">Pemenang gagal dipilih</string>
+    <string name="DETAILTAWARANFINAL_SELECTWINNER_FAILED_ALERTDIALOGOKBUTTON">OK</string>
+
     <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGTITLE">Pemenang telah dipilih!</string>
     <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGMSG">Pelelang telah memilih pemenang lelang. Dengan ini maka lelang dihentikan.</string>
     <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGBUTTON">OK</string>

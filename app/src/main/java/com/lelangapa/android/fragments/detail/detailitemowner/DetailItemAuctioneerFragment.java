@@ -58,7 +58,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private BiddingSocket biddingSocket;
     private Socket socketBinder;
 
-    private DataReceiver detailReceived, timeTriggerReceived;
+    private DataReceiver detailReceived, timeTriggerReceived, whenWinnerChosenFinal;
     private SocketReceiver onConnectedReceived, onBidSuccessReceived, onBidFailedReceived, onAuctionCancelledReceived, onWinnerSelected;
     private AuctioneerResponseReceiver auctioneerResponseReceiver;
 
@@ -242,6 +242,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         setDetailReceived();
         setTimeTriggerReceived();
         setAuctioneerResponseReceived();
+        setWhenWinnerChosenFinal();
     }
     private void initializeSocketReceiver()
     {
@@ -386,6 +387,14 @@ public class DetailItemAuctioneerFragment extends Fragment {
                     biddingInformation = "finish";
                     if (activityContext != null) setAlertDialogBidFinished();
                 }
+            }
+        };
+    }
+    private void setWhenWinnerChosenFinal() {
+        whenWinnerChosenFinal = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                getDetailItem(itemID);
             }
         };
     }
@@ -617,7 +626,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         else if (detailItem.getItembidstatus() == -1)
         {
             menuPagerFinishedFragment.setUpDetailItemAndBiddingResources(detailItem, itemBidResources);
-            menuPagerFinishedFragment.setFragmentValue(itemBidResources);
+            menuPagerFinishedFragment.setFragmentValue(itemBidResources, whenWinnerChosenFinal);
             menuPagerFinishedFragment.setStatisticInformation(detailItem.getHargaawal(), detailItem.getHargatarget(), itemBidResources.getHargaBid());
             waktuBidFinishedFragment.setDetailItem(detailItem);
         }
