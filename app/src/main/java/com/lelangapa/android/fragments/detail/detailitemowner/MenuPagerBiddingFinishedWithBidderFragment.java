@@ -88,7 +88,7 @@ public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
                             itemBiddingResources.getNamaBidder(), itemBiddingResources.getHargaBid());
                     chooseWinnerToggler.showAlertDialog();
                 }
-            }         
+            }
 
             @Override
             public void responseDaftarTawaranReceived() {
