@@ -4,12 +4,14 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -66,6 +68,8 @@ public class UserLelangBarangFragment extends Fragment {
     //private ImageView gambarBarang;
     private Button button_lelangBarang;
     private ProgressDialog progressDialog;
+    private AlertDialog.Builder alertDialogImageBuilder;
+    private AlertDialog alertDialogImage;
     private SessionManager sessionManager;
     private static HashMap<String, String> session;
 
@@ -86,13 +90,15 @@ public class UserLelangBarangFragment extends Fragment {
     public static final int MY_RETRY = 2;
     public static final float MY_BACKOFF_MULT = 2f;
 
-    private int PICK_IMAGE_REQUEST = 1;
-    private int CROP_IMAGE_REQUEST = 2;
+    private int PICK_IMAGE_GALLERY_REQUEST = 1;
+    private int PICK_IMAGE_CAMERA_REQUEST = 2;
+    private int CROP_IMAGE_REQUEST = 3;
     private int IMAGE_ARRAY_INDEX = 0;
     private int IMAGE_ALREADY_UPLOADED_INDEX = 1;
     private static final int MAX_IMAGE= 8;
     private static int MAIN_IMAGE_INDEX;
     private String itemID;
+    private Uri cameraUri;
 
     private HashMap<String, String> data, dataImage;
     private ArrayList<ItemImageResources> listImages;
@@ -114,6 +120,7 @@ public class UserLelangBarangFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_lelang_barang_layout, container, false);
         initializeSession();
         initializeViews(view);
+        initializeAlertDialogImageBuilder();
         initializeTextChangeListenerOnPrice();
         initializeImageReceiver();
         setImagePicker();
@@ -194,6 +201,27 @@ public class UserLelangBarangFragment extends Fragment {
         editText_hargabarang_awal.addTextChangedListener(new NumberTextWatcher(editText_hargabarang_awal));
         editText_hargabarang_target.addTextChangedListener(new NumberTextWatcher(editText_hargabarang_target));
     }
+    private void initializeAlertDialogImageBuilder() {
+        alertDialogImageBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogImageBuilder.setTitle(R.string.PICK_IMAGE_FROM_TITLE)
+                .setMessage(R.string.PICK_IMAGE_FROM_MESSAGE)
+                .setPositiveButton(R.string.PICK_IMAGE_FROM_CAMERA_NEUTRALBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        chooseImageOnCamera();
+                    }
+                })
+                .setNegativeButton(R.string.PICK_IMAGE_FROM_GALLERY_NEUTRALBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        chooseImage();
+                    }
+                });
+    }
+    private void showAlertDialogImage() {
+        alertDialogImage = alertDialogImageBuilder.create();
+        alertDialogImage.show();
+    }
     private void setupViews()
     {
         /*gambarBarang.setOnClickListener(new View.OnClickListener() {
@@ -239,9 +267,8 @@ public class UserLelangBarangFragment extends Fragment {
         imagePicker = new ImagePicker() {
             @Override
             public void picked(Integer indexOfArray) {
-                //Log.v("Index", Integer.toString(indexOfArray));
                 IMAGE_ARRAY_INDEX = indexOfArray;
-                chooseImage();
+                showAlertDialogImage();
             }
         };
     }
@@ -301,19 +328,23 @@ public class UserLelangBarangFragment extends Fragment {
     }
     private void chooseImage(){
         Intent galleryIntent = new Intent(getActivity(), GalleryUtil.class);
-        startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
+        startActivityForResult(galleryIntent, PICK_IMAGE_GALLERY_REQUEST);
 
         /*Intent intent = new Intent();
         intent.setType("image*//*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         Intent chooserIntent = Intent.createChooser(intent, "Select Picture");
         //chooserIntent.putExtra("lol", "LOLOLOL");
-        startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST);*/
+        startActivityForResult(chooserIntent, PICK_IMAGE_GALLERY_REQUEST);*/
     }
-    private void otherVersionOfChooseImage()
-    {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+    private void chooseImageOnCamera() {
+        Intent camIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        File file = new File(Environment.getExternalStorageDirectory(),
+                "file" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+        cameraUri = Uri.fromFile(file);
+        camIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, cameraUri);
+        camIntent.putExtra("return-data", true);
+        startActivityForResult(camIntent, PICK_IMAGE_CAMERA_REQUEST);
     }
     private void cropImageURI(Uri path){
         try {
@@ -354,6 +385,24 @@ public class UserLelangBarangFragment extends Fragment {
             toast.show();
         }
     }
+    private void cropCameraImage() {
+        try {
+            cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(cameraUri, "image/*");
+            cropIntent.putExtra("crop", "true");
+            cropIntent.putExtra("outputX", 180);
+            cropIntent.putExtra("outputY", 180);
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("scaleUpIfNeeded", true);
+            cropIntent.putExtra("return-data", true);
+            startActivityForResult(cropIntent, CROP_IMAGE_REQUEST);
+        } catch (ActivityNotFoundException e) {
+            String errorMessage = "Perangkat Anda Tidak Mendukung Crop";
+            Toast toast = Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
     private void chooseMainImagePopupMenu(View view, final int position)
     {
         popupMenu_image = new PopupMenu(getActivity(), view);
@@ -386,32 +435,12 @@ public class UserLelangBarangFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null){
-            //Uri filePath = data.getData();
-
+        if (requestCode == PICK_IMAGE_GALLERY_REQUEST && resultCode == RESULT_OK && data != null){
             String picturePath = data.getStringExtra("picturePath");
-            //cropImageURI(filePath);
             cropImage(picturePath);
-            /*try {
-                //Log.v("EXTRA SUCCESS", data.getStringExtra("lol"));
-                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filepath);
-                if (IMAGE_ARRAY_INDEX == listImages.size() -1) {
-                    listImages.get(IMAGE_ARRAY_INDEX).setIdImage(Integer.toString(IMAGE_ARRAY_INDEX));
-                    listImages.get(IMAGE_ARRAY_INDEX).setBitmap(bitmap);
-                    ImageResources newinit = new ImageResources();
-                    listImages.add(newinit);
-
-                    adapter.updateImageSet();
-                }
-                else {
-                    listImages.get(IMAGE_ARRAY_INDEX).setIdImage(Integer.toString(IMAGE_ARRAY_INDEX));
-                    listImages.get(IMAGE_ARRAY_INDEX).setBitmap(bitmap);
-                    adapter.updateImageSet();
-                }
-                //gambarBarang.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
+        }
+        else if (requestCode == PICK_IMAGE_CAMERA_REQUEST && resultCode == RESULT_OK) {
+            cropCameraImage();
         }
         else if (requestCode == CROP_IMAGE_REQUEST && resultCode == RESULT_OK) {
             if (data != null) {
