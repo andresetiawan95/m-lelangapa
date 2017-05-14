@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
@@ -65,6 +70,10 @@ public class EditProfileFragment extends Fragment {
     public static final int MY_RETRY = 2;
     public static final float MY_BACKOFF_MULT = 2f;
 
+    private static int OS_VERSION;
+    private static final int PERMISSION_CAMERA_REQUEST = 10;
+    private static final int PERMISSION_GALLERY_REQUEST = 11;
+
     private Intent cropIntent;
     private Uri cameraUri;
 
@@ -113,6 +122,7 @@ public class EditProfileFragment extends Fragment {
 
     private void initializeConstant()
     {
+        OS_VERSION = Build.VERSION.SDK_INT;
         avatar = new AvatarResources();
     }
     private void initializeViews(View view)
@@ -218,7 +228,13 @@ public class EditProfileFragment extends Fragment {
                 .setPositiveButton(R.string.PICK_IMAGE_FROM_CAMERA_NEUTRALBUTTON, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        chooseImageOnCamera();
+                        if (OS_VERSION >= Build.VERSION_CODES.M) {
+                            askForPermission(android.Manifest.permission.CAMERA, PERMISSION_CAMERA_REQUEST);
+                        }
+                        else {
+                            Log.v("NO-PERMISSION", "NO NEED TO REQUEST PERMISSION");
+                            chooseImageOnCamera();
+                        }
                     }
                 })
                 .setNegativeButton(R.string.PICK_IMAGE_FROM_GALLERY_NEUTRALBUTTON, new DialogInterface.OnClickListener() {
@@ -376,5 +392,39 @@ public class EditProfileFragment extends Fragment {
         AvatarAPI.UploadAvatar uploadAvatarAPI = AvatarAPI.instanceUploadAvatar(imageData, whenAvatarUploaded);
         uploadAvatarAPI.setRetryPolicy(new DefaultRetryPolicy(MY_TIMEOUT, MY_RETRY, MY_BACKOFF_MULT));
         RequestController.getInstance(getActivity()).addToRequestQueue(uploadAvatarAPI);
+    }
+
+    /*PERMISSION REQUEST FOR ANDROID 6.0 ABOVE*/
+    private void askForPermission(String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+            //system will show alert
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permission)) {
+                //ini akan ditampilkan ketika pengguna sebelumnya sudah men-denied permission
+                ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
+            }
+            else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
+            }
+        }
+        else {
+            Toast.makeText(getActivity(), "Permission sudah diberikan", Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permission, grantResults);
+        if (ActivityCompat.checkSelfPermission(getActivity(), permission[0]) == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case PERMISSION_CAMERA_REQUEST :
+                    chooseImageOnCamera();
+                    break;
+                case PERMISSION_GALLERY_REQUEST :
+                    chooseImageOnGallery();
+                    break;
+            }
+        }
+        else {
+            Toast.makeText(getActivity(), "Permission tidak diberikan", Toast.LENGTH_SHORT).show();
+        }
     }
 }
