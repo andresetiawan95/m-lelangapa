@@ -78,6 +78,7 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     private static final String KEY_IDCATEGORY = "id_category";
     private static final String KEY_NAMAUSER = "nama_user";
     private static final String KEY_NAMACATEGORY = "nama_category";
+    private static final String KEY_USERDOMAIN = "user_domain";
     private static final String KEY_IMAGE = "image";
     private EditText editText_namabarang, editText_deskripsibarang, editText_hargabarang_awal, editText_hargabarang_target;
     private TextView textView_tanggalmulai, textView_jammulai, textView_tanggalselesai, textView_jamselesai;
@@ -458,6 +459,7 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         dataInput.put(KEY_IDCATEGORY, Integer.toString(spinner_kategori.getSelectedItemPosition() +1));
         dataInput.put(KEY_NAMACATEGORY, spinner_kategori.getSelectedItem().toString());
         dataInput.put(KEY_NAMAUSER, SessionManager.getSessionStatic().get(SessionManager.KEY_NAME));
+        dataInput.put(KEY_USERDOMAIN, SessionManager.getSessionStatic().get(SessionManager.KEY_USERDOMAIN));
     }
     private void sendUpdatedDataToServer(){
         DataReceiver updatedData = new DataReceiver() {

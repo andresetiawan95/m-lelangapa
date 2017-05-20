@@ -85,6 +85,7 @@ public class UserLelangBarangFragment extends Fragment {
     private static final String KEY_IDCATEGORY = "id_category";
     private static final String KEY_NAMAUSER = "nama_user";
     private static final String KEY_NAMACATEGORY = "nama_category";
+    private static final String KEY_USERDOMAIN = "user_domain";
     private static final String KEY_IMAGE = "image";
     public static final int MY_TIMEOUT = 100000;
     public static final int MY_RETRY = 2;
@@ -307,6 +308,7 @@ public class UserLelangBarangFragment extends Fragment {
         data.put(KEY_IDCATEGORY, Integer.toString(spinner_kategori.getSelectedItemPosition() +1));
         data.put(KEY_NAMACATEGORY, spinner_kategori.getSelectedItem().toString());
         data.put(KEY_NAMAUSER, session.get(SessionManager.KEY_NAME));
+        data.put(KEY_USERDOMAIN, session.get(SessionManager.KEY_USERDOMAIN));
         //data.put(KEY_IMAGE, getStringImage(bitmap));
         progressDialog = ProgressDialog.show(getActivity(), "Sedang diproses..","Harap tunggu...");
         sendLelangData();

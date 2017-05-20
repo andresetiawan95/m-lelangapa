@@ -78,6 +78,7 @@ public class LoginFragment extends Fragment {
                                         userDataObject.getString("username_return"),
                                         userDataObject.getString("name_user_return"),
                                         userDataObject.getString("email_user_return"),
+                                        userDataObject.getString("domain_user_return"),
                                         jsonResponse.getString("token"));
 
                                 Intent loginIntent = new Intent(getActivity(), MainActivity.class);

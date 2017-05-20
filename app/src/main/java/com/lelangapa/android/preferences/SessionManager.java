@@ -19,11 +19,13 @@ public class SessionManager {
     private static final String KEY_USERNAME = "username";
     public static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
+    public static final String KEY_USERDOMAIN = "domain";
     public static final String KEY_ID ="id";
     private static final String DUMMY_ID = "0";
     private static final String DUMMY_USERNAME = "dummy";
     private static final String DUMMY_NAME = "Dummy";
     private static final String DUMMY_EMAIL = "dummy@lelangkita.com";
+    private static final String DUMMY_USERDOMAIN = "null";
 
     public static final String KEY_TOKEN = "token";
     public static final String DUMMY_TOKEN = "no_token";
@@ -32,12 +34,13 @@ public class SessionManager {
         sessionPreferences = this.context.getSharedPreferences(SESSION_PREFERENCES, Context.MODE_PRIVATE);
         editor = sessionPreferences.edit();
     }
-    public void createSession(String id, String username, String name, String email, String token){
+    public void createSession(String id, String username, String name, String email, String domain, String token){
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.putString(KEY_ID, id);
         editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_NAME, name);
         editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_USERDOMAIN, domain);
         editor.putString(KEY_TOKEN, token);
         editor.commit();
     }
@@ -55,6 +58,7 @@ public class SessionManager {
         sessionMap.put(KEY_USERNAME, sessionPreferences.getString(KEY_USERNAME, DUMMY_USERNAME));
         sessionMap.put(KEY_NAME, sessionPreferences.getString(KEY_NAME, DUMMY_NAME));
         sessionMap.put(KEY_EMAIL, sessionPreferences.getString(KEY_EMAIL, DUMMY_EMAIL));
+        sessionMap.put(KEY_USERDOMAIN, sessionPreferences.getString(KEY_USERDOMAIN, DUMMY_USERDOMAIN));
         sessionMap.put(KEY_TOKEN, sessionPreferences.getString(KEY_TOKEN, DUMMY_TOKEN));
         return sessionMap;
     }
@@ -77,6 +81,7 @@ public class SessionManager {
         sessionMap.put(KEY_USERNAME, sessionPreferences.getString(KEY_USERNAME, DUMMY_USERNAME));
         sessionMap.put(KEY_NAME, sessionPreferences.getString(KEY_NAME, DUMMY_NAME));
         sessionMap.put(KEY_EMAIL, sessionPreferences.getString(KEY_EMAIL, DUMMY_EMAIL));
+        sessionMap.put(KEY_USERDOMAIN, sessionPreferences.getString(KEY_USERDOMAIN, DUMMY_USERDOMAIN));
         sessionMap.put(KEY_TOKEN, sessionPreferences.getString(KEY_TOKEN, DUMMY_TOKEN));
         return sessionMap;
     }
