@@ -123,12 +123,12 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                username = editText_username.getText().toString().trim();
+                username = editText_username.getText().toString();
                 if (username.contains(" ")) {
                     textInputLayout_username.setErrorEnabled(true);
                     textInputLayout_username.setError("Tidak boleh mengandung spasi");
                 }
-                if (regexPattern.matcher(username).find()) {
+                else if (regexPattern.matcher(username).find()) {
                     textInputLayout_username.setErrorEnabled(true);
                     textInputLayout_username.setError("Mengandung karakter tidak valid");
                 }
