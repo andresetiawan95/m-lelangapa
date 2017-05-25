@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.lelangapa.android.R;
 import com.lelangapa.android.apicalls.gerai.GetItemEditLelangBarangAPI;
@@ -38,10 +37,8 @@ public class UserEditLelangBarangFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_user_gerai_layout, container, false);
-        final Button btnEditBarang = (Button) getActivity().findViewById(R.id.fragment_user_edit_lelang_barang_jual_button);
         //Toast.makeText(getActivity(), getActivity().getIntent().getStringExtra("items_id"), Toast.LENGTH_SHORT).show();
         itemID = getActivity().getIntent().getStringExtra("items_id");
-        btnEditBarang.setVisibility(View.INVISIBLE);
         allDataBarangReceived = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {

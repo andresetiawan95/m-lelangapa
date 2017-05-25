@@ -9,8 +9,12 @@
     <include
         layout="@layout/toolbar"
         />
-
-    <LinearLayout
+    <FrameLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/fragment_user_lelang_barang_layout"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+    </FrameLayout>
+    <!--<LinearLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -33,7 +37,7 @@
                 android:textColor="@color/buttonWhiteColor"
                 android:text="Lelang Barang"/>
         </FrameLayout>
-    </LinearLayout>
+    </LinearLayout>-->
 
 
 </android.support.design.widget.CoordinatorLayout>

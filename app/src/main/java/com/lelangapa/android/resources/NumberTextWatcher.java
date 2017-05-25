@@ -1,5 +1,6 @@
 package com.lelangapa.android.resources;
 
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ public class NumberTextWatcher implements TextWatcher {
     private boolean hasFractionalPart;
 
     private EditText et;
+    private TextInputLayout til;
 
     public NumberTextWatcher(EditText et)
     {
@@ -25,6 +27,14 @@ public class NumberTextWatcher implements TextWatcher {
         symbols.setGroupingSeparator('.'); //menggunakan titik sebagai separator desimal
         df = new DecimalFormat("#,###",symbols);
         this.et = et;
+        hasFractionalPart = false;
+    }
+    public NumberTextWatcher(EditText et, TextInputLayout til) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.'); //menggunakan titik sebagai separator desimal
+        df = new DecimalFormat("#,###",symbols);
+        this.et = et;
+        this.til = til;
         hasFractionalPart = false;
     }
 
@@ -39,6 +49,18 @@ public class NumberTextWatcher implements TextWatcher {
         try {
             int inilen, endlen;
             inilen = et.getText().length(); //mendapatkan panjang text sebelum diformat
+
+            //TAMBAHAN UNTUK MEMBERIKAN WARNING JIKA TIDAK ADA INPUTAN
+            if (til != null) {
+                if (inilen<=0) {
+                    til.setErrorEnabled(true);
+                    til.setError("Harus diisi.");
+                }
+                else {
+                    til.setErrorEnabled(false);
+                    til.setError(null);
+                }
+            }
 
             String v = s.toString().replace(String.valueOf(df.getDecimalFormatSymbols().getGroupingSeparator()), "");
             Number n = df.parse(v);

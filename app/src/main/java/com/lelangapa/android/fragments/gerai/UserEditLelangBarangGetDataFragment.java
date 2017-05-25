@@ -8,10 +8,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -40,6 +44,7 @@ import com.lelangapa.android.interfaces.OnItemClickListener;
 import com.lelangapa.android.listeners.RecyclerItemClickListener;
 import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.resources.DateTimeConverter;
+import com.lelangapa.android.resources.ErrorMessage;
 import com.lelangapa.android.resources.ItemImageResources;
 import com.lelangapa.android.resources.NumberTextWatcher;
 import com.lelangapa.android.resources.PriceFormatter;
@@ -81,7 +86,10 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     private static final String KEY_USERDOMAIN = "user_domain";
     private static final String KEY_IMAGE = "image";
     private EditText editText_namabarang, editText_deskripsibarang, editText_hargabarang_awal, editText_hargabarang_target;
-    private TextView textView_tanggalmulai, textView_jammulai, textView_tanggalselesai, textView_jamselesai;
+    private TextView textView_tanggalmulai, textView_jammulai, textView_tanggalselesai, textView_jamselesai, textView_imageWarning, textView_dateWarning;
+    private TextInputLayout til_namaBarang, til_deskripsiBarang, til_hargabarangawal, til_hargabarangtarget;
+    private Button btnEditBarang;
+    private ScrollView scrollView;
 
     private RecyclerView recyclerView_image;
     private ImagePicker imagePicker;
@@ -111,11 +119,10 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_user_edit_lelang_barang_layout, container, false);
-        Button btnEditBarang = (Button) getActivity().findViewById(R.id.fragment_user_edit_lelang_barang_jual_button);
-        btnEditBarang.setVisibility(View.VISIBLE);
         initializeViews(view);
         initializeTextChangeListenerOnPrice();
         initializeDateTimeOnClickListeners();
+        setupAllInputValidation();
         takeMainImageAsFirstImage();
         setInitialUniqueIdImage();
         setImagePicker();
@@ -128,9 +135,11 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         btnEditBarang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingDialog = ProgressDialog.show(getActivity(), "Sedang diproses", "Harap menunggu..");
-                putFilledData();
-                sendUpdatedDataToServer();
+                if (validateInput() && validatePriceInput() && validateDateInput() && validateImageInput()) {
+                    loadingDialog = ProgressDialog.show(getActivity(), "Sedang diproses", "Harap menunggu..");
+                    putFilledData();
+                    sendUpdatedDataToServer();
+                }
             }
         });
         return view;
@@ -165,6 +174,7 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
 
                     adapter.updateDataSet(dataImageReceived);
                 }
+                removeImageError();
             }
         }
     }
@@ -187,10 +197,21 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         textView_jamselesai = (TextView) view.findViewById(R.id.fragment_user_edit_lelang_barang_jam_selesai);
         spinner_kategori = (Spinner) view.findViewById(R.id.fragment_user_edit_lelang_barang_kategori);
         recyclerView_image = (RecyclerView) view.findViewById(R.id.fragment_user_edit_lelang_barang_image_recyclerview);
+
+        textView_imageWarning = (TextView) view.findViewById(R.id.fragment_user_edit_lelang_barang_image_warning);
+        textView_dateWarning = (TextView) view.findViewById(R.id.fragment_user_edit_lelang_barang_jadwal_warning);
+        scrollView = (ScrollView) view.findViewById(R.id.fragment_user_edit_lelang_barang_scroll);
+
+        btnEditBarang = (Button) view.findViewById(R.id.fragment_user_edit_lelang_barang_jual_button);
+
+        til_namaBarang = (TextInputLayout) view.findViewById(R.id.fragment_user_edit_lelang_barang_input_nama_barang);
+        til_deskripsiBarang = (TextInputLayout) view.findViewById(R.id.fragment_user_edit_lelang_barang_input_deskripsi_barang);
+        til_hargabarangawal = (TextInputLayout) view.findViewById(R.id.fragment_user_edit_lelang_barang_input_harga_awal);
+        til_hargabarangtarget = (TextInputLayout) view.findViewById(R.id.fragment_user_edit_lelang_barang_input_harga_target);
     }
     private void initializeTextChangeListenerOnPrice() {
-        editText_hargabarang_awal.addTextChangedListener(new NumberTextWatcher(editText_hargabarang_awal));
-        editText_hargabarang_target.addTextChangedListener(new NumberTextWatcher(editText_hargabarang_target));
+        editText_hargabarang_awal.addTextChangedListener(new NumberTextWatcher(editText_hargabarang_awal, til_hargabarangawal));
+        editText_hargabarang_target.addTextChangedListener(new NumberTextWatcher(editText_hargabarang_target, til_hargabarangtarget));
     }
     private void initializeDateTimeOnClickListeners() {
         textView_tanggalmulai.setOnClickListener(new View.OnClickListener() {
@@ -217,6 +238,120 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
                 selectTime(textView_jamselesai);
             }
         });
+    }
+    private void setupAllInputValidation() {
+        setupInputValidation(editText_namabarang, til_namaBarang);
+        setupInputValidation(editText_deskripsibarang, til_deskripsiBarang);
+    }
+    private void setupInputValidation(EditText editText, final TextInputLayout textInputLayout) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().equalsIgnoreCase("")) {
+                    textInputLayout.setErrorEnabled(true);
+                    textInputLayout.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
+                }
+                else {
+                    textInputLayout.setErrorEnabled(false);
+                    textInputLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+    private boolean validateInput() {
+        if (!(til_namaBarang.isErrorEnabled() && til_deskripsiBarang.isErrorEnabled()
+                && til_hargabarangawal.isErrorEnabled() && til_hargabarangtarget.isErrorEnabled())) {
+            if (editText_namabarang.getText().toString().trim().equalsIgnoreCase("")) {
+                til_namaBarang.setErrorEnabled(true);
+                til_namaBarang.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
+                scrollOnView(til_namaBarang, 0);
+                return false;
+            }
+            if (editText_deskripsibarang.getText().toString().trim().equalsIgnoreCase("")) {
+                til_deskripsiBarang.setErrorEnabled(true);
+                til_deskripsiBarang.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
+                scrollOnView(til_deskripsiBarang, 0);
+                return false;
+            }
+            if (editText_hargabarang_awal.getText().toString().trim().equalsIgnoreCase("")) {
+                til_hargabarangawal.setErrorEnabled(true);
+                til_hargabarangawal.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
+                scrollOnView(til_hargabarangawal, 0);
+                return false;
+            }
+            if (editText_hargabarang_target.getText().toString().trim().equalsIgnoreCase("")) {
+                til_hargabarangtarget.setErrorEnabled(true);
+                til_hargabarangtarget.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
+                scrollOnView(til_hargabarangtarget, 0);
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+    private boolean validateImageInput() {
+        if (dataImageReceived.size()==1 && dataImageReceived.get(0).getBitmap()==null) {
+            textView_imageWarning.setText(ErrorMessage.EMPTY_IMAGE_ERROR);
+            textView_imageWarning.setVisibility(View.VISIBLE);
+            scrollOnView(recyclerView_image, 0);
+            return false;
+        }
+        else {
+            textView_imageWarning.setVisibility(View.GONE);
+            return true;
+        }
+    }
+    private boolean validateDateInput() {
+        String tanggalMulai = textView_tanggalmulai.getText().toString();
+        String tanggalSelesai = textView_tanggalselesai.getText().toString();
+        String jamMulai = textView_jammulai.getText().toString();
+        String jamSelesai = textView_jamselesai.getText().toString();
+
+        if (tanggalMulai.equalsIgnoreCase("DD-MM-YYYY") || tanggalSelesai.equalsIgnoreCase("DD-MM-YYYY")
+                || jamMulai.equalsIgnoreCase("HH:MM") || jamSelesai.equalsIgnoreCase("HH:MM")) {
+            textView_dateWarning.setVisibility(View.VISIBLE);
+            textView_dateWarning.setText(ErrorMessage.EMPTY_DATE_ERROR);
+            scrollOnView(textView_dateWarning, 1);
+            return false;
+        }
+        else {
+            textView_dateWarning.setVisibility(View.GONE);
+            return true;
+        }
+    }
+    private void scrollOnView(final View view, final int position) {
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (position == 0)
+                    scrollView.smoothScrollTo(0, view.getTop());
+                else scrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        });
+    }
+    private boolean validatePriceInput() {
+        String hargamulai = editText_hargabarang_awal.getText().toString().trim().replaceAll("[^0-9]","");
+        String hargaselesai = editText_hargabarang_target.getText().toString().trim().replaceAll("[^0-9]","");
+        long hargamulailong = Long.parseLong(hargamulai);
+        long hargaselesailong = Long.parseLong(hargaselesai);
+        if (hargamulailong > hargaselesailong) {
+            til_hargabarangtarget.setErrorEnabled(true);
+            til_hargabarangtarget.setError(ErrorMessage.ERROR_HARGA_TARGET);
+            return false;
+        }
+        return true;
+    }
+    private void removeImageError() {
+        textView_imageWarning.setVisibility(View.GONE);
+    }
+    private void removeDateError() {
+        textView_dateWarning.setVisibility(View.GONE);
     }
     private void takeMainImageAsFirstImage() {
         if (dataImageReceived.size() > 0) {
@@ -480,6 +615,18 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
                             updateMainImage();
                         }
                     }
+                    else if (res.equals("error")) {
+                        if (respObject.getString("errcode").equals("wrong-time-start")) {
+                            loadingDialog.dismiss();
+                            textView_dateWarning.setText(ErrorMessage.WRONG_TIME_START_ERROR);
+                            textView_dateWarning.setVisibility(View.VISIBLE);
+                        }
+                        else if (respObject.getString("errcode").equals("wrong-time-format")) {
+                            loadingDialog.dismiss();
+                            textView_dateWarning.setText(ErrorMessage.MISMATCH_DATE_ERROR);
+                            textView_dateWarning.setVisibility(View.VISIBLE);
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -501,6 +648,7 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 textView.setText(dateTimeConverter.convertUserDateInput(dayOfMonth + "-" + (month+1) + "-" + year));
+                removeDateError();
             }
         }, year, month, day);
         datePickerDialog.show();
@@ -513,6 +661,7 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 textView.setText(String.format("%02d:%02d", hourOfDay, minute));
+                removeDateError();
             }
         }, hour, minute, false);
         timePickerDialog.show();

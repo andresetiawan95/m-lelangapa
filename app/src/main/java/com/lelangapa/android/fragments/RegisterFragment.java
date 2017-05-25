@@ -2,10 +2,14 @@ package com.lelangapa.android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +26,8 @@ import com.lelangapa.android.R;
 import com.lelangapa.android.activities.LoginActivity;
 import com.lelangapa.android.apicalls.RegisterAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
+import com.lelangapa.android.interfaces.DataReceiver;
+import com.lelangapa.android.resources.ErrorMessage;
 import com.lelangapa.android.resources.GeoResources;
 
 import org.json.JSONException;
@@ -47,10 +53,17 @@ public class RegisterFragment extends Fragment {
     private Button btnRegister;
     private String CONST_LELANGAPA_URL = "https://www.lelangapa.com/";
     private String _namaLengkap, _username, _password, _domain, _email, _address, _city, _province, _telepon;
-    private Pattern regexPattern;
+    private Pattern regexPattern, regexPatternPassword;
     private HashMap<String, String> dataRegister;
 
     private Response.Listener<String> responseListener;
+    private DataReceiver usernameReceiver, domainReceiver;
+    private static Handler loadHandler;
+    private static Runnable loadRunnable;
+
+    private static int TYPE_USERNAME = 0, TYPE_DOMAIN = 1;
+    private static final long LOAD_DELAY_MS = 500;
+
     public RegisterFragment(){
         initializeConstant();
     }
@@ -59,6 +72,7 @@ public class RegisterFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_register_layout, container, false);
         initializeViews(view);
         initializeResponseListener();
+        initializeDataReceivers();
         geoResources = new GeoResources();
         setSpinnerProvince();
         setupAllInputValidation();
@@ -89,7 +103,8 @@ public class RegisterFragment extends Fragment {
     }
     private void initializeConstant() {
         dataRegister = new HashMap<>();
-        regexPattern = Pattern.compile("[^a-zA-Z0-9@._]");
+        regexPattern = Pattern.compile("[^a-zA-Z0-9-._]");
+        loadHandler = new Handler(Looper.getMainLooper());
     }
     private void initializeResponseListener() {
         responseListener = new Response.Listener<String>() {
@@ -110,6 +125,40 @@ public class RegisterFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        };
+    }
+    private void initializeDataReceivers() {
+        usernameReceiver = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                String result = output.toString();
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.getString("status").equals("exist")) {
+                        til_username.setErrorEnabled(true);
+                        til_username.setError(ErrorMessage.USERNAME_EXIST);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        domainReceiver = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                String result = output.toString();
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.getString("status").equals("exist")) {
+                        til_domain.setErrorEnabled(true);
+                        til_domain.setError(ErrorMessage.DOMAIN_EXIST);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         };
     }
@@ -139,7 +188,7 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onClick(View view){
                 setupInputDataRegister();
-                if (validateInput()) {
+                if (validateInput() && validateEmail()) {
                     buildDataRegister();
                     RegisterAPI.Register registerAPI = RegisterAPI.instanceRegister(dataRegister, responseListener);
                     RequestController.getInstance(getActivity()).addToRequestQueue(registerAPI);
@@ -176,14 +225,65 @@ public class RegisterFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) { }
         });
     }
-    private void setupInputValidation(final EditText editText, final TextInputLayout textInputLayout) {
+    private void setupRegularInputValidation(final EditText editText, final TextInputLayout textInputLayout) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (TextUtils.isEmpty(s.toString())) {
+                    textInputLayout.setErrorEnabled(true);
+                    textInputLayout.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
+                }
+                else {
+                    textInputLayout.setErrorEnabled(false);
+                    textInputLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+    private void setupEmailValidation(final EditText editText, final TextInputLayout textInputLayout) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String tempEmail = s.toString();
+                if (TextUtils.isEmpty(tempEmail) || !Patterns.EMAIL_ADDRESS.matcher(tempEmail).matches()) {
+                    textInputLayout.setErrorEnabled(true);
+                    textInputLayout.setError("Email tidak valid.");
+                }
+                else {
+                    textInputLayout.setErrorEnabled(false);
+                    textInputLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+    private void setupPasswordInputValidation(final EditText editText, final TextInputLayout textInputLayout) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String input = editText.getText().toString();
+                String input = s.toString();
                 if (input.contains(" ")) {
                     textInputLayout.setErrorEnabled(true);
                     textInputLayout.setError("Tidak boleh mengandung spasi.");
@@ -198,17 +298,19 @@ public class RegisterFragment extends Fragment {
                 }
             }
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+
+            }
         });
     }
-    private void setupInputValidationForUniqueEntry(final EditText editText, final TextInputLayout textInputLayout) {
+    private void setupInputValidationForUniqueEntry(final EditText editText, final TextInputLayout textInputLayout, final int type) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String input = editText.getText().toString();
+                final String input = s.toString();
                 if (input.contains(" ")) {
                     textInputLayout.setErrorEnabled(true);
                     textInputLayout.setError("Tidak boleh mengandung spasi.");
@@ -223,6 +325,17 @@ public class RegisterFragment extends Fragment {
                 }
 
                 //handler 1 second to call API
+                if (!textInputLayout.isErrorEnabled()) {
+                    //jika ga ada error, load API
+                    loadHandler.removeCallbacks(loadRunnable);
+                    loadRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            checkInputAvailability(type, input);
+                        }
+                    };
+                    loadHandler.postDelayed(loadRunnable, LOAD_DELAY_MS);
+                }
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -231,50 +344,50 @@ public class RegisterFragment extends Fragment {
         });
     }
     private void setupAllInputValidation() {
-        setupInputValidation(namaLengkap, til_nama);
-        setupInputValidationForUniqueEntry(username, til_username);
-        setupInputValidation(password, til_password);
-        setupInputValidationForUniqueEntry(domain, til_domain);
-        setupInputValidation(email, til_email);
-        setupInputValidation(address, til_address);
-        setupInputValidation(telepon, til_telepon);
+        setupRegularInputValidation(namaLengkap, til_nama);
+        setupInputValidationForUniqueEntry(username, til_username, TYPE_USERNAME);
+        setupPasswordInputValidation(password, til_password);
+        setupInputValidationForUniqueEntry(domain, til_domain, TYPE_DOMAIN);
+        setupEmailValidation(email, til_email);
+        setupRegularInputValidation(address, til_address);
+        setupRegularInputValidation(telepon, til_telepon);
     }
     private boolean validateInput() {
         if (!(til_nama.isErrorEnabled() && til_username.isErrorEnabled() && til_password.isErrorEnabled() && til_domain.isErrorEnabled()
         && til_email.isErrorEnabled() && til_address.isErrorEnabled() && til_telepon.isErrorEnabled())) {
             if (_namaLengkap.trim().equalsIgnoreCase("")) {
                 til_nama.setErrorEnabled(true);
-                til_nama.setError("Harus diisi.");
+                til_nama.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
                 return false;
             }
             if (_username.trim().equalsIgnoreCase("")){
                 til_username.setErrorEnabled(true);
-                til_username.setError("Harus diisi");
+                til_username.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
                 return false;
             }
             if (_password.trim().equalsIgnoreCase("")) {
                 til_password.setErrorEnabled(true);
-                til_password.setError("Harus diisi.");
+                til_password.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
                 return false;
             }
             if (_domain.trim().equalsIgnoreCase("")) {
                 til_domain.setErrorEnabled(true);
-                til_domain.setError("Harus diisi.");
+                til_domain.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
                 return false;
             }
             if (_email.trim().equalsIgnoreCase("")) {
                 til_email.setErrorEnabled(true);
-                til_email.setError("Harus diisi");
+                til_email.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
                 return false;
             }
             if (_address.trim().equalsIgnoreCase("")) {
                 til_address.setErrorEnabled(true);
-                til_address.setError("Harus diisi.");
+                til_address.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
                 return false;
             }
             if (_telepon.trim().equalsIgnoreCase("")) {
                 til_telepon.setErrorEnabled(true);
-                til_telepon.setError("Harus diisi.");
+                til_telepon.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
                 return false;
             }
             return true;
@@ -282,6 +395,17 @@ public class RegisterFragment extends Fragment {
         else {
             return false;
         }
+    }
+    private boolean validateEmail() {
+        if (!til_email.isErrorEnabled()) {
+            if (TextUtils.isEmpty(_email) || !Patterns.EMAIL_ADDRESS.matcher(_email).matches()) {
+                til_email.setErrorEnabled(true);
+                til_email.setError("Alamat email tidak valid.");
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
     private void setupInputDataRegister() {
         _namaLengkap = namaLengkap.getText().toString();
@@ -304,5 +428,17 @@ public class RegisterFragment extends Fragment {
         dataRegister.put("id_province", _province);
         dataRegister.put("username", _username);
         dataRegister.put("domain", _domain);
+    }
+    private void checkInputAvailability(int type, String input) {
+        if (type==TYPE_USERNAME) checkUsername(input);
+        else if (type==TYPE_DOMAIN) checkDomain(input);
+    }
+    private void checkUsername(String input) {
+        RegisterAPI.CheckUsername checkUsername = RegisterAPI.instanceCheckUsername(input, usernameReceiver);
+        RequestController.getInstance(getActivity()).addToRequestQueue(checkUsername);
+    }
+    private void checkDomain(String input) {
+        RegisterAPI.CheckDomain checkDomain = RegisterAPI.instanceCheckDomain(input, domainReceiver);
+        RequestController.getInstance(getActivity()).addToRequestQueue(checkDomain);
     }
 }

@@ -10,7 +10,12 @@
         layout="@layout/toolbar"
         />
 
-    <LinearLayout
+    <FrameLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/fragment_user_edit_lelang_barang_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <!--<LinearLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -33,7 +38,6 @@
                 android:textColor="@color/buttonWhiteColor"
                 android:text="Edit Barang"/>
         </FrameLayout>
-    </LinearLayout>
-
+    </LinearLayout>-->
 
 </android.support.design.widget.CoordinatorLayout>
