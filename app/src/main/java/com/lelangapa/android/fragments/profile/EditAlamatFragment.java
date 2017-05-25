@@ -1,6 +1,5 @@
 package com.lelangapa.android.fragments.profile;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.lelangapa.android.R;
-import com.lelangapa.android.activities.ProfileActivity;
 import com.lelangapa.android.apicalls.EditAlamatAPI;
 import com.lelangapa.android.apicalls.GetUserProfileAPI;
 import com.lelangapa.android.interfaces.DataReceiver;
@@ -94,9 +92,9 @@ public class EditAlamatFragment extends Fragment {
                     String result = jsonResponse.getString("status");
                     if (result.equals("success")){
                         Toast.makeText(getActivity(), "Alamat berhasil diperbaharui.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent (getActivity(), ProfileActivity.class);
+                        /*Intent intent = new Intent (getActivity(), ProfileActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        getActivity().startActivity(intent);
+                        getActivity().startActivity(intent);*/
                         getActivity().finish();
                     }
                 } catch (JSONException e) {

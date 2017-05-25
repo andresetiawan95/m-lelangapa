@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:id="@+id/user_info_name_navbar"
-        android:text="Halo, Pelelang"
+        android:text="Halo!"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView

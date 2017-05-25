@@ -115,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_main_layout, homeFragment)
                             .commit();*/
+                    viewPager.setCurrentItem(0);
+                }
+                else if (id==R.id.nav_promo) {
+                    viewPager.setCurrentItem(1);
                 }
                 else if (id==R.id.nav_login) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);

@@ -1,6 +1,5 @@
 package com.lelangapa.android.fragments.profile;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.lelangapa.android.R;
-import com.lelangapa.android.activities.LoginActivity;
 import com.lelangapa.android.apicalls.EditPasswordAPI;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.preferences.SessionManager;
@@ -88,9 +86,9 @@ public class EditPasswordFragment extends Fragment {
                     String result = jsonResponse.getString("status");
                     if (result.equals("success")){
                         Toast.makeText(getActivity(), "Pergantian password telah dilakukan. Silahkan login kembali.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        /*Intent intent = new Intent(getActivity(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        getActivity().startActivity(intent);
+                        getActivity().startActivity(intent);*/
                         getActivity().finish();
                     }
                     else if (result.equals("error-2")){

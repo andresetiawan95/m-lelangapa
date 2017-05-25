@@ -209,9 +209,9 @@ public class EditProfileFragment extends Fragment {
                 Log.v("upload-avatar", response);
                 if (response.equals("success")) {
                     Toast.makeText(getActivity(), "Pengubahan profil telah berhasil", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent (getActivity(), ProfileActivity.class);
+                    /*Intent intent = new Intent (getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getActivity().startActivity(intent);
+                    getActivity().startActivity(intent);*/
                     getActivity().finish();
                 }
                 else {
