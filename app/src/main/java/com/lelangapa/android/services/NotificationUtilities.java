@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
@@ -29,7 +30,7 @@ public class NotificationUtilities {
 
     public void showNotificationMessage(String title, String message, Intent intent) {
         if (TextUtils.isEmpty(message)) return;
-        int icon = R.mipmap.ic_launcher;
+        int icon = R.mipmap.ic_launcher_with_background;
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -57,6 +58,7 @@ public class NotificationUtilities {
         Notification notification;
         notification = builder
                 .setSmallIcon(icon)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher_with_background))
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setTicker(title)
                 .setWhen(0)
@@ -65,7 +67,6 @@ public class NotificationUtilities {
                 .setContentIntent(pendingIntent)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setStyle(inboxStyle)
-                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(message)
                 .build();
 

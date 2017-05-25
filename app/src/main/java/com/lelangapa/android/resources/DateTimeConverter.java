@@ -8,6 +8,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -32,7 +33,7 @@ public class DateTimeConverter {
             sdf.applyPattern(dateFormatForServer);
             String output = sdf.format(date);
             //memisahkan GMT+0700 menjadi 'GMT' dan '+0700'
-            String[] timezone = TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT).split("T");
+            String[] timezone = TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT, Locale.US).split("T");
             output = output + timezone[1];
             //Log.v("Time yang dikirim", output);
             return output;

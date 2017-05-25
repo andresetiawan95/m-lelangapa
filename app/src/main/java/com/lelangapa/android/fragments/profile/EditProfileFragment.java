@@ -407,7 +407,12 @@ public class EditProfileFragment extends Fragment {
             }
         }
         else {
-            Toast.makeText(getActivity(), "Permission sudah diberikan", Toast.LENGTH_SHORT).show();
+            if (requestCode == PERMISSION_CAMERA_REQUEST) {
+                chooseImageOnCamera();
+            }
+            else if (requestCode == PERMISSION_GALLERY_REQUEST) {
+                chooseImageOnGallery();
+            }
         }
     }
     @Override

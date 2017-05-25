@@ -6,12 +6,17 @@ import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -107,6 +112,9 @@ public class UserLelangBarangFragment extends Fragment {
     private static int MAIN_IMAGE_INDEX;
     private String itemID;
     private Uri cameraUri;
+    private static int OS_VERSION;
+    private static final int PERMISSION_CAMERA_REQUEST = 10;
+    private static final int PERMISSION_GALLERY_REQUEST = 11;
 
     private HashMap<String, String> data, dataImage;
     private ArrayList<ItemImageResources> listImages;
@@ -144,6 +152,7 @@ public class UserLelangBarangFragment extends Fragment {
         dataImage = new HashMap<>();
         listImages = new ArrayList<>();
         dateTimeConverter = new DateTimeConverter();
+        OS_VERSION = Build.VERSION.SDK_INT;
     }
     private void initializeImageReceiver()
     {
@@ -226,13 +235,19 @@ public class UserLelangBarangFragment extends Fragment {
                 .setPositiveButton(R.string.PICK_IMAGE_FROM_CAMERA_NEUTRALBUTTON, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        chooseImageOnCamera();
+                        if (OS_VERSION >= Build.VERSION_CODES.M) {
+                            askForPermission(android.Manifest.permission.CAMERA, PERMISSION_CAMERA_REQUEST);
+                        }
+                        else {
+                            Log.v("NO-PERMISSION", "NO NEED TO REQUEST PERMISSION");
+                            chooseImageOnCamera();
+                        }
                     }
                 })
                 .setNegativeButton(R.string.PICK_IMAGE_FROM_GALLERY_NEUTRALBUTTON, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        chooseImage();
+                        chooseImageOnGallery();
                     }
                 });
     }
@@ -245,7 +260,7 @@ public class UserLelangBarangFragment extends Fragment {
         /*gambarBarang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImage();
+                chooseImageOnGallery();
             }
         });*/
         textView_tanggalmulai.setOnClickListener(new View.OnClickListener() {
@@ -449,7 +464,7 @@ public class UserLelangBarangFragment extends Fragment {
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
     }
-    private void chooseImage(){
+    private void chooseImageOnGallery(){
         Intent galleryIntent = new Intent(getActivity(), GalleryUtil.class);
         startActivityForResult(galleryIntent, PICK_IMAGE_GALLERY_REQUEST);
 
@@ -671,5 +686,43 @@ public class UserLelangBarangFragment extends Fragment {
         SubmitGambarBarangAPI submitGambarBarangAPI = new SubmitGambarBarangAPI(dataImage, imageReceiver);
         submitGambarBarangAPI.setRetryPolicy(new DefaultRetryPolicy(MY_TIMEOUT, MY_RETRY, MY_BACKOFF_MULT));
         RequestController.getInstance(getActivity()).addToRequestQueue(submitGambarBarangAPI);
+    }
+    /*PERMISSION REQUEST FOR ANDROID 6.0 ABOVE*/
+    private void askForPermission(String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+            //system will show alert
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permission)) {
+                //ini akan ditampilkan ketika pengguna sebelumnya sudah men-denied permission
+                ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
+            }
+            else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
+            }
+        }
+        else {
+            if (requestCode == PERMISSION_CAMERA_REQUEST) {
+                chooseImageOnCamera();
+            }
+            else if (requestCode == PERMISSION_GALLERY_REQUEST) {
+                chooseImageOnGallery();
+            }
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permission, grantResults);
+        if (ActivityCompat.checkSelfPermission(getActivity(), permission[0]) == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case PERMISSION_CAMERA_REQUEST :
+                    chooseImageOnCamera();
+                    break;
+                case PERMISSION_GALLERY_REQUEST :
+                    chooseImageOnGallery();
+                    break;
+            }
+        }
+        else {
+            Toast.makeText(getActivity(), "Permission tidak diberikan", Toast.LENGTH_SHORT).show();
+        }
     }
 }
