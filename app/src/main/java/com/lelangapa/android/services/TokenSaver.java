@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.lelangapa.android.apicalls.notification.NotificationAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
@@ -35,7 +34,7 @@ public class TokenSaver {
         editor.commit();
     }
     public static void sendTokenToServer(Context context, String token, String userID) {
-        Log.e("TOKEN SENDING", token);
+        //Log.e("TOKEN SENDING", token);
         HashMap<String, String> data = new HashMap<>();
         data.put("id_device", Settings.Secure.getString(context.getContentResolver(),Settings
                 .Secure.ANDROID_ID) + Build.SERIAL);

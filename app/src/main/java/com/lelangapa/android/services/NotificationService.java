@@ -3,7 +3,6 @@ package com.lelangapa.android.services;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -22,17 +21,17 @@ public class NotificationService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage)
     {
-        Log.e(TAG, "From : " + remoteMessage.getFrom());
+        //Log.e(TAG, "From : " + remoteMessage.getFrom());
 
         //if you send using "notification" param
         if (remoteMessage.getNotification() != null) {
-            Log.e(TAG, "title : " + remoteMessage.getNotification().getTitle());
-            Log.e(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+            //Log.e(TAG, "title : " + remoteMessage.getNotification().getTitle());
+            //Log.e(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
         }
 
         //if you send using "data" param
         if (remoteMessage.getData().size() > 0) {
-            Log.e(TAG, "Data Payload : " + remoteMessage.getData().toString());
+            //Log.e(TAG, "Data Payload : " + remoteMessage.getData().toString());
 
             try {
                 JSONObject notifJSON = new JSONObject(remoteMessage.getData().toString());

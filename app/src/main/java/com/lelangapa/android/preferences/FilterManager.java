@@ -16,6 +16,7 @@ public class FilterManager {
 
     private static final String FILTER_PREFERENCE_KEY = "filter_preference";
     public static final String KEY_ID_CATEGORY = "id_category";
+    public static final String KEY_USER_ID = "id_user"; //dipakai untuk search di UserGeraiPublic
     private static final String DUMMY_CATEGORY = "0";
     public static boolean IS_FILTER_SPECIFIED;
 

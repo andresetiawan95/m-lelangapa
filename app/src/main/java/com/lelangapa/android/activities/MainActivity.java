@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.lelangapa.android.R;
 import com.lelangapa.android.activities.favorite.FavoriteListActivity;
 import com.lelangapa.android.activities.feedback.feedbackanda.FeedbackAndaActivity;
+import com.lelangapa.android.activities.gerai.UserLelangBarangActivity;
 import com.lelangapa.android.activities.profile.chat.UserChatActivity;
 import com.lelangapa.android.activities.search.MainSearchActivity;
 import com.lelangapa.android.apicalls.notification.NotificationAPI;
@@ -141,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
                             .replace(R.id.fragment_main_layout, registerFragment)
                             .addToBackStack(null)
                             .commit();*/
+                }
+                else if (id==R.id.nav_lelang_barang) {
+                    Intent intent = new Intent(MainActivity.this, UserLelangBarangActivity.class);
+                    startActivity(intent);
                 }
                 else if (id==R.id.nav_profil){
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class);

@@ -147,14 +147,14 @@ public class ProfileFragment extends Fragment {
         userProfileMenuData.setUserProfileMenu("Feedback Anda");
         userProfileMenuData.setUserProfileMenuDesc("Periksa feedback yang diberikan kepada anda.");
         userProfileList.add(userProfileMenuData);
-        userProfileMenuData = new UserProfile();
+        /*userProfileMenuData = new UserProfile();
         userProfileMenuData.setUserProfileMenu("Tiket Bantuan");
         userProfileMenuData.setUserProfileMenuDesc("Buka tiket bantuan anda.");
         userProfileList.add(userProfileMenuData);
         userProfileMenuData = new UserProfile();
         userProfileMenuData.setUserProfileMenu("Logout");
         userProfileMenuData.setUserProfileMenuDesc("Logout akun anda.");
-        userProfileList.add(userProfileMenuData);
+        userProfileList.add(userProfileMenuData);*/
         upAdapter.notifyDataSetChanged();
 
         return view;

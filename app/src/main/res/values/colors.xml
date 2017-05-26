@@ -39,6 +39,8 @@
 
     <color name="detailItemTrendingUp">#5fbf44</color>
 
+    <color name="collapsingToolbarPublicColorSementara">#cf7e7d</color>
+
     <color name="textColorForStatus">#ffffff</color>
     <color name="feedbackStatusPemenang">#ff9129</color>
     <color name="feedbackStatusPelelang">#d93a0e</color>

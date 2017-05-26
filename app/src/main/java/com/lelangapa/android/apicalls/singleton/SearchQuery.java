@@ -20,6 +20,10 @@ public class SearchQuery {
         searchQuery.query.put("query", q);
         return searchQuery;
     }
+    public SearchQuery insertUserID(String q) {
+        searchQuery.query.put("user", q);
+        return searchQuery;
+    }
     public SearchQuery insertFromAndSize(int from, int size) {
         searchQuery.query.put("from", Integer.toString(from));
         searchQuery.query.put("size", Integer.toString(size));

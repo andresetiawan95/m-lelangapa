@@ -15,6 +15,15 @@
             android:title="Kategori" />
     </group>-->
     <group
+        android:id="@+id/activity_main_drawer_loggedin_group_auction_now"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_lelang_barang"
+            android:icon="@drawable/ic_navdrawer_lelang_barang"
+            android:title="Lelang Barang">
+        </item>
+    </group>
+    <group
         android:id="@+id/activity_main_drawer_loggedin_group_usermenu"
         android:checkableBehavior="single">
         <item
