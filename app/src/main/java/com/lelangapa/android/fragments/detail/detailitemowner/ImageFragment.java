@@ -3,6 +3,7 @@ package com.lelangapa.android.fragments.detail.detailitemowner;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ public class ImageFragment extends Fragment {
     private ImageView imageView_gambaritem;
     private ViewPager viewPager;
     private PageIndicator indicator;
+    private ItemImageSliderAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -38,7 +40,7 @@ public class ImageFragment extends Fragment {
     }
     private void setupViewPagerAndIndicator()
     {
-        ItemImageSliderAdapter adapter = new ItemImageSliderAdapter(getActivity(), detailItem.getListImageURL());
+        adapter = new ItemImageSliderAdapter(getActivity(), detailItem.getListImageURL());
         int limit = adapter.getCount() > 1 ? adapter.getCount() -1 : 1;
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(limit);
@@ -47,5 +49,7 @@ public class ImageFragment extends Fragment {
     public void setDetailItem(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
+        Log.v("LIST IMAGE", detailItem.getListImageURL().toString());
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
 }
