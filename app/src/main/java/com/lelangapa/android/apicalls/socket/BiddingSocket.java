@@ -7,12 +7,7 @@ import com.lelangapa.android.interfaces.SocketReceiver;
 import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.resources.SocketSSLResources;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -98,16 +93,22 @@ public class BiddingSocket {
     private Socket createServerSocket()
     {
         try {
+            //sepertinya sementara ini masih aman dengan URL.
+            //kalau ada error, bisa ganti lagi ke IP address
+            //dan uncomment semua yang di comment
             IO.Options options = new IO.Options();
             options.forceNew = false;
             options.reconnection = true;
-            options.sslContext = socketSSLResources.getSSLSocketContext();
-            options.hostnameVerifier = socketSSLResources.getHostnameVerifier();
+            //options.sslContext = socketSSLResources.getSSLSocketContext();
+            //options.hostnameVerifier = socketSSLResources.getHostnameVerifier();
             options.query = "token=" + SessionManager.getUserTokenStatic();
-            mSocket = IO.socket("https://188.166.179.2:15000", options);
+            //mSocket = IO.socket("https://188.166.179.2:15000", options);
+            options.secure = true;
+            mSocket = IO.socket("https://bidding.lelangapa.com", options);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        }
+        /*catch (IOException e) {
             e.printStackTrace();
         } catch (CertificateException e) {
             e.printStackTrace();
@@ -117,7 +118,7 @@ public class BiddingSocket {
             e.printStackTrace();
         } catch (KeyManagementException e) {
             e.printStackTrace();
-        }
+        }*/
         return mSocket;
     }
     public Emitter.Listener onConnected = new Emitter.Listener() {
