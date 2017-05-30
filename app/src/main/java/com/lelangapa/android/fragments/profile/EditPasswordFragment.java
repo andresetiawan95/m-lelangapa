@@ -85,7 +85,7 @@ public class EditPasswordFragment extends Fragment {
                     JSONObject jsonResponse = new JSONObject(response);
                     String result = jsonResponse.getString("status");
                     if (result.equals("success")){
-                        Toast.makeText(getActivity(), "Pergantian password telah dilakukan. Silahkan login kembali.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Pergantian password telah dilakukan.", Toast.LENGTH_SHORT).show();
                         /*Intent intent = new Intent(getActivity(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         getActivity().startActivity(intent);*/
