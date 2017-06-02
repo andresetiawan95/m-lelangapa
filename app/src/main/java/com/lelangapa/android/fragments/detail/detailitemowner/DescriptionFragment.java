@@ -50,6 +50,10 @@ public class DescriptionFragment extends Fragment {
     public void setDetailItem(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
+        if (textView_isiDeskripsi != null)
+        {
+            setDescriptionText();
+        }
     }
     private void setExpandableTextViewProperties() {
         textView_isiDeskripsi.setInterpolator(new OvershootInterpolator());
@@ -65,10 +69,7 @@ public class DescriptionFragment extends Fragment {
     }
     private void setDescriptionText()
     {
-        if (textView_isiDeskripsi != null)
-        {
-            textView_isiDeskripsi.setText(detailItem.getDeskripsibarang());
-        }
+        textView_isiDeskripsi.setText(detailItem.getDeskripsibarang());
     }
     /*
     * Setter method end here

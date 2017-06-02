@@ -21,6 +21,8 @@ public class WaktuBidNotStartedFragment extends Fragment {
 
     private TextView textView_startDate;
     private TextView textView_endDate;
+
+    private static String startTime, endTime;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -52,16 +54,16 @@ public class WaktuBidNotStartedFragment extends Fragment {
     public void setDetailItem(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
+        if (textView_startDate != null && textView_endDate != null) {
+            setTimeStartAndTimeFinish(detailItem.getTanggaljammulai(), detailItem.getTanggaljamselesai());
+        }
     }
     public void setTimeStartAndTimeFinish(String startTimeUTC, String finishTimeUTC)
     {
-        String startTime = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(startTimeUTC);
-        String endTime = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(finishTimeUTC);
-        if (textView_startDate != null && textView_endDate != null)
-        {
-            textView_startDate.setText(startTime);
-            textView_endDate.setText(endTime);
-        }
+        startTime = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(startTimeUTC);
+        endTime = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(finishTimeUTC);
+        textView_startDate.setText(startTime);
+        textView_endDate.setText(endTime);
     }
     /*
     * Setter method end here
