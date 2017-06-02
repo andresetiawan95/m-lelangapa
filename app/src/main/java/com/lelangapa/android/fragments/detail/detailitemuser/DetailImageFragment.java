@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.lelangapa.android.R;
 import com.lelangapa.android.adapters.imageslider.ItemImageSliderAdapter;
 import com.lelangapa.android.interfaces.pageindicator.PageIndicator;
+import com.lelangapa.android.interfaces.pageindicator.ScrollEnabler;
 import com.lelangapa.android.modifiedviews.CirclePageIndicator;
 import com.lelangapa.android.resources.DetailItemResources;
 
@@ -24,6 +25,7 @@ public class DetailImageFragment extends Fragment {
 
     private ViewPager viewPager;
     private PageIndicator indicator;
+    private ScrollEnabler scrollEnabler;
 
     public DetailImageFragment(){}
     @Override
@@ -45,10 +47,26 @@ public class DetailImageFragment extends Fragment {
         int limit = adapter.getCount() > 1 ? adapter.getCount() -1 : 1;
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(limit);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(int position) {}
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                scrollEnabler.isScrollEnabled(state==ViewPager.SCROLL_STATE_IDLE);
+            }
+        });
         indicator.setViewPager(viewPager);
     }
     public void setDetailItem(DetailItemResources detailItem)
     {
         this.detailItem = detailItem;
+    }
+    public void setScrollEnabler(ScrollEnabler scrollEnabler)
+    {
+        this.scrollEnabler = scrollEnabler;
     }
 }

@@ -28,6 +28,7 @@ import com.lelangapa.android.fragments.detail.detailitemfavorite.UnfavoriteToggl
 import com.lelangapa.android.interfaces.BidReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.SocketReceiver;
+import com.lelangapa.android.interfaces.pageindicator.ScrollEnabler;
 import com.lelangapa.android.preferences.SessionManager;
 import com.lelangapa.android.resources.BiddingResources;
 import com.lelangapa.android.resources.DetailItemResources;
@@ -73,6 +74,7 @@ public class DetailFragment extends Fragment {
     private HashMap<String, String> session;
 
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ScrollEnabler scrollEnabler;
     private Long serverDateTimeMillisecond;
     private String itemID, biddingInformation, favoriteID;
     private BiddingSocket biddingSocket;
@@ -129,6 +131,7 @@ public class DetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_barang_layout, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_detail_barang_swipe_refreshLayout);
         setUpSwipeRefreshLayout();
+        setScrollEnabler();
         return view;
     }
     @Override
@@ -623,6 +626,17 @@ public class DetailFragment extends Fragment {
                 getDetailItem(itemID);
             }
         });
+    }
+    private void setScrollEnabler() {
+        scrollEnabler = new ScrollEnabler() {
+            @Override
+            public void isScrollEnabled(boolean enable) {
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setEnabled(enable);
+                }
+            }
+        };
+        detailImageFragment.setScrollEnabler(scrollEnabler);
     }
     private void setDataToChildFragments(DetailItemResources detailItem)
     {

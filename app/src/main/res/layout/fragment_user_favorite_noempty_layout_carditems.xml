@@ -7,12 +7,12 @@
         android:id="@+id/fragment_user_favorite_layout_cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardUseCompatPadding="true">
+        card_view:cardUseCompatPadding="true"
+        android:clickable="true">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="260dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true">
+            android:background="?android:attr/selectableItemBackground">
             <ImageView
                 android:id="@+id/fragment_user_favorite_layout_imgview"
                 android:layout_margin="8dp"

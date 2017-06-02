@@ -1,7 +1,5 @@
 package com.lelangapa.android.apicalls.detail;
 
-import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
@@ -28,14 +26,14 @@ public class DetailItemAPI extends StringRequest {
     @Override
     protected Response<String> parseNetworkResponse(NetworkResponse networkResponse)
     {
-        Log.v("Header LALALALLAA", networkResponse.headers.toString());
+        //Log.v("Header LALALALLAA", networkResponse.headers.toString());
         return super.parseNetworkResponse(networkResponse);
     }
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String>  params = new HashMap<String, String>();
         params.put("Cache-Control", "max-age=0");
-        Log.v("REQUEST HEADER", params.toString());
+        //Log.v("REQUEST HEADER", params.toString());
         return params;
     }
 }

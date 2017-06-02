@@ -1,7 +1,5 @@
 package com.lelangapa.android.apicalls.feedback.feedback_average;
 
-import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
@@ -31,7 +29,7 @@ public class FeedbackAverage {
         public Map<String, String> getHeaders() throws AuthFailureError {
             Map<String, String>  params = new HashMap<String, String>();
             params.put("Cache-Control", "max-age=0");
-            Log.v("REQUEST HEADER", params.toString());
+            //Log.v("REQUEST HEADER", params.toString());
             return params;
         }
     }
@@ -51,7 +49,7 @@ public class FeedbackAverage {
         public Map<String, String> getHeaders() throws AuthFailureError {
             Map<String, String>  params = new HashMap<String, String>();
             params.put("Cache-Control", "max-age=0");
-            Log.v("REQUEST HEADER", params.toString());
+            //Log.v("REQUEST HEADER", params.toString());
             return params;
         }
     }

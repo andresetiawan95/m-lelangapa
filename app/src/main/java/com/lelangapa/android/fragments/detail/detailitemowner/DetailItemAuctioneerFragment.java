@@ -29,6 +29,7 @@ import com.lelangapa.android.fragments.detail.ownerdialogfragment.ListBidderDial
 import com.lelangapa.android.interfaces.AuctioneerResponseReceiver;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.SocketReceiver;
+import com.lelangapa.android.interfaces.pageindicator.ScrollEnabler;
 import com.lelangapa.android.resources.BiddingResources;
 import com.lelangapa.android.resources.DetailItemResources;
 
@@ -77,6 +78,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
     private DaftarTawaranFragment daftarTawaranFragment;
 
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ScrollEnabler scrollEnabler;
     private FragmentManager fragmentManager;
 
     private boolean isChangeTawaranFragment = false, isDoneLoaded, isIntentToEdit;
@@ -110,6 +112,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_barang_layout, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_detail_barang_swipe_refreshLayout);
         setUpSwipeRefreshLayout();
+        setScrollEnabler();
         return view;
     }
 
@@ -294,6 +297,17 @@ public class DetailItemAuctioneerFragment extends Fragment {
                 }
             }
         });
+    }
+    private void setScrollEnabler() {
+        scrollEnabler = new ScrollEnabler() {
+            @Override
+            public void isScrollEnabled(boolean enable) {
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setEnabled(enable);
+                }
+            }
+        };
+        imageFragment.setScrollEnabler(scrollEnabler);
     }
     /*
     * Initialization methods end here

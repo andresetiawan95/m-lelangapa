@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.lelangapa.android.R;
 import com.lelangapa.android.fragments.detail.detailitemfavorite.UnfavoriteTrashToggler;
 import com.lelangapa.android.interfaces.DataReceiver;
+import com.lelangapa.android.interfaces.OnItemClickListener;
 import com.lelangapa.android.resources.FavoriteResources;
 import com.squareup.picasso.Picasso;
 
@@ -28,16 +29,19 @@ public class UserFavoriteAdapter extends RecyclerView.Adapter<UserFavoriteAdapte
     private ArrayList<FavoriteResources> listFavorite;
     private String userID;
     private Context context;
+    private OnItemClickListener onItemClickListener;
     public UserFavoriteAdapter
             (Context context,
             ArrayList<FavoriteResources> listFavorite,
             String userID,
-            DataReceiver favoriteReceiver)
+            DataReceiver favoriteReceiver,
+             OnItemClickListener onItemClickListener)
     {
         this.listFavorite = listFavorite;
         this.context = context;
         this.userID = userID;
         this.favoriteStatusReceived = favoriteReceiver;
+        this.onItemClickListener = onItemClickListener;
         this.unfavoriteTrashToggler = new UnfavoriteTrashToggler((Activity) this.context, this.userID, this.favoriteStatusReceived);
     }
     public class FavoriteViewHolder extends RecyclerView.ViewHolder {
@@ -63,7 +67,7 @@ public class UserFavoriteAdapter extends RecyclerView.Adapter<UserFavoriteAdapte
     }
 
     @Override
-    public void onBindViewHolder(FavoriteViewHolder viewHolder, int position)
+    public void onBindViewHolder(final FavoriteViewHolder viewHolder, int position)
     {
         final FavoriteResources itemFavorite = listFavorite.get(position);
         if (itemFavorite.getImageURLItem() != null) {
@@ -74,6 +78,12 @@ public class UserFavoriteAdapter extends RecyclerView.Adapter<UserFavoriteAdapte
         }
         viewHolder.textView_judulItem.setText(itemFavorite.getNamaItemFavorite());
         viewHolder.textView_user.setText(itemFavorite.getNamaUserAuctioneerItemFavorite());
+        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClick(v, viewHolder.getAdapterPosition());
+            }
+        });
         viewHolder.imageView_trash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,7 +1,5 @@
 package com.lelangapa.android.apicalls;
 
-import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -34,7 +32,7 @@ public class EditUserProfileAPI extends StringRequest{
         Map<String, String> params = new HashMap<>();
         if (SessionManager.isLoggedInStatic()) {
             params.put("token", SessionManager.getUserTokenStatic());
-            Log.v("HEADER", params.toString());
+            //Log.v("HEADER", params.toString());
         }
         return params;
     }

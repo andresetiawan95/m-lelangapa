@@ -1,7 +1,5 @@
 package com.lelangapa.android.apicalls.detail.daftarblock;
 
-import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
@@ -34,7 +32,7 @@ public class GetBlockAPI {
             Map<String, String> params = new HashMap<>();
             if (SessionManager.isLoggedInStatic()) {
                 params.put("token", SessionManager.getUserTokenStatic());
-                Log.v("HEADER", params.toString());
+                //Log.v("HEADER", params.toString());
             }
             return params;
         }

@@ -19,7 +19,6 @@ import com.lelangapa.android.apicalls.favorite.FavoriteAPI;
 import com.lelangapa.android.apicalls.singleton.RequestController;
 import com.lelangapa.android.interfaces.DataReceiver;
 import com.lelangapa.android.interfaces.OnItemClickListener;
-import com.lelangapa.android.listeners.RecyclerItemClickListener;
 import com.lelangapa.android.resources.FavoriteResources;
 
 import org.json.JSONArray;
@@ -38,6 +37,7 @@ public class FavoriteNoEmptyFragment extends Fragment {
     private RecyclerView recyclerView_favorite;
     private SwipeRefreshLayout swipeRefreshLayout;
     private DataReceiver unfavoriteReceived, favoriteDataReceiver, whenListFavoriteIsEmptyReceiver;
+    private OnItemClickListener onItemClickListener;
 
     private String userID;
     private Bundle bundleExtras;
@@ -49,6 +49,7 @@ public class FavoriteNoEmptyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_favorite_noempty_layout, container, false);
         initializeViews(view);
         setDataReceiverForItemFavorites();
+        setOnItemClickListener();
         setUnfavoriteReceived();
         setSwipeRefreshLayoutProperties();
         setRecyclerViewAdapter();
@@ -77,29 +78,8 @@ public class FavoriteNoEmptyFragment extends Fragment {
     /*
     * Initialization method end here
     * */
-    public void setUserID(String userID)
-    {
-        this.userID = userID;
-    }
-    public void setWhenListFavoriteIsEmptyReceiver(DataReceiver dataReceiver)
-    {
-        this.whenListFavoriteIsEmptyReceiver = dataReceiver;
-    }
-    public void setItemFavoriteList(ArrayList<FavoriteResources> listBarangFavorit)
-    {
-        this.listBarangFavorit = listBarangFavorit;
-    }
-    private void setRecyclerViewAdapter()
-    {
-        favoriteAdapter = new UserFavoriteAdapter(getActivity(), listBarangFavorit, userID, unfavoriteReceived);
-    }
-    private void setRecyclerViewProperties()
-    {
-        RecyclerView.LayoutManager upLayoutManager = new GridLayoutManager(getActivity(), 2);
-        recyclerView_favorite.setLayoutManager(upLayoutManager);
-        recyclerView_favorite.setAdapter(favoriteAdapter);
-        recyclerView_favorite.setItemAnimator(new DefaultItemAnimator());
-        recyclerView_favorite.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_favorite, new OnItemClickListener() {
+    private void setOnItemClickListener() {
+        onItemClickListener = new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 intent = new Intent(getActivity(), DetailBarangActivity.class);
@@ -115,7 +95,47 @@ public class FavoriteNoEmptyFragment extends Fragment {
             public void onLongItemClick(View view, int position) {
 
             }
-        }));
+        };
+    }
+    public void setUserID(String userID)
+    {
+        this.userID = userID;
+    }
+    public void setWhenListFavoriteIsEmptyReceiver(DataReceiver dataReceiver)
+    {
+        this.whenListFavoriteIsEmptyReceiver = dataReceiver;
+    }
+    public void setItemFavoriteList(ArrayList<FavoriteResources> listBarangFavorit)
+    {
+        this.listBarangFavorit = listBarangFavorit;
+    }
+    private void setRecyclerViewAdapter()
+    {
+        favoriteAdapter = new UserFavoriteAdapter(getActivity(), listBarangFavorit, userID, unfavoriteReceived, onItemClickListener);
+    }
+    private void setRecyclerViewProperties()
+    {
+        RecyclerView.LayoutManager upLayoutManager = new GridLayoutManager(getActivity(), 2);
+        recyclerView_favorite.setLayoutManager(upLayoutManager);
+        recyclerView_favorite.setAdapter(favoriteAdapter);
+        recyclerView_favorite.setItemAnimator(new DefaultItemAnimator());
+        /*recyclerView_favorite.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView_favorite, new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                intent = new Intent(getActivity(), DetailBarangActivity.class);
+                bundleExtras = new Bundle();
+                bundleExtras.putString("auctioneer_id", listBarangFavorit.get(position).getIdUserAuctioneer());
+                bundleExtras.putString("items_id", listBarangFavorit.get(position).getIdItemFavorite());
+                intent.putExtras(bundleExtras);
+
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));*/
     }
     /*
     * Content Provider method start here
