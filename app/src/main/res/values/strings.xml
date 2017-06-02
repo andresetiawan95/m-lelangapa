@@ -115,6 +115,9 @@
 
     <string name="CHATMESSAGE_HINT">Ketik pesan...</string>
 
+    <string name="BIDDING_DISABLED_NOT_LOGIN">Login terlebih dahulu untuk mengikuti jalannya lelang secara langsung</string>
+    <string name="BIDDING_DISABLED_NOT_LOGIN_ASK_LOGIN">Login sekarang!</string>
+
     <!-- String resource for spinner on UserPublicActivity (Fragment Feedback)-->
     <string-array name="spinner_feedback_for_public">
         <item>Sebagai pemenang</item>

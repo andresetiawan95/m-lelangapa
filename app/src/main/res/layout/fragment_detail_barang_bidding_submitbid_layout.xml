@@ -50,9 +50,11 @@
 
     </RelativeLayout>
     <LinearLayout
+        android:id="@+id/fragment_detail_barang_bid_enabled"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -76,6 +78,30 @@
             android:text="TAWAR"/>
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/fragment_detail_barang_bid_disabled"
+        android:visibility="gone"
+        android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/BIDDING_DISABLED_NOT_LOGIN"/>
+        <TextView
+            android:id="@+id/fragment_detail_barang_bid_disabled_ask_login"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textAppearance="?android:textAppearance"
+            android:text="@string/BIDDING_DISABLED_NOT_LOGIN_ASK_LOGIN"/>
+    </LinearLayout>
+
     <!--<LinearLayout
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
