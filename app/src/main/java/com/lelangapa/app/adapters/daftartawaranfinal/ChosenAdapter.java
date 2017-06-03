@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.lelangapa.app.R;
 import com.lelangapa.app.resources.BiddingResources;
+import com.lelangapa.app.resources.PriceFormatter;
 
 import java.util.ArrayList;
 
@@ -73,12 +74,12 @@ public class ChosenAdapter extends RecyclerView.Adapter<ChosenAdapter.ViewHolder
         if (viewType == TYPE_SELECTED) {
             SelectedViewHolder selectedViewHolder = (SelectedViewHolder) holder;
             selectedViewHolder.textView_namaBidder.setText(resources.getNamaBidder());
-            selectedViewHolder.textView_tawaran.setText(resources.getHargaBid());
+            selectedViewHolder.textView_tawaran.setText(PriceFormatter.formatPrice(resources.getHargaBid()));
         }
         else {
             NotSelectedViewHolder notSelectedViewHolder = (NotSelectedViewHolder) holder;
             notSelectedViewHolder.textView_namaBidder.setText(resources.getNamaBidder());
-            notSelectedViewHolder.textView_tawaran.setText(resources.getHargaBid());
+            notSelectedViewHolder.textView_tawaran.setText(PriceFormatter.formatPrice(resources.getHargaBid()));
         }
     }
 

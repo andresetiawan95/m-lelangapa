@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.lelangapa.app.R;
 import com.lelangapa.app.resources.BiddingResources;
+import com.lelangapa.app.resources.PriceFormatter;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,7 @@ public class UnchosenAdapter extends RecyclerView.Adapter<UnchosenAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         BiddingResources resources = listOffer.get(position);
         holder.textView_namaBidder.setText(resources.getNamaBidder());
-        holder.textView_tawaran.setText(resources.getHargaBid());
+        holder.textView_tawaran.setText(PriceFormatter.formatPrice(resources.getHargaBid()));
         holder.icon_choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

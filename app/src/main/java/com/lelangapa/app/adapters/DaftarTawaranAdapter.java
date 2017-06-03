@@ -15,6 +15,7 @@ import com.lelangapa.app.fragments.detail.detailtawaran.BlockToggler;
 import com.lelangapa.app.fragments.detail.detailtawaran.CancelToggler;
 import com.lelangapa.app.fragments.detail.detailtawaran.ChooseWinnerToggler;
 import com.lelangapa.app.resources.BiddingResources;
+import com.lelangapa.app.resources.PriceFormatter;
 
 import java.util.ArrayList;
 
@@ -69,7 +70,7 @@ public class DaftarTawaranAdapter extends RecyclerView.Adapter<DaftarTawaranAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         final BiddingResources detailOffer = listOffers.get(position);
         holder.textView_namaBidder.setText(detailOffer.getNamaBidder());
-        holder.textView_tawaran.setText(detailOffer.getHargaBid());
+        holder.textView_tawaran.setText(PriceFormatter.formatPrice(detailOffer.getHargaBid()));
         holder.icon_options.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -21,6 +21,7 @@ import com.lelangapa.app.interfaces.DataReceiver;
 import com.lelangapa.app.interfaces.OnItemClickListener;
 import com.lelangapa.app.listeners.RecyclerItemClickListener;
 import com.lelangapa.app.resources.BiddingResources;
+import com.lelangapa.app.resources.PriceFormatter;
 
 import java.util.ArrayList;
 
@@ -104,7 +105,7 @@ public class BeforeChosenFragment extends Fragment {
     }
     private void setupViews() {
         textView_nama.setText(leadBidder.getNamaBidder());
-        textView_offer.setText(leadBidder.getHargaBid());
+        textView_offer.setText(PriceFormatter.formatPrice(leadBidder.getHargaBid()));
     }
     private void whenWinnerSelectionDoneSuccess() {
         BiddingResources selectedBidder = null;

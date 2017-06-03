@@ -18,6 +18,7 @@ import com.lelangapa.app.R;
 import com.lelangapa.app.adapters.daftartawaranfinal.ChosenAdapter;
 import com.lelangapa.app.decorations.DividerItemDecoration;
 import com.lelangapa.app.resources.BiddingResources;
+import com.lelangapa.app.resources.PriceFormatter;
 
 import java.util.ArrayList;
 
@@ -69,7 +70,7 @@ public class AfterChosenFragment extends Fragment {
         textView_alert.setTextColor(Color.parseColor("#ffffff"));
         textView_header.setText("Pemenang Terpilih");
         textView_nama.setText(leadBidder.getNamaBidder());
-        textView_offer.setText(leadBidder.getHargaBid());
+        textView_offer.setText(PriceFormatter.formatPrice(leadBidder.getHargaBid()));
     }
     public void setListOffer(ArrayList<BiddingResources> list) {
         this.listOffer = list;

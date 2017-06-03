@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lelangapa.app.R;
@@ -19,19 +20,24 @@ import com.lelangapa.app.interfaces.AuctioneerResponseReceiver;
 import com.lelangapa.app.interfaces.DataReceiver;
 import com.lelangapa.app.resources.BiddingResources;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by andre on 31/01/17.
  */
 
 public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
     private BiddingResources itemBiddingResources;
-    private ProgressBar progressBar;
     private AuctioneerResponseReceiver auctioneerResponseReceiver;
     private DataReceiver whenWinnerChosen;
     private ChooseWinnerToggler chooseWinnerToggler;
+    private TextView textView_indicator;
+    private ProgressBar progressBar_indicator;
+    private Long offerPriceGap, startAndTargetPriceGap;
+    private DecimalFormat decimalFormatter;
 
     private static final int REQUEST_DAFTAR_TAWARAN = 1;
-    private String itemID;
+    private String itemID, startPrice, expectedPrice;
 
     private ChosenFragment chosenFragment;
     private UnchosenFragment unchosenFragment;
@@ -39,11 +45,13 @@ public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_detail_barang_bidding_finished_auctioneer_layout_new, container, false);
+        initializeConstant();
         initializeViews(view);
         initializeToggler();
         initializeFragment();
         setAuctioneerResponseReceiver();
         setupFragment();
+        updateProgressBarIndicator();
         return view;
     }
     @Override
@@ -63,10 +71,13 @@ public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
             //changeFragmentWhenWinnerSelected(selectedBidder);
         }
     }
-
+    private void initializeConstant() {
+        this.decimalFormatter = new DecimalFormat("#.00");
+    }
     private void initializeViews(View view)
     {
-        progressBar = (ProgressBar) view.findViewById(R.id.fragment_detail_barang_bidding_finished_auctioneer_indicator_progress_bar);
+        textView_indicator = (TextView) view.findViewById(R.id.fragment_detail_barang_bidding_finished_auctioneer_indicator_percent);
+        progressBar_indicator = (ProgressBar) view.findViewById(R.id.fragment_detail_barang_bidding_finished_auctioneer_indicator_progress_bar);
     }
     private void initializeToggler() {
         chooseWinnerToggler = new ChooseWinnerToggler(getActivity(), whenWinnerChosen);
@@ -102,13 +113,37 @@ public class MenuPagerBiddingFinishedWithBidderFragment extends Fragment {
     public void setBidderInformation(BiddingResources itemBiddingResources)
     {
         this.itemBiddingResources = itemBiddingResources;
-        if (chosenFragment!=null && unchosenFragment!=null) setupFragment();
+        if (chosenFragment!=null && unchosenFragment!=null) {
+            setupFragment();
+            updateProgressBarIndicator();
+        }
     }
     public void setItemID(String itemID) {
         this.itemID = itemID;
     }
     public void setDataReceiverWhenWinnerChosen(DataReceiver receiver) {
         this.whenWinnerChosen = receiver;
+    }
+    public void setAuctionPrices(String startPrice, String expPrice) {
+        this.startPrice = startPrice;
+        this.expectedPrice = expPrice;
+    }
+    private void updateProgressBarIndicator()
+    {
+        progressBar_indicator.setProgress(calculateProgress());
+        textView_indicator.setText(decimalFormatter.format(calculateIndicatorPercentage()));
+    }
+    private int calculateProgress()
+    {
+        offerPriceGap = Long.valueOf(itemBiddingResources.getHargaBid()) - Long.valueOf(startPrice);
+        startAndTargetPriceGap = Long.valueOf(expectedPrice) - Long.valueOf(startPrice);
+        return (int) (((double)offerPriceGap / (double)startAndTargetPriceGap) * (double)100);
+    }
+    private double calculateIndicatorPercentage()
+    {
+        offerPriceGap = Long.valueOf(itemBiddingResources.getHargaBid()) - Long.valueOf(startPrice);
+        startAndTargetPriceGap = Long.valueOf(expectedPrice) - Long.valueOf(startPrice);
+        return (((double)offerPriceGap / (double)startAndTargetPriceGap) * (double)100);
     }
     private void setupFragment() {
         if (itemBiddingResources.isWinnerStatus()) {

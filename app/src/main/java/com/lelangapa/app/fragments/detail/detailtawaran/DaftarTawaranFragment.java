@@ -25,6 +25,7 @@ import com.lelangapa.app.interfaces.SocketReceiver;
 import com.lelangapa.app.interfaces.SocketSender;
 import com.lelangapa.app.resources.BiddingResources;
 import com.lelangapa.app.resources.DetailItemResources;
+import com.lelangapa.app.resources.PriceFormatter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -270,7 +271,7 @@ public class DaftarTawaranFragment extends Fragment {
             linearLayout_priceProperties.setVisibility(View.VISIBLE);
         }
         textView_nama.setText(listOffer.get(0).getNamaBidder());
-        textView_offer.setText(listOffer.get(0).getHargaBid());
+        textView_offer.setText(PriceFormatter.formatPrice(listOffer.get(0).getHargaBid()));
         if (isNoBidIndicatorEnabled) {
             textView_noBidIndicator.setVisibility(View.GONE);
             isNoBidIndicatorEnabled = false;

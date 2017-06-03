@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.lelangapa.app.R;
 import com.lelangapa.app.interfaces.AuctioneerResponseReceiver;
 import com.lelangapa.app.resources.BiddingResources;
+import com.lelangapa.app.resources.PriceFormatter;
 
 /**
  * Created by andre on 10/05/17.
@@ -74,7 +75,7 @@ public class ChosenFragment extends Fragment {
     private void showInformation() {
         if (textView_namaBidder!=null && textView_hargaBid!=null) {
             textView_namaBidder.setText(biddingResources.getNamaBidder());
-            textView_hargaBid.setText(biddingResources.getHargaBid());
+            textView_hargaBid.setText(PriceFormatter.formatPrice(biddingResources.getHargaBid()));
         }
     }
 }
