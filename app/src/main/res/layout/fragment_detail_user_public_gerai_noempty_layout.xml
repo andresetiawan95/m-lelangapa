@@ -9,7 +9,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
-        <com.lelangapa.android.modifiedviews.SearchEditText
+        <com.lelangapa.app.modifiedviews.SearchEditText
             android:id="@+id/fragment_detail_user_public_gerai_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             android:singleLine="true"
             android:background="@color/backgroundLayoutWhiteColor">
 
-        </com.lelangapa.android.modifiedviews.SearchEditText>
+        </com.lelangapa.app.modifiedviews.SearchEditText>
         <!--<SearchView
             android:id="@+id/fragment_detail_user_public_gerai_search"
             android:layout_width="match_parent"

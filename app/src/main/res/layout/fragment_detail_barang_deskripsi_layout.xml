@@ -20,7 +20,7 @@
             android:text="Deskripsi"
             android:textAppearance="?android:textAppearance"
             android:textSize="18dp"/>
-        <com.lelangapa.android.modifiedviews.ExpandableTextViewWithLine
+        <com.lelangapa.app.modifiedviews.ExpandableTextViewWithLine
             android:id="@+id/fragment_detail_barang_deskripsi_isideskripsi"
             android:layout_margin="8dp"
             android:layout_width="match_parent"

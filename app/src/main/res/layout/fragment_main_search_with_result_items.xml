@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp">
-                <com.lelangapa.android.modifiedviews.ExpandableTextViewWithLine
+                <com.lelangapa.app.modifiedviews.ExpandableTextViewWithLine
                     android:id="@+id/fragment_main_search_layout_namabarang"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
