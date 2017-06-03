@@ -68,6 +68,7 @@ public class DetailFragment extends Fragment {
     private UnfavoriteToggler unfavoriteMenuToggler;
 
     private DetailItemResources detailItem;
+    private BiddingResources itemBidResources;
     private AlertDialog.Builder bidFailedAlertDialogBuilder;
     private Context activityContext;
     private SessionManager sessionManager;
@@ -99,6 +100,7 @@ public class DetailFragment extends Fragment {
         intentChatActivity = new Intent(getActivity(), UserChatRoomActivity.class);
 
         detailItem = new DetailItemResources();
+        itemBidResources = new BiddingResources();
         sessionManager = new SessionManager(getActivity());
         session = sessionManager.getSession();
         itemID = getActivity().getIntent().getExtras().getString("items_id");
@@ -663,7 +665,7 @@ public class DetailFragment extends Fragment {
             detailBiddingFragment.setBiddingPeringkatList(biddingPeringkatList);
             if (!detailItem.getNamabidder().equals("nouser"))
             {
-                detailBiddingFinishedWithBidderFragment.setDetailItem(detailItem);
+                detailBiddingFinishedWithBidderFragment.setBiddingInformation(itemBidResources);
             }
         }
         detailHeaderFragment.setDetailItem(detailItem);
@@ -776,6 +778,12 @@ public class DetailFragment extends Fragment {
                             detailItem.setNamaauctioneer(itemDataObject.getString("user_name"));
                             detailItem.setNamabidder(itemDataObject.getString("bidder_name"));
                             detailItem.setHargabid(itemDataObject.getString("item_bid_price"));
+
+                            //informasi tawaran terbaru/tertinggi/terpilih
+                            itemBidResources.setNamaBidder(itemDataObject.getString("bidder_name"));
+                            itemBidResources.setHargaBid(itemDataObject.getString("item_bid_price"));
+                            itemBidResources.setWinnerStatus(itemDataObject.getBoolean("winner_status"));
+
                             JSONArray detailUrlGambarItemArray = itemDataObject.getJSONArray("url");
                             JSONArray biddingPeringkatArray = itemDataObject.getJSONArray("peringkat");
 

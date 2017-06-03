@@ -5,7 +5,7 @@ package com.lelangapa.app.resources;
  */
 
 public class RiwayatResources {
-    private String idBid, idItem, idAuctioneer, namaAuctioneer, namaItem, hargaBid, bidTimestamp;
+    private String idBid, idItem, idAuctioneer, namaAuctioneer, namaItem, hargaBid, bidTimestamp, mainImageURL;
     private boolean winStatus;
     private Integer bidStatus, bidTime;
 
@@ -89,5 +89,13 @@ public class RiwayatResources {
     public Integer getBidTime()
     {
         return bidTime;
+    }
+
+    public String getMainImageURL() {
+        return mainImageURL;
+    }
+
+    public void setMainImageURL(String mainImageURL) {
+        this.mainImageURL = mainImageURL;
     }
 }

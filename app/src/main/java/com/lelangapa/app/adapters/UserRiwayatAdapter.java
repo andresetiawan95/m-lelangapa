@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.app.R;
+import com.lelangapa.app.resources.PriceFormatter;
 import com.lelangapa.app.resources.RiwayatResources;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -59,7 +61,10 @@ public class UserRiwayatAdapter extends RecyclerView.Adapter<UserRiwayatAdapter.
         viewHolder.textView_judulItem.setText(riwayatResources.getNamaItem());
         viewHolder.textView_namaAuctioneer.setText(riwayatResources.getNamaAuctioneer());
         viewHolder.textView_kalibid.setText(Integer.toString(riwayatResources.getBidTime()));
-        viewHolder.textView_hargabid.setText(riwayatResources.getHargaBid());
+        viewHolder.textView_hargabid.setText(PriceFormatter.formatPrice(riwayatResources.getHargaBid()));
+        if (riwayatResources.getMainImageURL() != null) Picasso.with(context).load(riwayatResources.getMainImageURL()).into(viewHolder.imageView_imageItem);
+        else viewHolder.imageView_imageItem.setImageResource(R.drawable.ic_insert_photo_grey_128dp);
+
         if (riwayatResources.getWinStatus() && riwayatResources.getBidStatus() == -1)
         {
             viewHolder.textView_statuswin.setText("MENANG");

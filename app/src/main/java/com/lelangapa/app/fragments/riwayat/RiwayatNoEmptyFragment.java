@@ -139,7 +139,8 @@ public class RiwayatNoEmptyFragment extends Fragment {
                         riwayatResources.setBidTime(jsonArrayObject.getInt("bid_time_return"));
                         riwayatResources.setWinStatus(jsonArrayObject.getBoolean("win_status_return"));
                         riwayatResources.setHargaBid(jsonArrayObject.getString("price_bid_return"));
-                        riwayatResources.setBidStatus(jsonArrayObject.getInt("bid_status_return"));
+                        if (jsonArrayObject.has("main_image_url"))
+                            riwayatResources.setMainImageURL("http://img-s7.lelangapa.com/" + jsonArrayObject.getString("main_image_url"));
                         listRiwayat.add(riwayatResources);
                     }
                     riwayatAdapter.updateDataset(listRiwayat);

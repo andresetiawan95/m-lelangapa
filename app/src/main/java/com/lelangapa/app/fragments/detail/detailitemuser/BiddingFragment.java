@@ -19,6 +19,7 @@ import com.lelangapa.app.interfaces.DataReceiver;
 import com.lelangapa.app.preferences.SessionManager;
 import com.lelangapa.app.resources.DetailItemResources;
 import com.lelangapa.app.resources.NumberTextWatcher;
+import com.lelangapa.app.resources.PriceFormatter;
 
 import java.text.DecimalFormat;
 
@@ -114,12 +115,12 @@ public class BiddingFragment extends Fragment {
         if (detailItem.getNamabidder().equals("nouser"))
         {
             textView_namaBidder.setText("Bid starter");
-            textView_hargaBid.setText(detailItem.getHargabid());
+            textView_hargaBid.setText(PriceFormatter.formatPrice(detailItem.getHargabid()));
         }
         else
         {
             textView_namaBidder.setText(detailItem.getNamabidder());
-            textView_hargaBid.setText(detailItem.getHargabid());
+            textView_hargaBid.setText(PriceFormatter.formatPrice(detailItem.getHargabid()));
         }
         //updateProgressBarIndicator();
     }
