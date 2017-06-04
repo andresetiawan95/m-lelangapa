@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
@@ -24,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.app.R;
@@ -42,6 +42,7 @@ import com.lelangapa.app.preferences.SessionManager;
 import com.lelangapa.app.services.NotifConfig;
 import com.lelangapa.app.services.TokenSaver;
 import com.lelangapa.app.viewpagers.HomeViewPagerAdapter;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     public static ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private ProgressDialog progressDialog;
+    private TextView userInfoNameNavbar, userInfoEmailNavbar;
+    private ImageView imageViewAvatar;
 
     private final String headerPrefix = "Halo, ";
     private SessionManager sessionManager;
@@ -66,11 +69,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.v ("OnCreate", "oncreate started");
-
         setTokenBroadcastReceiver();
-        Log.v("Android ID", Settings.Secure.getString(this.getContentResolver(),Settings
-                .Secure.ANDROID_ID));
         sessionManager = new SessionManager(MainActivity.this);
         if (sessionManager.isLoggedIn()){
             setContentView(R.layout.activity_main_loggedin);
@@ -78,11 +77,13 @@ public class MainActivity extends AppCompatActivity {
             navigationView = (NavigationView) findViewById(R.id.nav_view_loggedin);
             //Get header of navigation bar
             View header = navigationView.getHeaderView(0);
-            TextView userInfoNameNavbar = (TextView) header.findViewById(R.id.user_info_name_navbar);
-            TextView userInfoEmailNavbar = (TextView) header.findViewById(R.id.user_info_email_navbar);
+            imageViewAvatar = (ImageView) header.findViewById(R.id.imageView_avatar_navbar);
+            userInfoNameNavbar = (TextView) header.findViewById(R.id.user_info_name_navbar);
+            userInfoEmailNavbar = (TextView) header.findViewById(R.id.user_info_email_navbar);
             userInfo = sessionManager.getSession();
             userInfoNameNavbar.setText(headerPrefix + userInfo.get(sessionManager.getKEY_NAME()));
             userInfoEmailNavbar.setText(userInfo.get(sessionManager.getKEY_EMAIL()));
+            loadUserAvatar();
         }
         else {
             setContentView(R.layout.activity_main);
@@ -217,6 +218,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
     }
+    private void loadUserAvatar() {
+        if (sessionManager.isLoggedIn()) {
+            if (!userInfo.get(SessionManager.KEY_AVATAR).equals("null"))
+                Picasso.with(this).load("http://img-s7.lelangapa.com/" + userInfo.get(SessionManager.KEY_AVATAR))
+                        .into(imageViewAvatar);
+        }
+    }
     private void setUpViewPager(ViewPager viewPager){
         HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new BerandaHomeFragment(), getResources().getString(R.string.HOME));
@@ -343,6 +351,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+        loadUserAvatar();
         LocalBroadcastManager.getInstance(this).registerReceiver(tokenBroadcastReceiver,
                 new IntentFilter(NotifConfig.REGISTRATION_COMPLETE));
 //        Log.v("OnResunme", "on resume started");

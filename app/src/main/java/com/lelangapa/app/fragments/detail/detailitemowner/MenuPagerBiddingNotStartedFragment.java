@@ -24,7 +24,7 @@ public class MenuPagerBiddingNotStartedFragment extends Fragment {
 
     private DataReceiver triggerStarted;
     private Long serverTimeNow_milisecond, startTime_milisecond, timeCountDown;
-    private long HOURS_MAX = 3600000, MINUTES_MAX = 60000, SECONDS_MAX = 1000;
+    private long DAY_MAX = 24 * 60 * 60 * 1000, HOURS_MAX = 3600000, MINUTES_MAX = 60000, SECONDS_MAX = 1000;
     private NumberFormat format;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -78,6 +78,8 @@ public class MenuPagerBiddingNotStartedFragment extends Fragment {
             public void onTick(long millisUntilFinished) {
                 timeCountDown = millisUntilFinished;
                 if (millisUntilFinished <= 1000) onFinish();
+                long day = (timeCountDown / DAY_MAX);
+                timeCountDown %= DAY_MAX;
                 long hour = (timeCountDown / HOURS_MAX);
                 timeCountDown %= HOURS_MAX;
                 long min = (timeCountDown / MINUTES_MAX);
@@ -85,7 +87,7 @@ public class MenuPagerBiddingNotStartedFragment extends Fragment {
                 long secs = (timeCountDown/ SECONDS_MAX);
                 timeCountDown %= SECONDS_MAX;
 
-                textView_timeCountdown.setText(format.format(hour) + ":" + format.format(min) + ":" + format.format(secs));
+                textView_timeCountdown.setText(format.format(day) + "d " +format.format(hour) + "h " + format.format(min) + "m " + format.format(secs) + "s");
             }
 
             @Override

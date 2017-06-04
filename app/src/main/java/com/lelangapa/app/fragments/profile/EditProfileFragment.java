@@ -207,15 +207,21 @@ public class EditProfileFragment extends Fragment {
             public void dataReceived(Object output) {
                 String response = output.toString();
                 Log.v("upload-avatar", response);
-                if (response.equals("success")) {
-                    Toast.makeText(getActivity(), "Pengubahan profil telah berhasil", Toast.LENGTH_LONG).show();
-                    /*Intent intent = new Intent (getActivity(), ProfileActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getActivity().startActivity(intent);*/
-                    getActivity().finish();
-                }
-                else {
-                    Toast.makeText(getActivity(), "Upload gagal", Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    if (jsonResponse.getString("status").equals("success")) {
+                        sessionManager.editAvatarSessionPreference(jsonResponse.getString("avatar_url"));
+                        Toast.makeText(getActivity(), "Pengubahan profil telah berhasil", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent (getActivity(), ProfileActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        getActivity().startActivity(intent);
+                        getActivity().finish();
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Upload gagal", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         };

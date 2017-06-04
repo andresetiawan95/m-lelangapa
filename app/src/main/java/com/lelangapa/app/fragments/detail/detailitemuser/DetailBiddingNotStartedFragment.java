@@ -25,7 +25,7 @@ public class DetailBiddingNotStartedFragment extends Fragment {
     private Long startTime_milisecond;
     private Long serverTime, timeCountDown, hoursLeftLong, minutesLeftLong, secondsLeftLong;
     private String hoursLeftString, minutesLeftString, secondsLeftString;
-    private long HOURS_MAX = 3600000, MINUTES_MAX = 60000, SECONDS_MAX = 1000;
+    private long DAY_MAX = 24 * 60 * 60 * 1000, HOURS_MAX = 3600000, MINUTES_MAX = 60000, SECONDS_MAX = 1000;
     private NumberFormat format;
     public DetailBiddingNotStartedFragment(){}
     @Override
@@ -54,6 +54,8 @@ public class DetailBiddingNotStartedFragment extends Fragment {
             public void onTick(long millisUntilFinished) {
                 timeCountDown = millisUntilFinished;
                 if (millisUntilFinished <= 1000) onFinish();
+                long day = (timeCountDown / DAY_MAX);
+                timeCountDown %= DAY_MAX;
                 long hour = (timeCountDown / HOURS_MAX);
                 timeCountDown %= HOURS_MAX;
                 long min = (timeCountDown / MINUTES_MAX);
@@ -61,7 +63,7 @@ public class DetailBiddingNotStartedFragment extends Fragment {
                 long secs = (timeCountDown/ SECONDS_MAX);
                 timeCountDown %= SECONDS_MAX;
 
-                textView_countdown.setText(format.format(hour) + ":" + format.format(min) + ":" + format.format(secs));
+                textView_countdown.setText(format.format(day) + "d " +format.format(hour) + "h " + format.format(min) + "m " + format.format(secs) + "s");
                 /*if(millisUntilFinished <= 1000) onFinish();
                 timeCountDown = millisUntilFinished;
                 if (timeCountDown/HOURS_MAX > 0)

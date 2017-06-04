@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.app.R;
@@ -14,6 +15,7 @@ import com.lelangapa.app.apicalls.feedback.feedback_average.FeedbackAverage;
 import com.lelangapa.app.apicalls.singleton.RequestController;
 import com.lelangapa.app.interfaces.DataReceiver;
 import com.lelangapa.app.resources.DetailItemResources;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,9 +26,10 @@ import org.json.JSONObject;
 
 public class DetailAuctioneerFragment extends Fragment {
     private DetailItemResources detailItemResources;
-    private String auctioneerID, auctioneerName;
+    private String auctioneerID, auctioneerName, auctioneerAvatarURL;
     private TextView textView_namaAuctioneer, textView_ratingAuctioneer_rate, textView_ratingAuctioneer_total;
     private TextView textView_ratingWinner_rate, textView_ratingWinner_total;
+    private ImageView imageView_auctioneerAvatar;
     //private Button button_checkProfile;
 
     private DataReceiver dataReceiverFeedbackAsAuctioneer, dataReceiverFeedbackAsWinner;
@@ -41,6 +44,7 @@ public class DetailAuctioneerFragment extends Fragment {
         initializeDataReceivers();
         setOnClickListener();
         setTextViewAuctioneerInformation();
+        loadAuctioneerAvatar();
         getAverageFeedbackData();
         return view;
     }
@@ -52,6 +56,7 @@ public class DetailAuctioneerFragment extends Fragment {
 
         textView_ratingWinner_rate = (TextView) view.findViewById(R.id.fragment_detail_barang_auctioneer_layout_rating_winner_rate);
         textView_ratingWinner_total = (TextView) view.findViewById(R.id.fragment_detail_barang_auctioneer_layout_rating_winner_total);
+        imageView_auctioneerAvatar = (ImageView) view.findViewById(R.id.fragment_detail_barang_auctioneer_layout_profilepicture);
         //button_checkProfile = (Button) view.findViewById(R.id.fragment_detail_barang_auctioneer_layout_button);
     }
     private void initializeDataReceivers()
@@ -115,10 +120,12 @@ public class DetailAuctioneerFragment extends Fragment {
 
         textView_namaAuctioneer.setOnClickListener(onClickListener);
     }
-    public void setAuctioneerInfo(String auctioneerID, String auctioneerName)
+    public void setAuctioneerInfo(String auctioneerID, String auctioneerName, String auctioneerAvatarURL)
     {
         this.auctioneerID = auctioneerID;
         this.auctioneerName = auctioneerName;
+        if (!auctioneerAvatarURL.equals("null"))
+            this.auctioneerAvatarURL = "http://img-s7.lelangapa.com/"+auctioneerAvatarURL;
     }
     public void setAuctioneerInfo(DetailItemResources detailItemResources)
     {
@@ -127,6 +134,9 @@ public class DetailAuctioneerFragment extends Fragment {
     private void setTextViewAuctioneerInformation()
     {
         textView_namaAuctioneer.setText(auctioneerName);
+    }
+    private void loadAuctioneerAvatar() {
+        if (auctioneerAvatarURL != null) Picasso.with(getActivity()).load(auctioneerAvatarURL).into(imageView_auctioneerAvatar);
     }
     private void getAverageFeedbackData()
     {

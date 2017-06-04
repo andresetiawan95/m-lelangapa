@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.lelangapa.app.R;
 import com.lelangapa.app.resources.DateTimeConverter;
+import com.lelangapa.app.resources.PriceFormatter;
 import com.lelangapa.app.resources.RiwayatResources;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class UserRiwayatDetailAdapter extends RecyclerView.Adapter<UserRiwayatDe
         RiwayatResources riwayatResources = biddingList.get(position);
         String indonesiaTimestampFormat = dateTimeConverter.convertUTCToLocalTimeIndonesiaFormat(riwayatResources.getBidTimestamp());
         holder.textView_bidTimestamp.setText(indonesiaTimestampFormat);
-        holder.textView_hargaBid.setText(riwayatResources.getHargaBid());
+        holder.textView_hargaBid.setText(PriceFormatter.formatPrice(riwayatResources.getHargaBid()));
     }
 
     @Override

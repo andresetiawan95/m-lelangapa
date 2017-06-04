@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,9 +29,9 @@ import com.lelangapa.app.interfaces.OnItemClickListener;
 import com.lelangapa.app.listeners.RecyclerItemClickListener;
 import com.lelangapa.app.preferences.SessionManager;
 import com.lelangapa.app.resources.UserProfile;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,21 +42,34 @@ public class ProfileFragment extends Fragment {
     private RecyclerView userProfileRecyclerView;
     private List<UserProfile> userProfileList = new ArrayList<>();
     private UserProfileAdapter upAdapter;
+
+    private TextView userProfileName, userProfileEmail;
+    private ImageView imageView_avatar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_userprofile_layout, container ,false);
-
+        initializeViews(view);
         SessionManager sessionManager = new SessionManager(getActivity());
         if (sessionManager.isLoggedIn()){
-            HashMap<String, String> userProfile = SessionManager.getSessionStatic();
-            TextView userProfileName = (TextView) view.findViewById(R.id.fragment_userprofile_user_name);
-            TextView userProfileEmail = (TextView) view.findViewById(R.id.fragment_userprofile_user_email);
-            userProfileName.setText(userProfile.get(sessionManager.getKEY_NAME()));
-            userProfileEmail.setText(userProfile.get(sessionManager.getKEY_EMAIL()));
+            userProfileName.setText(SessionManager.getSessionStatic().get(sessionManager.getKEY_NAME()));
+            userProfileEmail.setText(SessionManager.getSessionStatic().get(sessionManager.getKEY_EMAIL()));
+            loadUserAvatar();
         }
-
+        initializeMenuAdapter();
+        setupRecyclerViewProperties();
+        generateMenuList();
+        return view;
+    }
+    private void initializeViews(View view) {
+        imageView_avatar = (ImageView) view.findViewById(R.id.fragment_userprofile_image_profile);
+        userProfileName = (TextView) view.findViewById(R.id.fragment_userprofile_user_name);
+        userProfileEmail = (TextView) view.findViewById(R.id.fragment_userprofile_user_email);
         userProfileRecyclerView = (RecyclerView) view.findViewById(R.id.userprofile_recyclerview);
+    }
+    private void initializeMenuAdapter() {
         upAdapter = new UserProfileAdapter(userProfileList);
+    }
+    private void setupRecyclerViewProperties() {
         RecyclerView.LayoutManager upLayoutManager = new LinearLayoutManager(getActivity());
         userProfileRecyclerView.setLayoutManager(upLayoutManager);
         userProfileRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
@@ -108,9 +122,9 @@ public class ProfileFragment extends Fragment {
 
             }
         }));
-
+    }
+    private void generateMenuList() {
         UserProfile userProfileMenuData;
-
         userProfileMenuData = new UserProfile();
         userProfileMenuData.setUserProfileMenu("Chat");
         userProfileMenuData.setUserProfileMenuDesc("Periksa pesan anda.");
@@ -157,6 +171,10 @@ public class ProfileFragment extends Fragment {
         userProfileList.add(userProfileMenuData);*/
         upAdapter.notifyDataSetChanged();
 
-        return view;
+    }
+    private void loadUserAvatar() {
+        if (!SessionManager.getSessionStatic().get(SessionManager.KEY_AVATAR).equals("null"))
+            Picasso.with(getActivity()).load("http://img-s7.lelangapa.com/" + SessionManager.getSessionStatic().get(SessionManager.KEY_AVATAR))
+                    .into(imageView_avatar);
     }
 }

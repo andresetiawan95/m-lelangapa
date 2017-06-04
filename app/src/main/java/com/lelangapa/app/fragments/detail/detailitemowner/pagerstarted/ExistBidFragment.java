@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.lelangapa.app.R;
 import com.lelangapa.app.interfaces.AuctioneerResponseReceiver;
 import com.lelangapa.app.resources.BiddingResources;
+import com.lelangapa.app.resources.PriceFormatter;
 
 /**
  * Created by andre on 20/04/17.
@@ -117,6 +118,6 @@ public class ExistBidFragment extends Fragment {
     private void displayBidderInformation()
     {
         textView_namaBidder.setText(itemBidResources.getNamaBidder());
-        textView_priceNow.setText(itemBidResources.getHargaBid());
+        textView_priceNow.setText(PriceFormatter.formatPrice(itemBidResources.getHargaBid()));
     }
 }

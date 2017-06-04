@@ -67,6 +67,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Domain"
                 android:inputType="text"
+                android:maxLength="20"
                 android:textAppearance="?android:textAppearanceSmall" />
             <TextView
                 android:id="@+id/fragment_register_domain_textview"

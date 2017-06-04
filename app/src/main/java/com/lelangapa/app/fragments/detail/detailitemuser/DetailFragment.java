@@ -77,7 +77,7 @@ public class DetailFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ScrollEnabler scrollEnabler;
     private Long serverDateTimeMillisecond;
-    private String itemID, biddingInformation, favoriteID;
+    private String itemID, biddingInformation, favoriteID, auctioneerAvatarURL;
     private BiddingSocket biddingSocket;
     private Socket socketBinder;
     private SocketReceiver socketConnected, socketDisconnected, socketBidSuccessReceiver, socketBidFailedReceiver,
@@ -671,7 +671,7 @@ public class DetailFragment extends Fragment {
         detailHeaderFragment.setDetailItem(detailItem);
         detailImageFragment.setDetailItem(detailItem);
         detailDescriptionFragment.setDetailItem(detailItem);
-        detailAuctioneerFragment.setAuctioneerInfo(detailItem.getIdauctioneer(), detailItem.getNamaauctioneer());
+        detailAuctioneerFragment.setAuctioneerInfo(detailItem.getIdauctioneer(), detailItem.getNamaauctioneer(), auctioneerAvatarURL);
     }
     private void setChildFragments()
     {
@@ -783,6 +783,11 @@ public class DetailFragment extends Fragment {
                             itemBidResources.setNamaBidder(itemDataObject.getString("bidder_name"));
                             itemBidResources.setHargaBid(itemDataObject.getString("item_bid_price"));
                             itemBidResources.setWinnerStatus(itemDataObject.getBoolean("winner_status"));
+
+                            //informasi avatar auctioneer
+                            if (!itemDataObject.getString("auctioneer_avatar_url").equals("null"))
+                                auctioneerAvatarURL = itemDataObject.getString("auctioneer_avatar_url");
+                            else auctioneerAvatarURL = "null";
 
                             JSONArray detailUrlGambarItemArray = itemDataObject.getJSONArray("url");
                             JSONArray biddingPeringkatArray = itemDataObject.getJSONArray("peringkat");
