@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageViewAvatar;
 
     private final String headerPrefix = "Halo, ";
+    private static String AVATAR_URL = "null";
     private SessionManager sessionManager;
     private HashMap<String, String> userInfo = new HashMap<>();
 
@@ -220,9 +221,27 @@ public class MainActivity extends AppCompatActivity {
     }
     private void loadUserAvatar() {
         if (sessionManager.isLoggedIn()) {
-            if (!userInfo.get(SessionManager.KEY_AVATAR).equals("null"))
+            if (!userInfo.get(SessionManager.KEY_AVATAR).equals("null")) {
+                //Log.e("Load avatar 1", "Load avatar 1");
+                AVATAR_URL = userInfo.get(SessionManager.KEY_AVATAR);
                 Picasso.with(this).load("http://img-s7.lelangapa.com/" + userInfo.get(SessionManager.KEY_AVATAR))
                         .into(imageViewAvatar);
+            }
+        }
+    }
+    private void loadUserAvatarOnResume() {
+        if (sessionManager.isLoggedIn()) {
+            if (!userInfo.get(SessionManager.KEY_AVATAR).equals("null") && !userInfo.get(SessionManager.KEY_AVATAR).equals(AVATAR_URL)) {
+                //Log.e("Load avatar onResume", "Load avatar onResume");
+                AVATAR_URL = userInfo.get(SessionManager.KEY_AVATAR);
+                Picasso.with(this).load("http://img-s7.lelangapa.com/" + userInfo.get(SessionManager.KEY_AVATAR))
+                        .into(imageViewAvatar);
+            }
+            else if (userInfo.get(SessionManager.KEY_AVATAR).equals("null") && !userInfo.get(SessionManager.KEY_AVATAR).equals(AVATAR_URL)){
+                //ketika avatar dihapus
+                AVATAR_URL = userInfo.get(SessionManager.KEY_AVATAR);
+                imageViewAvatar.setImageResource(R.drawable.ic_noavatar);
+            }
         }
     }
     private void setUpViewPager(ViewPager viewPager){
@@ -351,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
-        loadUserAvatar();
+        loadUserAvatarOnResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(tokenBroadcastReceiver,
                 new IntentFilter(NotifConfig.REGISTRATION_COMPLETE));
 //        Log.v("OnResunme", "on resume started");
