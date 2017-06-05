@@ -435,6 +435,8 @@ public class DetailItemAuctioneerFragment extends Fragment {
             public void socketReceived(Object status, Object response) {
                 JSONObject socketResponse = (JSONObject) response;
                 try {
+                    //Log.v("Bid Return", response.toString());
+                    itemBidResources.setIdBid(socketResponse.getString("id_bid_return"));
                     itemBidResources.setIdBidder(socketResponse.getString("bidder_id_return"));
                     itemBidResources.setNamaBidder(socketResponse.getString("bidder_name_return"));
                     itemBidResources.setHargaBid(socketResponse.getString("bid_price_return"));
