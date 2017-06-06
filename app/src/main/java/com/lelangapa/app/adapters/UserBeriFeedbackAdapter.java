@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.lelangapa.app.R;
 import com.lelangapa.app.resources.FeedbackResources;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -73,6 +74,10 @@ public class UserBeriFeedbackAdapter extends RecyclerView.Adapter<UserBeriFeedba
             holder.textView_statusReview.setText("BELUM DIULAS");
             holder.textView_statusReview.setTextColor(ContextCompat.getColor(context, R.color.feedbackStatusReviewUndone));
         }
+        if (!feedbackResources.getAvatarURLUser().equals("null"))
+            Picasso.with(context).load("http://img-s7.lelangapa.com/" + feedbackResources.getAvatarURLUser())
+                    .into(holder.imageView_avatar);
+        else holder.imageView_avatar.setImageResource(R.drawable.ic_noavatar);
     }
 
     @Override

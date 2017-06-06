@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.app.R;
@@ -12,6 +13,7 @@ import com.lelangapa.app.apicalls.riwayat.RiwayatAPI;
 import com.lelangapa.app.apicalls.singleton.RequestController;
 import com.lelangapa.app.interfaces.DataReceiver;
 import com.lelangapa.app.resources.RiwayatResources;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +31,7 @@ public class DetailRiwayatFragment extends Fragment {
     private DataReceiver listReceiver;
 
     private TextView textView_namaItem, textView_namaAuctioneer, textView_kaliBid;
+    private ImageView imageView_itemImage;
     private RiwayatResources riwayatResources;
     private LoadingListFragment loadingListFragment;
     private ListNoEmptyFragment listNoEmptyFragment;
@@ -55,6 +58,7 @@ public class DetailRiwayatFragment extends Fragment {
     }
     private void initializeViews(View view)
     {
+        imageView_itemImage = (ImageView) view.findViewById(R.id.fragment_user_riwayat_detail_image);
         textView_namaItem = (TextView) view.findViewById(R.id.fragment_user_riwayat_detail_judulitem);
         textView_namaAuctioneer = (TextView) view.findViewById(R.id.fragment_user_riwayat_detail_namaauctioneer);
         textView_kaliBid = (TextView) view.findViewById(R.id.fragment_user_riwayat_detail_bidkali);
@@ -66,6 +70,7 @@ public class DetailRiwayatFragment extends Fragment {
         userID = extrasPassed.getString("user_id_loggedin");
         riwayatResources.setIdItem(extrasPassed.getString("item_id"));
         riwayatResources.setNamaItem(extrasPassed.getString("item_name"));
+        riwayatResources.setMainImageURL(extrasPassed.getString("item_main_image"));
         riwayatResources.setNamaAuctioneer(extrasPassed.getString("auctioneer_name"));
         riwayatResources.setBidTime(extrasPassed.getInt("bid_time"));
 
@@ -73,6 +78,8 @@ public class DetailRiwayatFragment extends Fragment {
         textView_namaItem.setText(riwayatResources.getNamaItem());
         textView_namaAuctioneer.setText(riwayatResources.getNamaAuctioneer());
         textView_kaliBid.setText(bidTime);
+        if (riwayatResources.getMainImageURL() != null)
+            Picasso.with(getActivity()).load(riwayatResources.getMainImageURL()).into(imageView_itemImage);
     }
     private void initializeFragment()
     {

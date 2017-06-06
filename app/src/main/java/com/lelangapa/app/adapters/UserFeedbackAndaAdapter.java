@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.lelangapa.app.R;
 import com.lelangapa.app.resources.FeedbackResources;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -67,6 +68,10 @@ public class UserFeedbackAndaAdapter extends RecyclerView.Adapter<UserFeedbackAn
         holder.textView_namaItem.setText(feedbackResources.getNamaItem());
         holder.textView_bidkali.setText(bidTime);
         holder.ratingBar_rateGiven.setRating((float) feedbackResources.getRateGiven());
+        if (!feedbackResources.getAvatarURLUser().equals("null"))
+            Picasso.with(context).load("http://img-s7.lelangapa.com/" + feedbackResources.getAvatarURLUser())
+                    .into(holder.imageView_avatar);
+        else holder.imageView_avatar.setImageResource(R.drawable.ic_noavatar);
     }
 
     @Override

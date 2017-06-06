@@ -94,6 +94,7 @@ public class RiwayatNoEmptyFragment extends Fragment {
                 bundleExtras.putString("item_id", listRiwayat.get(position).getIdItem());
                 bundleExtras.putString("item_name", listRiwayat.get(position).getNamaItem());
                 bundleExtras.putString("auctioneer_name", listRiwayat.get(position).getNamaAuctioneer());
+                bundleExtras.putString("item_main_image", listRiwayat.get(position).getMainImageURL());
                 bundleExtras.putInt("bid_time", listRiwayat.get(position).getBidTime());
                 intent.putExtras(bundleExtras);
                 startActivity(intent);

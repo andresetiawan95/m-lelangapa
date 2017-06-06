@@ -5,7 +5,7 @@ package com.lelangapa.app.resources;
  */
 
 public class FeedbackResources {
-    private String idRatinglogs, idRating, idItem, idUser, namaUser, namaItem;
+    private String idRatinglogs, idRating, idItem, idUser, namaUser, avatarURLUser, namaItem;
     private Integer bidTime, rateGiven;
     private String statusUser;
     private String rateMessage;
@@ -98,5 +98,13 @@ public class FeedbackResources {
 
     public void setIdRating(String idRating) {
         this.idRating = idRating;
+    }
+
+    public String getAvatarURLUser() {
+        return avatarURLUser;
+    }
+
+    public void setAvatarURLUser(String avatarURLUser) {
+        this.avatarURLUser = avatarURLUser;
     }
 }

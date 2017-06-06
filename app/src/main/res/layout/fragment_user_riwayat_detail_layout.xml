@@ -30,13 +30,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:orientation="vertical"
                 android:layout_gravity="center">
-                <TextView
+                <com.lelangapa.app.modifiedviews.ExpandableTextViewWithLine
                     android:id="@+id/fragment_user_riwayat_detail_judulitem"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:text="Judul Barang"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textAppearance="?android:textAppearance"/>
                 <TextView
                     android:id="@+id/fragment_user_riwayat_detail_namaauctioneer"

@@ -27,10 +27,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
+                <com.lelangapa.app.modifiedviews.ExpandableTextViewWithLine
                     android:id="@+id/fragment_user_riwayat_noempty_judulitem"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:text="Judul Barang"
                     android:textAppearance="?android:textAppearance"/>
                 <TextView

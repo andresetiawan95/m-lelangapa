@@ -113,6 +113,7 @@ public class FeedbackMainFragment extends Fragment {
                             feedbackResources.setIdItem(jsonArrayObject.getString("id_item_return"));
                             feedbackResources.setIdUser(jsonArrayObject.getString("id_rater_return"));
                             feedbackResources.setNamaUser(jsonArrayObject.getString("nama_rater_return"));
+                            feedbackResources.setAvatarURLUser(jsonArrayObject.getString("avatar_rater_return"));
                             feedbackResources.setNamaItem(jsonArrayObject.getString("nama_item_return"));
                             feedbackResources.setBidTime(jsonArrayObject.getInt("bid_time_return"));
                             feedbackResources.setRateGiven(jsonArrayObject.getInt("rate"));

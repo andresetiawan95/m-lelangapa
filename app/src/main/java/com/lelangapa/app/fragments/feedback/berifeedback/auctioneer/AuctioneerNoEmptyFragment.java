@@ -148,6 +148,7 @@ public class AuctioneerNoEmptyFragment extends Fragment {
                                 feedbackResources.setIdItem(jsonArrayObject.getString("id_item_return"));
                                 feedbackResources.setIdUser(jsonArrayObject.getString("id_user_auctioneer_return"));
                                 feedbackResources.setNamaUser(jsonArrayObject.getString("nama_user_auctioneer"));
+                                feedbackResources.setAvatarURLUser(jsonArrayObject.getString("avatar_user_auctioneer"));
                                 feedbackResources.setStatusRating(jsonArrayObject.getBoolean("status_rating_from_winner_return"));
                                 feedbackResources.setNamaItem(jsonArrayObject.getString("nama_item_return"));
                                 feedbackResources.setBidTime(jsonArrayObject.getInt("bid_time_item_return"));

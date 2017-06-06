@@ -95,6 +95,7 @@ public class WinnerFragment extends Fragment {
                                 feedbackResources.setIdItem(jsonArrayObject.getString("id_item_return"));
                                 feedbackResources.setIdUser(jsonArrayObject.getString("id_user_winner_return"));
                                 feedbackResources.setNamaUser(jsonArrayObject.getString("nama_user_winner"));
+                                feedbackResources.setAvatarURLUser(jsonArrayObject.getString("avatar_user_winner"));
                                 feedbackResources.setStatusRating(jsonArrayObject.getBoolean("status_rating_from_auctioneer_return"));
                                 feedbackResources.setNamaItem(jsonArrayObject.getString("nama_item_return"));
                                 feedbackResources.setBidTime(jsonArrayObject.getInt("bid_time_item_return"));

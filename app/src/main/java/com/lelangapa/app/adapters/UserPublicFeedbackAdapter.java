@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.lelangapa.app.R;
 import com.lelangapa.app.resources.FeedbackResources;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -65,6 +66,10 @@ public class UserPublicFeedbackAdapter extends RecyclerView.Adapter<UserPublicFe
         else {
             holder.textView_rateMessage.setText(feedbackResources.getRateMessage());
         }
+        if (!feedbackResources.getAvatarURLUser().equals("null"))
+            Picasso.with(context).load("http://img-s7.lelangapa.com/" + feedbackResources.getAvatarURLUser())
+            .into(holder.imageView_avatar);
+        else holder.imageView_avatar.setImageResource(R.drawable.ic_noavatar);
     }
 
     @Override
