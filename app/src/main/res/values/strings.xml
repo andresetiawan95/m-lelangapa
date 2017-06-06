@@ -42,6 +42,11 @@
     <string name="DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGMSG">Terimakasih sudah berpartisipasi dalam lelang ini. Klik "OK" untuk memuat ulang laman</string>
     <string name="DETAILFRAGMENT_BIDFINISHED_ALERTDIALOGBUTTON">OK</string>
 
+    <string name="DETAILFRAGMENT_ASKING_CANCELAUCTION_ALERTDIALOGTITLE">Apakah anda ingin membatalkan sesi lelang ini?</string>
+    <string name="DETAILFRAGMENT_ASKING_CANCELAUCTION_ALERTDIALOGMSG">Jika dibatalkan, maka lelang akan dihentikan dan semua tawaran yang masuk pada sesi ini dibatalkan</string>
+    <string name="DETAILFRAGMENT_ASKING_CANCELAUCTION_ALERTDIALOGOKBUTTON">BATALKAN</string>
+    <string name="DETAILFRAGMENT_ASKING_CANCELAUCTION_ALERTDIALOGCANCELBUTTON">TIDAK</string>
+
     <string name="DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGTITLE">Lelang telah dibatalkan</string>
     <string name="DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGMSG">Lelang telah dibatalkan oleh pelelang. Seluruh penawaran telah dibatalkan</string>
     <string name="DETAILFRAGMENT_AUCTIONCANCELLED_ALERTDIALOGBUTTON">OK</string>
@@ -60,6 +65,11 @@
     <string name="DETAILTAWARANFINAL_SELECTWINNER_FAILED_ALERTDIALOGTITLE">Pemenang gagal dipilih</string>
     <string name="DETAILTAWARANFINAL_SELECTWINNER_FAILED_ALERTDIALOGMGS">Pemenang gagal dipilih</string>
     <string name="DETAILTAWARANFINAL_SELECTWINNER_FAILED_ALERTDIALOGOKBUTTON">OK</string>
+
+    <string name="DETAILFRAGMENT_ASKING_SELECTWINNER_ALERTDIALOGTITLE">Apakah anda memilih pemenang ini?</string>
+    <string name="DETAILFRAGMENT_ASKING_SELECTWINNER_ALERTDIALOGMSG">Jika pemenang sudah terpilih, maka lelang akan dihentikan.</string>
+    <string name="DETAILFRAGMENT_ASKING_SELECTWINNER_ALERTDIALOGOKBUTTON">PILIH</string>
+    <string name="DETAILFRAGMENT_ASKING_SELECTWINNER_ALERTDIALOGCANCELBUTTON">TIDAK</string>
 
     <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGTITLE">Pemenang telah dipilih!</string>
     <string name="DETAILFRAGMENT_WINNERSELECTED_ALERTDIALOGMSG">Pelelang telah memilih pemenang lelang. Dengan ini maka lelang dihentikan.</string>

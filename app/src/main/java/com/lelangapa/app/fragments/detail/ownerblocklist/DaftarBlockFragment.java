@@ -88,24 +88,26 @@ public class DaftarBlockFragment extends Fragment {
             @Override
             public void dataReceived(Object output) {
                 //ketika daftar block sudah loaded dari server
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    if (jsonResponse.getString("status").equals("success")) {
-                        JSONArray responseArray = jsonResponse.getJSONArray("data");
-                        listBlock.clear();
-                        for (int i=0;i<responseArray.length();i++) {
-                            JSONObject responseArrayObject = responseArray.getJSONObject(i);
-                            BlockResources blockResources = new BlockResources();
-                            blockResources.setIdBlock(responseArrayObject.getString("id_block_return"));
-                            blockResources.setIdUserBlocked(responseArrayObject.getString("id_user_blocked_return"));
-                            blockResources.setNamaUserBlocked(responseArrayObject.getString("nama_user_blocked_return"));
-                            listBlock.add(blockResources);
+                if (isVisible()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (jsonResponse.getString("status").equals("success")) {
+                            JSONArray responseArray = jsonResponse.getJSONArray("data");
+                            listBlock.clear();
+                            for (int i=0;i<responseArray.length();i++) {
+                                JSONObject responseArrayObject = responseArray.getJSONObject(i);
+                                BlockResources blockResources = new BlockResources();
+                                blockResources.setIdBlock(responseArrayObject.getString("id_block_return"));
+                                blockResources.setIdUserBlocked(responseArrayObject.getString("id_user_blocked_return"));
+                                blockResources.setNamaUserBlocked(responseArrayObject.getString("nama_user_blocked_return"));
+                                listBlock.add(blockResources);
+                            }
+                            whenBlockListLoaded();
                         }
-                        whenBlockListLoaded();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };
@@ -113,14 +115,16 @@ public class DaftarBlockFragment extends Fragment {
             @Override
             public void dataReceived(Object output) {
                 //ketika user telah di unblock oleh auctioneer
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    if (jsonResponse.getString("status").equals("success")) {
-                        setWhenUserUnblockedReceiverOnNoEmptyFragment();
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (jsonResponse.getString("status").equals("success")) {
+                            setWhenUserUnblockedReceiverOnNoEmptyFragment();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

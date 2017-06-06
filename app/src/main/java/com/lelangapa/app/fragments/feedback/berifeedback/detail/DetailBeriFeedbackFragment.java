@@ -74,21 +74,23 @@ public class DetailBeriFeedbackFragment extends Fragment {
         dataFeedbackReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    if (jsonResponse.getString("status").equals("success")) {
-                        JSONArray responseArray = jsonResponse.getJSONArray("data");
-                        JSONObject responseArrayObject = responseArray.getJSONObject(0);
-                        feedbackResources.setRateGiven(responseArrayObject.getInt("rate_return"));
-                        if (!responseArrayObject.getString("rate_message_return").equals("null"))
-                            feedbackResources.setRateMessage(responseArrayObject.getString("rate_message_return"));
-                        else
-                            feedbackResources.setRateMessage(null);
-                        whenDataFeedbackAlreadyReceived();
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (jsonResponse.getString("status").equals("success")) {
+                            JSONArray responseArray = jsonResponse.getJSONArray("data");
+                            JSONObject responseArrayObject = responseArray.getJSONObject(0);
+                            feedbackResources.setRateGiven(responseArrayObject.getInt("rate_return"));
+                            if (!responseArrayObject.getString("rate_message_return").equals("null"))
+                                feedbackResources.setRateMessage(responseArrayObject.getString("rate_message_return"));
+                            else
+                                feedbackResources.setRateMessage(null);
+                            whenDataFeedbackAlreadyReceived();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

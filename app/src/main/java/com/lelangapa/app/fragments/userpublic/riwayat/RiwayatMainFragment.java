@@ -74,31 +74,33 @@ public class RiwayatMainFragment extends Fragment {
         dataReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    JSONArray responseArray = jsonResponse.getJSONArray("data");
-                    listRiwayat.clear();
-                    for (int i=0;i<responseArray.length();i++)
-                    {
-                        JSONObject jsonArrayObject = responseArray.getJSONObject(i);
-                        RiwayatResources riwayatResources = new RiwayatResources();
-                        riwayatResources.setIdBid(jsonArrayObject.getString("id_bid_return"));
-                        riwayatResources.setIdItem(jsonArrayObject.getString("id_item_return"));
-                        riwayatResources.setIdAuctioneer(jsonArrayObject.getString("id_user_return"));
-                        riwayatResources.setNamaAuctioneer(jsonArrayObject.getString("nama_user_return"));
-                        riwayatResources.setNamaItem(jsonArrayObject.getString("nama_item_return"));
-                        riwayatResources.setBidStatus(jsonArrayObject.getInt("bid_status_return"));
-                        riwayatResources.setBidTime(jsonArrayObject.getInt("bid_time_return"));
-                        riwayatResources.setWinStatus(jsonArrayObject.getBoolean("win_status_return"));
-                        riwayatResources.setHargaBid(jsonArrayObject.getString("price_bid_return"));
-                        if (jsonArrayObject.has("main_image_url"))
-                            riwayatResources.setMainImageURL("http://img-s7.lelangapa.com/" + jsonArrayObject.getString("main_image_url"));
-                        listRiwayat.add(riwayatResources);
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        JSONArray responseArray = jsonResponse.getJSONArray("data");
+                        listRiwayat.clear();
+                        for (int i=0;i<responseArray.length();i++)
+                        {
+                            JSONObject jsonArrayObject = responseArray.getJSONObject(i);
+                            RiwayatResources riwayatResources = new RiwayatResources();
+                            riwayatResources.setIdBid(jsonArrayObject.getString("id_bid_return"));
+                            riwayatResources.setIdItem(jsonArrayObject.getString("id_item_return"));
+                            riwayatResources.setIdAuctioneer(jsonArrayObject.getString("id_user_return"));
+                            riwayatResources.setNamaAuctioneer(jsonArrayObject.getString("nama_user_return"));
+                            riwayatResources.setNamaItem(jsonArrayObject.getString("nama_item_return"));
+                            riwayatResources.setBidStatus(jsonArrayObject.getInt("bid_status_return"));
+                            riwayatResources.setBidTime(jsonArrayObject.getInt("bid_time_return"));
+                            riwayatResources.setWinStatus(jsonArrayObject.getBoolean("win_status_return"));
+                            riwayatResources.setHargaBid(jsonArrayObject.getString("price_bid_return"));
+                            if (jsonArrayObject.has("main_image_url"))
+                                riwayatResources.setMainImageURL("http://img-s7.lelangapa.com/" + jsonArrayObject.getString("main_image_url"));
+                            listRiwayat.add(riwayatResources);
+                        }
+                        setupFragment();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    setupFragment();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

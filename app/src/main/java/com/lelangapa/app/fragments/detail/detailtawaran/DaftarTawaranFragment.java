@@ -143,40 +143,42 @@ public class DaftarTawaranFragment extends Fragment {
         dataReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    JSONArray responseArray = jsonResponse.getJSONArray("data");
-                    listOffer.clear();
-                    for (int i=0;i<responseArray.length();i++) {
-                        JSONObject arrayObject = responseArray.getJSONObject(i);
-                        BiddingResources biddingResources = new BiddingResources();
-                        biddingResources.setIdBid(arrayObject.getString("bid_id"));
-                        biddingResources.setNamaBidder(arrayObject.getString("user_name"));
-                        biddingResources.setHargaBid(arrayObject.getString("bid_price"));
-                        biddingResources.setIdBidder(arrayObject.getString("user_id"));
-                        listOffer.add(biddingResources);
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        JSONArray responseArray = jsonResponse.getJSONArray("data");
+                        listOffer.clear();
+                        for (int i=0;i<responseArray.length();i++) {
+                            JSONObject arrayObject = responseArray.getJSONObject(i);
+                            BiddingResources biddingResources = new BiddingResources();
+                            biddingResources.setIdBid(arrayObject.getString("bid_id"));
+                            biddingResources.setNamaBidder(arrayObject.getString("user_name"));
+                            biddingResources.setHargaBid(arrayObject.getString("bid_price"));
+                            biddingResources.setIdBidder(arrayObject.getString("user_id"));
+                            listOffer.add(biddingResources);
+                        }
+                        whenOfferListReceived();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    whenOfferListReceived();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-
             }
         };
         onBlockUserReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    if (jsonResponse.getString("status").equals("success")) {
-                        whenUserBlocked();
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (jsonResponse.getString("status").equals("success")) {
+                            whenUserBlocked();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-
             }
         };
     }

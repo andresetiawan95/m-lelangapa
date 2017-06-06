@@ -189,33 +189,35 @@ public class UserChatRoomFragment extends Fragment {
             public void socketReceived(Object status, Object response) {
                 Log.v("Success Join", "Joining room success");
                 Log.v("history recv", "history chat received");
-                listChatMessages.clear();
-                JSONArray jsonArray = (JSONArray) response;
-                try {
-                    for (int i = jsonArray.length() -1 ; i >=0; i--)
-                    {
-                        JSONObject arrayObject = jsonArray.getJSONObject(i);
-                        ChatResources chatResources = new ChatResources();
-                        chatResources.setChatMessage(arrayObject.getString("msg"));
-                        if (arrayObject.getString("sender").equals(yourUserID)) {
-                            chatResources.setIdUser(yourUserID);
-                            chatResources.setNamaUser("You");
-                            chatResources.setChatType(ChatResources.TYPE_MESSAGE_SENT);
+                if (isResumed()) {
+                    listChatMessages.clear();
+                    JSONArray jsonArray = (JSONArray) response;
+                    try {
+                        for (int i = jsonArray.length() -1 ; i >=0; i--)
+                        {
+                            JSONObject arrayObject = jsonArray.getJSONObject(i);
+                            ChatResources chatResources = new ChatResources();
+                            chatResources.setChatMessage(arrayObject.getString("msg"));
+                            if (arrayObject.getString("sender").equals(yourUserID)) {
+                                chatResources.setIdUser(yourUserID);
+                                chatResources.setNamaUser("You");
+                                chatResources.setChatType(ChatResources.TYPE_MESSAGE_SENT);
+                            }
+                            else {
+                                chatResources.setIdUser(yourFriendUserID);
+                                chatResources.setNamaUser(yourFriendName);
+                                chatResources.setChatType(ChatResources.TYPE_MESSAGE_RECEIVED);
+                            }
+                            chatResources.setChatRoom(arrayObject.getString("room"));
+                            listChatMessages.add(chatResources);
                         }
-                        else {
-                            chatResources.setIdUser(yourFriendUserID);
-                            chatResources.setNamaUser(yourFriendName);
-                            chatResources.setChatType(ChatResources.TYPE_MESSAGE_RECEIVED);
-                        }
-                        chatResources.setChatRoom(arrayObject.getString("room"));
-                        listChatMessages.add(chatResources);
+                        ((UserChatRoomActivity) getActivity()).changeActionBarTitle(yourFriendName);
+                        updateChatAdapter();
+                        scrollToBottom();
                     }
-                    ((UserChatRoomActivity) getActivity()).changeActionBarTitle(yourFriendName);
-                    updateChatAdapter();
-                    scrollToBottom();
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };

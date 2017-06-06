@@ -152,53 +152,57 @@ public class EditProfileFragment extends Fragment {
         whenAvatarLoaded = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                Bitmap loadedAvatar = (Bitmap) output;
-                avatar.setBitmap(loadedAvatar);
-                progressBar_avatar.setVisibility(View.GONE);
-                imageView_avatar.setEnabled(true);
-                imageView_avatar.setVisibility(View.VISIBLE);
-                imageView_avatar.setImageBitmap(loadedAvatar);
+                if (isResumed()) {
+                    Bitmap loadedAvatar = (Bitmap) output;
+                    avatar.setBitmap(loadedAvatar);
+                    progressBar_avatar.setVisibility(View.GONE);
+                    imageView_avatar.setEnabled(true);
+                    imageView_avatar.setVisibility(View.VISIBLE);
+                    imageView_avatar.setImageBitmap(loadedAvatar);
+                }
             }
         };
         getUserProfileData = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                progressBar_infoakun.setVisibility(View.GONE);
-                progressBar_infokontak.setVisibility(View.GONE);
-                editText_editProfile_Nama.setVisibility(View.VISIBLE);
-                editText_editProfile_Nama.setEnabled(false);
-                editText_editProfile_Nama.setFocusable(false);
-                editText_editProfile_Telepon.setVisibility(View.VISIBLE);
-                editText_editProfile_Email.setVisibility(View.VISIBLE);
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray responseData = jsonObject.getJSONArray("data");
-                    JSONObject userDataObject = responseData.getJSONObject(0);
-                    if (userDataObject!=null){
-                        nama = userDataObject.getString("nama_user_return");
-                        telepon = userDataObject.getString("phone_user_return");
-                        email = userDataObject.getString("email_user_return");
-                        editText_editProfile_Nama.setText(nama);
-                        editText_editProfile_Telepon.setText(telepon);
-                        editText_editProfile_Email.setText(email);
+                if (isResumed()) {
+                    String response = output.toString();
+                    progressBar_infoakun.setVisibility(View.GONE);
+                    progressBar_infokontak.setVisibility(View.GONE);
+                    editText_editProfile_Nama.setVisibility(View.VISIBLE);
+                    editText_editProfile_Nama.setEnabled(false);
+                    editText_editProfile_Nama.setFocusable(false);
+                    editText_editProfile_Telepon.setVisibility(View.VISIBLE);
+                    editText_editProfile_Email.setVisibility(View.VISIBLE);
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray responseData = jsonObject.getJSONArray("data");
+                        JSONObject userDataObject = responseData.getJSONObject(0);
+                        if (userDataObject!=null){
+                            nama = userDataObject.getString("nama_user_return");
+                            telepon = userDataObject.getString("phone_user_return");
+                            email = userDataObject.getString("email_user_return");
+                            editText_editProfile_Nama.setText(nama);
+                            editText_editProfile_Telepon.setText(telepon);
+                            editText_editProfile_Email.setText(email);
 
-                        if (userDataObject.getString("avatar_url_return").equals("null")) {
-                            imageView_avatar.setEnabled(true);
-                            imageView_avatar.setVisibility(View.VISIBLE);
-                            progressBar_avatar.setVisibility(View.GONE);
+                            if (userDataObject.getString("avatar_url_return").equals("null")) {
+                                imageView_avatar.setEnabled(true);
+                                imageView_avatar.setVisibility(View.VISIBLE);
+                                progressBar_avatar.setVisibility(View.GONE);
+                            }
+                            else {
+                                //masukkan url ke asynctask class untuk ditampilkan\
+                                GetUserAvatarBMP getUserAvatarBMP = new GetUserAvatarBMP(whenAvatarLoaded);
+                                getUserAvatarBMP.execute("http://img-s7.lelangapa.com/" + userDataObject.getString("avatar_url_return"));
+                            }
                         }
                         else {
-                            //masukkan url ke asynctask class untuk ditampilkan\
-                            GetUserAvatarBMP getUserAvatarBMP = new GetUserAvatarBMP(whenAvatarLoaded);
-                            getUserAvatarBMP.execute("http://img-s7.lelangapa.com/" + userDataObject.getString("avatar_url_return"));
+                            Toast.makeText(getActivity(), "Tidak ada data", Toast.LENGTH_SHORT).show();
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        Toast.makeText(getActivity(), "Tidak ada data", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

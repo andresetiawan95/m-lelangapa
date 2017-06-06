@@ -103,29 +103,31 @@ public class SearchWithResultFragment extends Fragment {
         whenNewSearchDataIsLoaded = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                jsonResponse = output.toString();
-                try {
-                    newSearchJSON = new JSONObject(jsonResponse);
-                    newSearchJSONArray = newSearchJSON.getJSONArray("result");
-                    for (int i=0;i<newSearchJSONArray.length();i++){
-                        JSONObject searchResultObj = newSearchJSONArray.getJSONObject(i).getJSONObject("_source");
-                        DetailItemResources searchProperty = new DetailItemResources();
-                        searchProperty.setIdbarang(searchResultObj.getString("id_item"));
-                        searchProperty.setIdauctioneer(searchResultObj.getString("id_user"));
-                        searchProperty.setNamabarang(searchResultObj.getString("title"));
-                        searchProperty.setNamaauctioneer(searchResultObj.getString("nama_user"));
-                        searchProperty.setHargaawal(searchResultObj.getString("starting_price"));
-                        searchProperty.setHargatarget(searchResultObj.getString("expected_price"));
-                        searchProperty.setIdkategori(searchResultObj.getString("id_category"));
-                        searchProperty.setNamakategori(searchResultObj.getString("nama_category"));
-                        if (searchResultObj.has("main_image_url")) {
-                            searchProperty.setUrlgambarbarang("http://img-s7.lelangapa.com/" + searchResultObj.getString("main_image_url"));
+                if (isResumed()) {
+                    jsonResponse = output.toString();
+                    try {
+                        newSearchJSON = new JSONObject(jsonResponse);
+                        newSearchJSONArray = newSearchJSON.getJSONArray("result");
+                        for (int i=0;i<newSearchJSONArray.length();i++){
+                            JSONObject searchResultObj = newSearchJSONArray.getJSONObject(i).getJSONObject("_source");
+                            DetailItemResources searchProperty = new DetailItemResources();
+                            searchProperty.setIdbarang(searchResultObj.getString("id_item"));
+                            searchProperty.setIdauctioneer(searchResultObj.getString("id_user"));
+                            searchProperty.setNamabarang(searchResultObj.getString("title"));
+                            searchProperty.setNamaauctioneer(searchResultObj.getString("nama_user"));
+                            searchProperty.setHargaawal(searchResultObj.getString("starting_price"));
+                            searchProperty.setHargatarget(searchResultObj.getString("expected_price"));
+                            searchProperty.setIdkategori(searchResultObj.getString("id_category"));
+                            searchProperty.setNamakategori(searchResultObj.getString("nama_category"));
+                            if (searchResultObj.has("main_image_url")) {
+                                searchProperty.setUrlgambarbarang("http://img-s7.lelangapa.com/" + searchResultObj.getString("main_image_url"));
+                            }
+                            searchResult.add(searchProperty);
                         }
-                        searchResult.add(searchProperty);
+                        loadLogic();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    loadLogic();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

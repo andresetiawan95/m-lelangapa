@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.lelangapa.app.R;
 import com.lelangapa.app.apicalls.EditPasswordAPI;
+import com.lelangapa.app.apicalls.singleton.RequestController;
 import com.lelangapa.app.interfaces.DataReceiver;
 import com.lelangapa.app.preferences.SessionManager;
 
@@ -101,7 +102,7 @@ public class EditPasswordFragment extends Fragment {
             }
         };
         EditPasswordAPI editPasswordAPI = new EditPasswordAPI(userPasswordData, uploadUserPasswordData);
-        queue.add(editPasswordAPI);
+        RequestController.getInstance(getActivity()).addToRequestQueue(editPasswordAPI);
     }
     private void putUserPasswordData(){
         userPasswordData.put("userid", session.get(sessionManager.getKEY_ID()));

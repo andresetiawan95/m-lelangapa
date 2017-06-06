@@ -152,42 +152,44 @@ public class FavoriteNoEmptyFragment extends Fragment {
         favoriteDataReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    JSONArray jsonResponseArray = jsonResponse.getJSONArray("data");
-                    listBarangFavorit.clear();
-                    for (int i=0;i<jsonResponseArray.length(); i++)
-                    {
-                        JSONObject jsonArrayObject = jsonResponseArray.getJSONObject(i);
-                        FavoriteResources favoriteResources = new FavoriteResources();
-                        favoriteResources.setIdFavorite(jsonArrayObject.getString("id_favorite_return"));
-                        favoriteResources.setIdItemFavorite(jsonArrayObject.getString("id_item_favorite_return"));
-                        favoriteResources.setNamaItemFavorite(jsonArrayObject.getString("nama_item_return"));
-                        favoriteResources.setNamaUserAuctioneerItemFavorite(jsonArrayObject.getString("nama_user_auctioneer_return"));
-                        favoriteResources.setTimeListedItemFavorite(jsonArrayObject.getString("time_listed_return"));
-
-                        JSONArray favoriteJSONArray = jsonArrayObject.getJSONArray("imageurl");
-                        for (int j=0;j<favoriteJSONArray.length();j++)
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        JSONArray jsonResponseArray = jsonResponse.getJSONArray("data");
+                        listBarangFavorit.clear();
+                        for (int i=0;i<jsonResponseArray.length(); i++)
                         {
-                            JSONObject imageJSONObject = favoriteJSONArray.getJSONObject(j);
-                            favoriteResources.setImageURLItem("http://img-s7.lelangapa.com/" + imageJSONObject.getString("url"));
-                            //Log.v("IMAGE GET", favoriteResources.getImageURLItem());
+                            JSONObject jsonArrayObject = jsonResponseArray.getJSONObject(i);
+                            FavoriteResources favoriteResources = new FavoriteResources();
+                            favoriteResources.setIdFavorite(jsonArrayObject.getString("id_favorite_return"));
+                            favoriteResources.setIdItemFavorite(jsonArrayObject.getString("id_item_favorite_return"));
+                            favoriteResources.setNamaItemFavorite(jsonArrayObject.getString("nama_item_return"));
+                            favoriteResources.setNamaUserAuctioneerItemFavorite(jsonArrayObject.getString("nama_user_auctioneer_return"));
+                            favoriteResources.setTimeListedItemFavorite(jsonArrayObject.getString("time_listed_return"));
+
+                            JSONArray favoriteJSONArray = jsonArrayObject.getJSONArray("imageurl");
+                            for (int j=0;j<favoriteJSONArray.length();j++)
+                            {
+                                JSONObject imageJSONObject = favoriteJSONArray.getJSONObject(j);
+                                favoriteResources.setImageURLItem("http://img-s7.lelangapa.com/" + imageJSONObject.getString("url"));
+                                //Log.v("IMAGE GET", favoriteResources.getImageURLItem());
+                            }
+                            listBarangFavorit.add(favoriteResources);
                         }
-                        listBarangFavorit.add(favoriteResources);
+                        if (listBarangFavorit.isEmpty())
+                        {
+                            favoriteAdapter.updateDataSet(listBarangFavorit);
+                            swipeRefreshLayout.setRefreshing(false);
+                            whenListFavoriteIsEmptyReceiver.dataReceived("done");
+                        }
+                        else {
+                            favoriteAdapter.updateDataSet(listBarangFavorit);
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    if (listBarangFavorit.isEmpty())
-                    {
-                        favoriteAdapter.updateDataSet(listBarangFavorit);
-                        swipeRefreshLayout.setRefreshing(false);
-                        whenListFavoriteIsEmptyReceiver.dataReceived("done");
-                    }
-                    else {
-                        favoriteAdapter.updateDataSet(listBarangFavorit);
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

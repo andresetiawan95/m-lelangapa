@@ -70,23 +70,25 @@ public class DaftarTawaranFinalFragment extends Fragment {
         whenOfferListLoaded = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    JSONArray responseArray = jsonResponse.getJSONArray("data");
-                    listOffer.clear();
-                    for (int i=0;i<responseArray.length();i++) {
-                        JSONObject arrayObject = responseArray.getJSONObject(i);
-                        BiddingResources biddingResources = new BiddingResources();
-                        biddingResources.setIdBid(arrayObject.getString("bid_id"));
-                        biddingResources.setNamaBidder(arrayObject.getString("user_name"));
-                        biddingResources.setHargaBid(arrayObject.getString("bid_price"));
-                        biddingResources.setIdBidder(arrayObject.getString("user_id"));
-                        listOffer.add(biddingResources);
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        JSONArray responseArray = jsonResponse.getJSONArray("data");
+                        listOffer.clear();
+                        for (int i=0;i<responseArray.length();i++) {
+                            JSONObject arrayObject = responseArray.getJSONObject(i);
+                            BiddingResources biddingResources = new BiddingResources();
+                            biddingResources.setIdBid(arrayObject.getString("bid_id"));
+                            biddingResources.setNamaBidder(arrayObject.getString("user_name"));
+                            biddingResources.setHargaBid(arrayObject.getString("bid_price"));
+                            biddingResources.setIdBidder(arrayObject.getString("user_id"));
+                            listOffer.add(biddingResources);
+                        }
+                        whenOfferListLoaded();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    whenOfferListLoaded();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

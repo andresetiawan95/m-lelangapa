@@ -10,10 +10,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.lelangapa.app.R;
 import com.lelangapa.app.apicalls.EditAlamatAPI;
 import com.lelangapa.app.apicalls.GetUserProfileAPI;
+import com.lelangapa.app.apicalls.singleton.RequestController;
 import com.lelangapa.app.interfaces.DataReceiver;
 import com.lelangapa.app.preferences.SessionManager;
 
@@ -53,26 +53,27 @@ public class EditAlamatFragment extends Fragment {
         DataReceiver dataReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                editText_Alamat.setVisibility(View.VISIBLE);
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray responseData = jsonObject.getJSONArray("data");
-                    JSONObject userDataObject = responseData.getJSONObject(0);
-                    if (userDataObject!=null){
-                        editText_Alamat.setText(userDataObject.getString("address_user_return"));
+                if (isResumed()) {
+                    String response = output.toString();
+                    editText_Alamat.setVisibility(View.VISIBLE);
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray responseData = jsonObject.getJSONArray("data");
+                        JSONObject userDataObject = responseData.getJSONObject(0);
+                        if (userDataObject!=null){
+                            editText_Alamat.setText(userDataObject.getString("address_user_return"));
+                        }
+                        else {
+                            Toast.makeText(getActivity(), "Tidak ada data", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        Toast.makeText(getActivity(), "Tidak ada data", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };
         GetUserProfileAPI getUserProfileAPI = new GetUserProfileAPI(session.get(sessionManager.getKEY_ID()), dataReceiver);
-        queue = Volley.newRequestQueue(getActivity());
-        queue.add(getUserProfileAPI);
+        RequestController.getInstance(getActivity()).addToRequestQueue(getUserProfileAPI);
         editAlamat_simpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +104,7 @@ public class EditAlamatFragment extends Fragment {
             }
         };
         EditAlamatAPI editAlamatAPI = new EditAlamatAPI(userAlamatData, uploadUserAlamatData);
-        queue.add(editAlamatAPI);
+        RequestController.getInstance(getActivity()).addToRequestQueue(editAlamatAPI);
     }
     private void putUserAlamatData(String _alamat){
         userAlamatData.put("address", _alamat);

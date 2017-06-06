@@ -101,32 +101,34 @@ public class UserGeraiNoEmptyFragment extends Fragment {
         whenItemsFromServerLoaded = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    String status = jsonObject.getString("status");
-                    if (status.equals("success")){
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
-                        for (int i = 0; i<jsonArray.length(); i++){
-                            JSONObject resObject = jsonArray.getJSONObject(i);
-                            UserGeraiResources geraiResources = new UserGeraiResources();
-                            geraiResources.setIdbarang(resObject.getString("items_id"));
-                            geraiResources.setNamabarang(resObject.getString("items_name"));
-                            geraiResources.setNamapengguna(resObject.getString("user_name"));
-                            geraiResources.setHargaawal(resObject.getString("starting_price"));
-                            geraiResources.setStatuslelang("active");
-                            JSONArray resArrayGambar = resObject.getJSONArray("url");
-                            for (int j=0;j<resArrayGambar.length();j++){
-                                JSONObject resGambarObject = resArrayGambar.getJSONObject(j);
-                                geraiResources.setUrlgambarbarang("http://img-s7.lelangapa.com/" + resGambarObject.getString("url"));
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String status = jsonObject.getString("status");
+                        if (status.equals("success")){
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            for (int i = 0; i<jsonArray.length(); i++){
+                                JSONObject resObject = jsonArray.getJSONObject(i);
+                                UserGeraiResources geraiResources = new UserGeraiResources();
+                                geraiResources.setIdbarang(resObject.getString("items_id"));
+                                geraiResources.setNamabarang(resObject.getString("items_name"));
+                                geraiResources.setNamapengguna(resObject.getString("user_name"));
+                                geraiResources.setHargaawal(resObject.getString("starting_price"));
+                                geraiResources.setStatuslelang("active");
+                                JSONArray resArrayGambar = resObject.getJSONArray("url");
+                                for (int j=0;j<resArrayGambar.length();j++){
+                                    JSONObject resGambarObject = resArrayGambar.getJSONObject(j);
+                                    geraiResources.setUrlgambarbarang("http://img-s7.lelangapa.com/" + resGambarObject.getString("url"));
+                                }
+                                dataBarang.add(geraiResources);
                             }
-                            dataBarang.add(geraiResources);
+                            whenDataAlreadyLoaded();
                         }
-                        whenDataAlreadyLoaded();
-                    }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };

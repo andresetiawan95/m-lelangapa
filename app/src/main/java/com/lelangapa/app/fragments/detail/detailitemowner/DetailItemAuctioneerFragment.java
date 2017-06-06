@@ -497,7 +497,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
         auctioneerResponseReceiver = new AuctioneerResponseReceiver() {
             @Override
             public void responseCancelReceived(boolean status) {
-                socketBinder.emit("cancelauction", itemID);
+                setAlertDialogAskingCancelAuction();
             }
             @Override
             public void responseDaftarTawaranReceived()
@@ -513,15 +513,7 @@ public class DetailItemAuctioneerFragment extends Fragment {
 
             @Override
             public void responseWinnerChosenReceived(boolean status, String idBid) {
-                JSONObject winnerChosenObject = new JSONObject();
-                try {
-                    winnerChosenObject.put("item_id_query", itemID);
-                    winnerChosenObject.put("bid_id_query", idBid);
-                    Log.v("INFO SEND", idBid);
-                    socketBinder.emit("winnerselected", winnerChosenObject.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                setAlertDialogAskingSelectWinner(idBid);
             }
         };
     }
@@ -696,56 +688,57 @@ public class DetailItemAuctioneerFragment extends Fragment {
         DataReceiver dataReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    String status = jsonResponse.getString("status");
-                    if (status.equals("success"))
-                    {
-                        serverDateTimeMillisecond = jsonResponse.getLong("server_time_in_millisecond");
-                        JSONArray responseData = jsonResponse.getJSONArray("data");
-                        for (int i=0;i<responseData.length();i++)
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        String status = jsonResponse.getString("status");
+                        if (status.equals("success"))
                         {
-                            JSONObject itemDataObject = responseData.getJSONObject(i);
-                            detailItem.setIdbarang(itemDataObject.getString("item_id"));
-                            detailItem.setNamabarang(itemDataObject.getString("item_name"));
-                            detailItem.setDeskripsibarang(itemDataObject.getString("item_description"));
-                            detailItem.setHargaawal(itemDataObject.getString("starting_price"));
-                            detailItem.setHargatarget(itemDataObject.getString("expected_price"));
-                            String startTimeBeforeSplit = itemDataObject.getString("start_time");
-                            String endTimeBeforeSplit = itemDataObject.getString("end_time");
-                            detailItem.setTanggaljammulai(startTimeBeforeSplit);
-                            detailItem.setTanggaljamselesai(endTimeBeforeSplit);
-                            detailItem.setTanggaljammulai_ms(itemDataObject.getLong("start_time_millisecond"));
-                            detailItem.setTanggaljamselesai_ms(itemDataObject.getLong("end_time_millisecond"));
-                            detailItem.setItembidstatus(itemDataObject.getInt("item_bid_status"));
-                            String[] startTimePart = startTimeBeforeSplit.split("T");
-                            String[] endTimePart = endTimeBeforeSplit.split("T");
-                            String startDate = startTimePart[0];
-                            String endDate = endTimePart[0];
-                            String [] startHourPart = startTimePart[1].split("\\.");
-                            String [] endHourPart = endTimePart[1].split("\\.");
-                            String startHour = startHourPart[0];
-                            String endHour = endHourPart[0];
-                            detailItem.setTanggalmulai(startDate);
-                            detailItem.setJammulai(startHour);
-                            detailItem.setTanggalselesai(endDate);
-                            detailItem.setJamselesai(endHour);
-                            detailItem.setIdauctioneer(itemDataObject.getString("user_id"));
-                            detailItem.setNamaauctioneer(itemDataObject.getString("user_name"));
-                            detailItem.setBidtime(itemDataObject.getInt("bid_time"));
-                            //detailItem.setNamabidder(itemDataObject.getString("bidder_name"));
-                            //detailItem.setHargabid(itemDataObject.getString("item_bid_price"));
+                            serverDateTimeMillisecond = jsonResponse.getLong("server_time_in_millisecond");
+                            JSONArray responseData = jsonResponse.getJSONArray("data");
+                            for (int i=0;i<responseData.length();i++)
+                            {
+                                JSONObject itemDataObject = responseData.getJSONObject(i);
+                                detailItem.setIdbarang(itemDataObject.getString("item_id"));
+                                detailItem.setNamabarang(itemDataObject.getString("item_name"));
+                                detailItem.setDeskripsibarang(itemDataObject.getString("item_description"));
+                                detailItem.setHargaawal(itemDataObject.getString("starting_price"));
+                                detailItem.setHargatarget(itemDataObject.getString("expected_price"));
+                                String startTimeBeforeSplit = itemDataObject.getString("start_time");
+                                String endTimeBeforeSplit = itemDataObject.getString("end_time");
+                                detailItem.setTanggaljammulai(startTimeBeforeSplit);
+                                detailItem.setTanggaljamselesai(endTimeBeforeSplit);
+                                detailItem.setTanggaljammulai_ms(itemDataObject.getLong("start_time_millisecond"));
+                                detailItem.setTanggaljamselesai_ms(itemDataObject.getLong("end_time_millisecond"));
+                                detailItem.setItembidstatus(itemDataObject.getInt("item_bid_status"));
+                                String[] startTimePart = startTimeBeforeSplit.split("T");
+                                String[] endTimePart = endTimeBeforeSplit.split("T");
+                                String startDate = startTimePart[0];
+                                String endDate = endTimePart[0];
+                                String [] startHourPart = startTimePart[1].split("\\.");
+                                String [] endHourPart = endTimePart[1].split("\\.");
+                                String startHour = startHourPart[0];
+                                String endHour = endHourPart[0];
+                                detailItem.setTanggalmulai(startDate);
+                                detailItem.setJammulai(startHour);
+                                detailItem.setTanggalselesai(endDate);
+                                detailItem.setJamselesai(endHour);
+                                detailItem.setIdauctioneer(itemDataObject.getString("user_id"));
+                                detailItem.setNamaauctioneer(itemDataObject.getString("user_name"));
+                                detailItem.setBidtime(itemDataObject.getInt("bid_time"));
+                                //detailItem.setNamabidder(itemDataObject.getString("bidder_name"));
+                                //detailItem.setHargabid(itemDataObject.getString("item_bid_price"));
 
-                            itemBidResources.setIdBid(itemDataObject.getString("bid_id_q"));
-                            itemBidResources.setNamaBidder(itemDataObject.getString("bidder_name"));
-                            itemBidResources.setHargaBid(itemDataObject.getString("item_bid_price"));
-                            itemBidResources.setWinnerStatus(itemDataObject.getBoolean("winner_status"));
+                                itemBidResources.setIdBid(itemDataObject.getString("bid_id_q"));
+                                itemBidResources.setNamaBidder(itemDataObject.getString("bidder_name"));
+                                itemBidResources.setHargaBid(itemDataObject.getString("item_bid_price"));
+                                itemBidResources.setWinnerStatus(itemDataObject.getBoolean("winner_status"));
 
-                            JSONArray detailUrlGambarItemArray = itemDataObject.getJSONArray("url");
-                            JSONArray biddingPeringkatArray = itemDataObject.getJSONArray("peringkat");
+                                JSONArray detailUrlGambarItemArray = itemDataObject.getJSONArray("url");
+                                JSONArray biddingPeringkatArray = itemDataObject.getJSONArray("peringkat");
 
-                            //clear list when load data from server
+                                //clear list when load data from server
                             /*biddingPeringkatList.clear();
                             for (int j=0;j<biddingPeringkatArray.length();j++)
                             {
@@ -756,18 +749,19 @@ public class DetailItemAuctioneerFragment extends Fragment {
                                 bidPeringkat.setHargaBid(biddingPeringkatObject.getString("bid_price"));
                                 biddingPeringkatList.add(bidPeringkat);
                             }*/
-                            listImageURL.clear();
-                            for (int j=0;j<detailUrlGambarItemArray.length();j++)
-                            {
-                                JSONObject detailUrlGambarItemObject = detailUrlGambarItemArray.getJSONObject(j);
-                                listImageURL.add("http://img-s7.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
+                                listImageURL.clear();
+                                for (int j=0;j<detailUrlGambarItemArray.length();j++)
+                                {
+                                    JSONObject detailUrlGambarItemObject = detailUrlGambarItemArray.getJSONObject(j);
+                                    listImageURL.add("http://img-s7.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
+                                }
+                                detailItem.setListImageURL(listImageURL);
                             }
-                            detailItem.setListImageURL(listImageURL);
+                            detailReceived.dataReceived("done");
                         }
-                        detailReceived.dataReceived("done");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };
@@ -841,6 +835,35 @@ public class DetailItemAuctioneerFragment extends Fragment {
             if(!onPauseActivity) refreshActivity();
         }
     }
+    private void setAlertDialogAskingSelectWinner(final String idBid) {
+        AlertDialog.Builder askSelectWinnerBuilder = new AlertDialog.Builder(activityContext);
+        askSelectWinnerBuilder.setTitle(R.string.DETAILFRAGMENT_ASKING_SELECTWINNER_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_ASKING_SELECTWINNER_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_ASKING_SELECTWINNER_ALERTDIALOGOKBUTTON
+                        , new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sendWinnerChosenDataToSocket(idBid);
+                            }
+                        })
+                .setNegativeButton(R.string.DETAILFRAGMENT_ASKING_SELECTWINNER_ALERTDIALOGCANCELBUTTON, null);
+        AlertDialog askWinnerSelectDialog = askSelectWinnerBuilder.create();
+        askWinnerSelectDialog.show();
+    }
+    private void setAlertDialogAskingCancelAuction() {
+        AlertDialog.Builder askCancelAuctionBuilder = new AlertDialog.Builder(activityContext);
+        askCancelAuctionBuilder.setTitle(R.string.DETAILFRAGMENT_ASKING_CANCELAUCTION_ALERTDIALOGTITLE)
+                .setMessage(R.string.DETAILFRAGMENT_ASKING_CANCELAUCTION_ALERTDIALOGMSG)
+                .setPositiveButton(R.string.DETAILFRAGMENT_ASKING_CANCELAUCTION_ALERTDIALOGOKBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        socketBinder.emit("cancelauction", itemID);
+                    }
+                })
+                .setNegativeButton(R.string.DETAILFRAGMENT_ASKING_CANCELAUCTION_ALERTDIALOGCANCELBUTTON, null);
+        AlertDialog askCancelAuctionDialog = askCancelAuctionBuilder.create();
+        askCancelAuctionDialog.show();
+    }
     private void setAlertDialogWinnerSelected()
     {
         AlertDialog.Builder winnerSelectedAlertDialogBuilder = new AlertDialog.Builder(activityContext);
@@ -870,7 +893,17 @@ public class DetailItemAuctioneerFragment extends Fragment {
         ListBidderDialogFragment listBidderDialogFragment = ListBidderDialogFragment.newInstance("Lalala");
         listBidderDialogFragment.show(fm, "fragment_lalala");
     }
-
+    private void sendWinnerChosenDataToSocket(String idBid) {
+        JSONObject winnerChosenObject = new JSONObject();
+        try {
+            winnerChosenObject.put("item_id_query", itemID);
+            winnerChosenObject.put("bid_id_query", idBid);
+            Log.v("INFO SEND", idBid);
+            socketBinder.emit("winnerselected", winnerChosenObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     private void showFragmentTawaran()
     {
         isChangeTawaranFragment = true;

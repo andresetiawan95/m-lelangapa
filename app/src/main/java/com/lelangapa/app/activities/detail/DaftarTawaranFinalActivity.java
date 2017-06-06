@@ -3,6 +3,7 @@ package com.lelangapa.app.activities.detail;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.lelangapa.app.R;
 import com.lelangapa.app.fragments.detail.daftartawaranfinal.DaftarTawaranFinalFragment;
@@ -34,5 +35,12 @@ public class DaftarTawaranFinalActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_activity_daftar_tawaran_final_layout, fragment)
                 .commit();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            super.onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

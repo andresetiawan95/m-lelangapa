@@ -42,7 +42,7 @@
                         android:id="@+id/fragment_detail_barang_daftar_tawaran_layout_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nama User"
+                        android:text="--"
                         android:layout_gravity="center"/>
                 </LinearLayout>
                 <LinearLayout
@@ -61,7 +61,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:text="1.000.000"/>
+                        android:text="--"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"

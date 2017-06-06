@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.lelangapa.app.R;
 import com.lelangapa.app.resources.BiddingResources;
+import com.lelangapa.app.resources.PriceFormatter;
 
 import java.util.ArrayList;
 
@@ -50,7 +51,7 @@ public class BiddingPeringkatAdapter extends RecyclerView.Adapter<BiddingPeringk
         //karena profile picture belum diterapkan, maka imageView belum di set dulu.
         //yang di set adalah nama dan price bidd dulu
         viewHolder.textView_biddernama.setText(singlePeringkatItem.getNamaBidder());
-        viewHolder.textView_bidderprice.setText(singlePeringkatItem.getHargaBid());
+        viewHolder.textView_bidderprice.setText(PriceFormatter.formatPrice(singlePeringkatItem.getHargaBid()));
     }
     @Override
     public int getItemCount()

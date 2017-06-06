@@ -99,26 +99,28 @@ public class DetailRiwayatFragment extends Fragment {
         listReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    //Log.v("RESPONSE", jsonResponse.toString());
-                    biddingList.clear();
-                    if (jsonResponse.getString("status").equals("success"))
-                    {
-                        JSONArray responseArray = jsonResponse.getJSONArray("data");
-                        for (int i=0;i<responseArray.length();i++)
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        //Log.v("RESPONSE", jsonResponse.toString());
+                        biddingList.clear();
+                        if (jsonResponse.getString("status").equals("success"))
                         {
-                            JSONObject responseArrayObject = responseArray.getJSONObject(i);
-                            RiwayatResources riwayatResources = new RiwayatResources();
-                            riwayatResources.setBidTimestamp(responseArrayObject.getString("bid_timestamp_return"));
-                            riwayatResources.setHargaBid(responseArrayObject.getString("price_bid_return"));
-                            biddingList.add(riwayatResources);
+                            JSONArray responseArray = jsonResponse.getJSONArray("data");
+                            for (int i=0;i<responseArray.length();i++)
+                            {
+                                JSONObject responseArrayObject = responseArray.getJSONObject(i);
+                                RiwayatResources riwayatResources = new RiwayatResources();
+                                riwayatResources.setBidTimestamp(responseArrayObject.getString("bid_timestamp_return"));
+                                riwayatResources.setHargaBid(responseArrayObject.getString("price_bid_return"));
+                                biddingList.add(riwayatResources);
+                            }
+                            setAndShowTheList();
                         }
-                        setAndShowTheList();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

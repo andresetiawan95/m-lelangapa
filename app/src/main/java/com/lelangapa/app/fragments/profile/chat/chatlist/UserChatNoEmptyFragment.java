@@ -104,28 +104,30 @@ public class UserChatNoEmptyFragment extends Fragment {
         dataReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    listChatRoom.clear();
-                    JSONArray responseArray = jsonResponse.getJSONArray("data");
-                    for (int i=0;i<responseArray.length();i++){
-                        JSONObject arrayObject = responseArray.getJSONObject(i);
-                        ChatResources chatResources = new ChatResources();
-                        if (arrayObject.getString("id_user_1").equals(userID)) {
-                            chatResources.setIdUser(arrayObject.getString("id_user_2"));
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        listChatRoom.clear();
+                        JSONArray responseArray = jsonResponse.getJSONArray("data");
+                        for (int i=0;i<responseArray.length();i++){
+                            JSONObject arrayObject = responseArray.getJSONObject(i);
+                            ChatResources chatResources = new ChatResources();
+                            if (arrayObject.getString("id_user_1").equals(userID)) {
+                                chatResources.setIdUser(arrayObject.getString("id_user_2"));
+                            }
+                            else {
+                                chatResources.setIdUser(arrayObject.getString("id_user_1"));
+                            }
+                            chatResources.setChatRoom(arrayObject.getString("room"));
+                            chatResources.setNamaUser(arrayObject.getString("name"));
+                            listChatRoom.add(chatResources);
                         }
-                        else {
-                            chatResources.setIdUser(arrayObject.getString("id_user_1"));
-                        }
-                        chatResources.setChatRoom(arrayObject.getString("room"));
-                        chatResources.setNamaUser(arrayObject.getString("name"));
-                        listChatRoom.add(chatResources);
+                        chatRoomListAdapter.updateDataset(listChatRoom);
+                        swipeRefreshLayout.setRefreshing(false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    chatRoomListAdapter.updateDataset(listChatRoom);
-                    swipeRefreshLayout.setRefreshing(false);
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

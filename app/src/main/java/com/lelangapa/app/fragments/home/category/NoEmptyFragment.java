@@ -74,31 +74,33 @@ public class NoEmptyFragment extends Fragment {
         whenNewItemLoaded = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    newItemJSON = new JSONObject(response);
-                    newItemJSONArray = newItemJSON.getJSONArray("result");
-                    for (int i=0;i<newItemJSONArray.length();i++) {
-                        JSONObject newItemJSONArrayObject = newItemJSONArray.getJSONObject(i).getJSONObject("_source");
-                        DetailItemResources itemResources = new DetailItemResources();
-                        itemResources.setIdbarang(newItemJSONArrayObject.getString("id_item"));
-                        itemResources.setIdauctioneer(newItemJSONArrayObject.getString("id_user"));
-                        itemResources.setNamabarang(newItemJSONArrayObject.getString("title"));
-                        itemResources.setNamaauctioneer(newItemJSONArrayObject.getString("nama_user"));
-                        itemResources.setHargaawal(newItemJSONArrayObject.getString("starting_price"));
-                        itemResources.setHargatarget(newItemJSONArrayObject.getString("expected_price"));
-                        itemResources.setIdkategori(newItemJSONArrayObject.getString("id_category"));
-                        itemResources.setNamakategori(newItemJSONArrayObject.getString("nama_category"));
-                        if (newItemJSONArrayObject.has("main_image_url")) {
-                            itemResources.setUrlgambarbarang("http://img-s7.lelangapa.com/" + newItemJSONArrayObject.getString("main_image_url"));
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        newItemJSON = new JSONObject(response);
+                        newItemJSONArray = newItemJSON.getJSONArray("result");
+                        for (int i=0;i<newItemJSONArray.length();i++) {
+                            JSONObject newItemJSONArrayObject = newItemJSONArray.getJSONObject(i).getJSONObject("_source");
+                            DetailItemResources itemResources = new DetailItemResources();
+                            itemResources.setIdbarang(newItemJSONArrayObject.getString("id_item"));
+                            itemResources.setIdauctioneer(newItemJSONArrayObject.getString("id_user"));
+                            itemResources.setNamabarang(newItemJSONArrayObject.getString("title"));
+                            itemResources.setNamaauctioneer(newItemJSONArrayObject.getString("nama_user"));
+                            itemResources.setHargaawal(newItemJSONArrayObject.getString("starting_price"));
+                            itemResources.setHargatarget(newItemJSONArrayObject.getString("expected_price"));
+                            itemResources.setIdkategori(newItemJSONArrayObject.getString("id_category"));
+                            itemResources.setNamakategori(newItemJSONArrayObject.getString("nama_category"));
+                            if (newItemJSONArrayObject.has("main_image_url")) {
+                                itemResources.setUrlgambarbarang("http://img-s7.lelangapa.com/" + newItemJSONArrayObject.getString("main_image_url"));
+                            }
+                            listItem.add(itemResources);
                         }
-                        listItem.add(itemResources);
+                        if (newItemJSONArray.length() > 0) {
+                            adapter.notifyItemRangeInserted((4 * PAGE_NOW), 4);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    if (newItemJSONArray.length() > 0) {
-                        adapter.notifyItemRangeInserted((4 * PAGE_NOW), 4);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

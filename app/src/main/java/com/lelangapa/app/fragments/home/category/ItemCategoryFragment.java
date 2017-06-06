@@ -66,30 +66,32 @@ public class ItemCategoryFragment extends Fragment {
         whenItemListLoaded = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    JSONArray jsonResponseArray = jsonResponse.getJSONArray("result");
-                    listItems.clear();
-                    for (int i=0;i<jsonResponseArray.length();i++) {
-                        JSONObject responseObject = jsonResponseArray.getJSONObject(i).getJSONObject("_source");
-                        DetailItemResources itemProperty = new DetailItemResources();
-                        itemProperty.setIdbarang(responseObject.getString("id_item"));
-                        itemProperty.setIdauctioneer(responseObject.getString("id_user"));
-                        itemProperty.setNamabarang(responseObject.getString("title"));
-                        itemProperty.setNamaauctioneer(responseObject.getString("nama_user"));
-                        itemProperty.setHargaawal(responseObject.getString("starting_price"));
-                        itemProperty.setHargatarget(responseObject.getString("expected_price"));
-                        itemProperty.setIdkategori(responseObject.getString("id_category"));
-                        itemProperty.setNamakategori(responseObject.getString("nama_category"));
-                        if (responseObject.has("main_image_url")) {
-                            itemProperty.setUrlgambarbarang("http://img-s7.lelangapa.com/" + responseObject.getString("main_image_url"));
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        JSONArray jsonResponseArray = jsonResponse.getJSONArray("result");
+                        listItems.clear();
+                        for (int i=0;i<jsonResponseArray.length();i++) {
+                            JSONObject responseObject = jsonResponseArray.getJSONObject(i).getJSONObject("_source");
+                            DetailItemResources itemProperty = new DetailItemResources();
+                            itemProperty.setIdbarang(responseObject.getString("id_item"));
+                            itemProperty.setIdauctioneer(responseObject.getString("id_user"));
+                            itemProperty.setNamabarang(responseObject.getString("title"));
+                            itemProperty.setNamaauctioneer(responseObject.getString("nama_user"));
+                            itemProperty.setHargaawal(responseObject.getString("starting_price"));
+                            itemProperty.setHargatarget(responseObject.getString("expected_price"));
+                            itemProperty.setIdkategori(responseObject.getString("id_category"));
+                            itemProperty.setNamakategori(responseObject.getString("nama_category"));
+                            if (responseObject.has("main_image_url")) {
+                                itemProperty.setUrlgambarbarang("http://img-s7.lelangapa.com/" + responseObject.getString("main_image_url"));
+                            }
+                            listItems.add(itemProperty);
                         }
-                        listItems.add(itemProperty);
+                        whenAllDataLoaded();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    whenAllDataLoaded();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

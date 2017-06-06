@@ -739,82 +739,84 @@ public class DetailFragment extends Fragment {
         DataReceiver dataReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    String status = jsonResponse.getString("status");
-                    if (status.equals("success"))
-                    {
-                        serverDateTimeMillisecond = jsonResponse.getLong("server_time_in_millisecond");
-                        JSONArray responseData = jsonResponse.getJSONArray("data");
-                        for (int i=0;i<responseData.length();i++)
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        String status = jsonResponse.getString("status");
+                        if (status.equals("success"))
                         {
-                            JSONObject itemDataObject = responseData.getJSONObject(i);
-                            detailItem.setIdbarang(itemDataObject.getString("item_id"));
-                            detailItem.setNamabarang(itemDataObject.getString("item_name"));
-                            detailItem.setDeskripsibarang(itemDataObject.getString("item_description"));
-                            detailItem.setHargaawal(itemDataObject.getString("starting_price"));
-                            detailItem.setHargatarget(itemDataObject.getString("expected_price"));
-                            String startTimeBeforeSplit = itemDataObject.getString("start_time");
-                            String endTimeBeforeSplit = itemDataObject.getString("end_time");
-                            detailItem.setTanggaljammulai(startTimeBeforeSplit);
-                            detailItem.setTanggaljamselesai(endTimeBeforeSplit);
-                            detailItem.setTanggaljammulai_ms(itemDataObject.getLong("start_time_millisecond"));
-                            detailItem.setTanggaljamselesai_ms(itemDataObject.getLong("end_time_millisecond"));
-                            detailItem.setItembidstatus(itemDataObject.getInt("item_bid_status"));
-                            String[] startTimePart = startTimeBeforeSplit.split("T");
-                            String[] endTimePart = endTimeBeforeSplit.split("T");
-                            String startDate = startTimePart[0];
-                            String endDate = endTimePart[0];
-                            String [] startHourPart = startTimePart[1].split("\\.");
-                            String [] endHourPart = endTimePart[1].split("\\.");
-                            String startHour = startHourPart[0];
-                            String endHour = endHourPart[0];
-                            detailItem.setTanggalmulai(startDate);
-                            detailItem.setJammulai(startHour);
-                            detailItem.setTanggalselesai(endDate);
-                            detailItem.setJamselesai(endHour);
-                            detailItem.setIdauctioneer(itemDataObject.getString("user_id"));
-                            detailItem.setNamaauctioneer(itemDataObject.getString("user_name"));
-                            detailItem.setNamabidder(itemDataObject.getString("bidder_name"));
-                            detailItem.setHargabid(itemDataObject.getString("item_bid_price"));
-
-                            //informasi tawaran terbaru/tertinggi/terpilih
-                            itemBidResources.setNamaBidder(itemDataObject.getString("bidder_name"));
-                            itemBidResources.setHargaBid(itemDataObject.getString("item_bid_price"));
-                            itemBidResources.setWinnerStatus(itemDataObject.getBoolean("winner_status"));
-
-                            //informasi avatar auctioneer
-                            if (!itemDataObject.getString("auctioneer_avatar_url").equals("null"))
-                                auctioneerAvatarURL = itemDataObject.getString("auctioneer_avatar_url");
-                            else auctioneerAvatarURL = "null";
-
-                            JSONArray detailUrlGambarItemArray = itemDataObject.getJSONArray("url");
-                            JSONArray biddingPeringkatArray = itemDataObject.getJSONArray("peringkat");
-
-                            //clear list when load data from server
-                            biddingPeringkatList.clear();
-                            listImageURL.clear();
-                            for (int j=0;j<biddingPeringkatArray.length();j++)
+                            serverDateTimeMillisecond = jsonResponse.getLong("server_time_in_millisecond");
+                            JSONArray responseData = jsonResponse.getJSONArray("data");
+                            for (int i=0;i<responseData.length();i++)
                             {
-                                BiddingResources bidPeringkat = new BiddingResources();
-                                JSONObject biddingPeringkatObject = biddingPeringkatArray.getJSONObject(j);
-                                bidPeringkat.setIdBidder(biddingPeringkatObject.getString("user_id"));
-                                bidPeringkat.setNamaBidder(biddingPeringkatObject.getString("user_name"));
-                                bidPeringkat.setHargaBid(biddingPeringkatObject.getString("bid_price"));
-                                biddingPeringkatList.add(bidPeringkat);
+                                JSONObject itemDataObject = responseData.getJSONObject(i);
+                                detailItem.setIdbarang(itemDataObject.getString("item_id"));
+                                detailItem.setNamabarang(itemDataObject.getString("item_name"));
+                                detailItem.setDeskripsibarang(itemDataObject.getString("item_description"));
+                                detailItem.setHargaawal(itemDataObject.getString("starting_price"));
+                                detailItem.setHargatarget(itemDataObject.getString("expected_price"));
+                                String startTimeBeforeSplit = itemDataObject.getString("start_time");
+                                String endTimeBeforeSplit = itemDataObject.getString("end_time");
+                                detailItem.setTanggaljammulai(startTimeBeforeSplit);
+                                detailItem.setTanggaljamselesai(endTimeBeforeSplit);
+                                detailItem.setTanggaljammulai_ms(itemDataObject.getLong("start_time_millisecond"));
+                                detailItem.setTanggaljamselesai_ms(itemDataObject.getLong("end_time_millisecond"));
+                                detailItem.setItembidstatus(itemDataObject.getInt("item_bid_status"));
+                                String[] startTimePart = startTimeBeforeSplit.split("T");
+                                String[] endTimePart = endTimeBeforeSplit.split("T");
+                                String startDate = startTimePart[0];
+                                String endDate = endTimePart[0];
+                                String [] startHourPart = startTimePart[1].split("\\.");
+                                String [] endHourPart = endTimePart[1].split("\\.");
+                                String startHour = startHourPart[0];
+                                String endHour = endHourPart[0];
+                                detailItem.setTanggalmulai(startDate);
+                                detailItem.setJammulai(startHour);
+                                detailItem.setTanggalselesai(endDate);
+                                detailItem.setJamselesai(endHour);
+                                detailItem.setIdauctioneer(itemDataObject.getString("user_id"));
+                                detailItem.setNamaauctioneer(itemDataObject.getString("user_name"));
+                                detailItem.setNamabidder(itemDataObject.getString("bidder_name"));
+                                detailItem.setHargabid(itemDataObject.getString("item_bid_price"));
+
+                                //informasi tawaran terbaru/tertinggi/terpilih
+                                itemBidResources.setNamaBidder(itemDataObject.getString("bidder_name"));
+                                itemBidResources.setHargaBid(itemDataObject.getString("item_bid_price"));
+                                itemBidResources.setWinnerStatus(itemDataObject.getBoolean("winner_status"));
+
+                                //informasi avatar auctioneer
+                                if (!itemDataObject.getString("auctioneer_avatar_url").equals("null"))
+                                    auctioneerAvatarURL = itemDataObject.getString("auctioneer_avatar_url");
+                                else auctioneerAvatarURL = "null";
+
+                                JSONArray detailUrlGambarItemArray = itemDataObject.getJSONArray("url");
+                                JSONArray biddingPeringkatArray = itemDataObject.getJSONArray("peringkat");
+
+                                //clear list when load data from server
+                                biddingPeringkatList.clear();
+                                listImageURL.clear();
+                                for (int j=0;j<biddingPeringkatArray.length();j++)
+                                {
+                                    BiddingResources bidPeringkat = new BiddingResources();
+                                    JSONObject biddingPeringkatObject = biddingPeringkatArray.getJSONObject(j);
+                                    bidPeringkat.setIdBidder(biddingPeringkatObject.getString("user_id"));
+                                    bidPeringkat.setNamaBidder(biddingPeringkatObject.getString("user_name"));
+                                    bidPeringkat.setHargaBid(biddingPeringkatObject.getString("bid_price"));
+                                    biddingPeringkatList.add(bidPeringkat);
+                                }
+                                for (int j=0;j<detailUrlGambarItemArray.length();j++)
+                                {
+                                    JSONObject detailUrlGambarItemObject = detailUrlGambarItemArray.getJSONObject(j);
+                                    listImageURL.add("http://img-s7.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
+                                }
+                                detailItem.setListImageURL(listImageURL);
                             }
-                            for (int j=0;j<detailUrlGambarItemArray.length();j++)
-                            {
-                                JSONObject detailUrlGambarItemObject = detailUrlGambarItemArray.getJSONObject(j);
-                                listImageURL.add("http://img-s7.lelangapa.com/" +detailUrlGambarItemObject.getString("url"));
-                            }
-                            detailItem.setListImageURL(listImageURL);
+                            detailReceived.dataReceived("done");
                         }
-                        detailReceived.dataReceived("done");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

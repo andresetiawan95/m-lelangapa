@@ -99,28 +99,30 @@ public class FeedbackMainFragment extends Fragment {
         dataReceiver = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    JSONArray jsonResponseArray = jsonResponse.getJSONArray("data");
-                    listFeedback.clear();
-                    for (int i=0;i<jsonResponseArray.length();i++)
-                    {
-                        JSONObject jsonArrayObject = jsonResponseArray.getJSONObject(i);
-                        FeedbackResources feedbackResources = new FeedbackResources();
-                        feedbackResources.setIdRating(jsonArrayObject.getString("id_rating_return"));
-                        feedbackResources.setIdItem(jsonArrayObject.getString("id_item_return"));
-                        feedbackResources.setIdUser(jsonArrayObject.getString("id_rater_return"));
-                        feedbackResources.setNamaUser(jsonArrayObject.getString("nama_rater_return"));
-                        feedbackResources.setNamaItem(jsonArrayObject.getString("nama_item_return"));
-                        feedbackResources.setBidTime(jsonArrayObject.getInt("bid_time_return"));
-                        feedbackResources.setRateGiven(jsonArrayObject.getInt("rate"));
-                        feedbackResources.setRateMessage(jsonArrayObject.getString("rate_message"));
-                        listFeedback.add(feedbackResources);
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        JSONArray jsonResponseArray = jsonResponse.getJSONArray("data");
+                        listFeedback.clear();
+                        for (int i=0;i<jsonResponseArray.length();i++)
+                        {
+                            JSONObject jsonArrayObject = jsonResponseArray.getJSONObject(i);
+                            FeedbackResources feedbackResources = new FeedbackResources();
+                            feedbackResources.setIdRating(jsonArrayObject.getString("id_rating_return"));
+                            feedbackResources.setIdItem(jsonArrayObject.getString("id_item_return"));
+                            feedbackResources.setIdUser(jsonArrayObject.getString("id_rater_return"));
+                            feedbackResources.setNamaUser(jsonArrayObject.getString("nama_rater_return"));
+                            feedbackResources.setNamaItem(jsonArrayObject.getString("nama_item_return"));
+                            feedbackResources.setBidTime(jsonArrayObject.getInt("bid_time_return"));
+                            feedbackResources.setRateGiven(jsonArrayObject.getInt("rate"));
+                            feedbackResources.setRateMessage(jsonArrayObject.getString("rate_message"));
+                            listFeedback.add(feedbackResources);
+                        }
+                        setupFragment();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    setupFragment();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };

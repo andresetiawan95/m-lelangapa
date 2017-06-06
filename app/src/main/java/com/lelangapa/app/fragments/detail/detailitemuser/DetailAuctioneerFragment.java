@@ -64,44 +64,48 @@ public class DetailAuctioneerFragment extends Fragment {
         dataReceiverFeedbackAsWinner = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    if (jsonResponse.getString("status").equals("success")) {
-                        if (jsonResponse.getInt("total_data") > 0) {
-                            String totalData = Integer.toString(jsonResponse.getInt("total_data"));
-                            textView_ratingWinner_rate.setText(jsonResponse.getString("rate_average"));
-                            textView_ratingWinner_total.setText(totalData);
+                if (isVisible()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (jsonResponse.getString("status").equals("success")) {
+                            if (jsonResponse.getInt("total_data") > 0) {
+                                String totalData = Integer.toString(jsonResponse.getInt("total_data"));
+                                textView_ratingWinner_rate.setText(jsonResponse.getString("rate_average"));
+                                textView_ratingWinner_total.setText(totalData);
+                            }
+                            else {
+                                textView_ratingWinner_rate.setText("0.0");
+                                textView_ratingWinner_total.setText("0");
+                            }
                         }
-                        else {
-                            textView_ratingWinner_rate.setText("0.0");
-                            textView_ratingWinner_total.setText("0");
-                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };
         dataReceiverFeedbackAsAuctioneer = new DataReceiver() {
             @Override
             public void dataReceived(Object output) {
-                String response = output.toString();
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    if (jsonResponse.getString("status").equals("success")) {
-                        if (jsonResponse.getInt("total_data") > 0) {
-                            String totalData = Integer.toString(jsonResponse.getInt("total_data"));
-                            textView_ratingAuctioneer_rate.setText(jsonResponse.getString("rate_average"));
-                            textView_ratingAuctioneer_total.setText(totalData);
+                if (isResumed()) {
+                    String response = output.toString();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (jsonResponse.getString("status").equals("success")) {
+                            if (jsonResponse.getInt("total_data") > 0) {
+                                String totalData = Integer.toString(jsonResponse.getInt("total_data"));
+                                textView_ratingAuctioneer_rate.setText(jsonResponse.getString("rate_average"));
+                                textView_ratingAuctioneer_total.setText(totalData);
+                            }
+                            else {
+                                textView_ratingAuctioneer_rate.setText("0.0");
+                                textView_ratingAuctioneer_total.setText("0");
+                            }
                         }
-                        else {
-                            textView_ratingAuctioneer_rate.setText("0.0");
-                            textView_ratingAuctioneer_total.setText("0");
-                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };
