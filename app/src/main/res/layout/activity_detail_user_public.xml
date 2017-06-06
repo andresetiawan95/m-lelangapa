@@ -54,7 +54,8 @@
                     android:orientation="horizontal"
                     android:padding="10dp"
                     app:layout_collapseMode="none">
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/activity_detail_user_public_avatar"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src ="@drawable/ic_noavatar"/>

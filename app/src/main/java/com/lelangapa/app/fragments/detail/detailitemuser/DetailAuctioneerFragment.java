@@ -116,8 +116,11 @@ public class DetailAuctioneerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DetailUserPublicActivity.class);
-                intent.putExtra("id_user", auctioneerID);
-                intent.putExtra("nama_user", auctioneerName);
+                Bundle bundleExtras = new Bundle();
+                bundleExtras.putString("id_user", auctioneerID);
+                bundleExtras.putString("nama_user", auctioneerName);
+                bundleExtras.putString("avatar_user", auctioneerAvatarURL);
+                intent.putExtras(bundleExtras);
                 startActivity(intent);
             }
         };

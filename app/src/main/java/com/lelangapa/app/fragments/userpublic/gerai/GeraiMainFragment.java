@@ -89,7 +89,7 @@ public class GeraiMainFragment extends Fragment {
     }
     private void getIntentData()
     {
-        userID = getActivity().getIntent().getStringExtra("id_user");
+        userID = getActivity().getIntent().getExtras().getString("id_user");
     }
     private void initializeFragments()
     {

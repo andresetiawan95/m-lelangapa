@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lelangapa.app.R;
@@ -17,6 +18,7 @@ import com.lelangapa.app.fragments.userpublic.feedback.FeedbackMainFragment;
 import com.lelangapa.app.fragments.userpublic.gerai.GeraiMainFragment;
 import com.lelangapa.app.fragments.userpublic.riwayat.RiwayatMainFragment;
 import com.lelangapa.app.viewpagers.UserPublicViewPagerAdapter;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by andre on 28/03/17.
@@ -27,6 +29,7 @@ public class DetailUserPublicActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private Toolbar toolbar;
     private TextView textView_toolbar, textView_namaUser;
+    private ImageView imageView_avatar;
 
     private AppBarLayout appBarLayout;
     private boolean isShow = false;
@@ -55,6 +58,7 @@ public class DetailUserPublicActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.activity_detail_user_public_viewpager);
         textView_toolbar = (TextView) findViewById(R.id.activity_detail_user_public_toolbar_textview);
         textView_namaUser = (TextView) findViewById(R.id.activity_detail_user_public_name);
+        imageView_avatar = (ImageView) findViewById(R.id.activity_detail_user_public_avatar);
         setSupportActionBar(toolbar);
         textView_toolbar.setVisibility(View.GONE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -69,9 +73,11 @@ public class DetailUserPublicActivity extends AppCompatActivity {
     }
     private void setupViews()
     {
-        String name = getIntent().getStringExtra("nama_user");
+        String name = getIntent().getExtras().getString("nama_user");
+        String avatarURL = getIntent().getExtras().getString("avatar_user");
         textView_namaUser.setText(name);
         textView_toolbar.setText(name);
+        if (avatarURL != null) Picasso.with(this).load(avatarURL).into(imageView_avatar);
     }
     private void setupTabLayoutAndViewpager()
     {
