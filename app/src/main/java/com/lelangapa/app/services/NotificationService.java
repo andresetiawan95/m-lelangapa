@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.lelangapa.app.activities.detail.DetailBarangActivity;
+import com.lelangapa.app.resources.PriceFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,20 +47,25 @@ public class NotificationService extends FirebaseMessagingService {
     {
         try {
             JSONObject data = jsonObject.getJSONObject("data");
-            String title = data.getString("item_name");
-            String bidder = data.getString("bidder_name");
-            String price = data.getString("price_now");
+            //Log.e("Notif masuk", data.toString());
+            if (data.has("notif_indicator")) {
+                if (data.getString("notif_indicator").equals("bidsuccess")) {
+                    String title = data.getString("item_name");
+                    String bidder = data.getString("bidder_name");
+                    String price = PriceFormatter.formatPrice(data.getString("price_now"));
 
-            String message = "Penawaran anda telah dikalahkan oleh\n" + bidder + "\ndengan harga penawaran\nRp. " + price;
-            Intent resultIntent = new Intent(getApplicationContext(), DetailBarangActivity.class);
+                    String message = "Penawaran anda telah dikalahkan oleh\n" + bidder + "\ndengan harga penawaran\nRp. " + price;
+                    Intent resultIntent = new Intent(getApplicationContext(), DetailBarangActivity.class);
 
-            Bundle bundleExtras = new Bundle();
-            bundleExtras.putString("auctioneer_id", data.getString("auctioneer_id"));
-            bundleExtras.putString("items_id", data.getString("item_id"));
+                    Bundle bundleExtras = new Bundle();
+                    bundleExtras.putString("auctioneer_id", data.getString("auctioneer_id"));
+                    bundleExtras.putString("items_id", data.getString("item_id"));
 
-            resultIntent.putExtras(bundleExtras);
+                    resultIntent.putExtras(bundleExtras);
 
-            showNotificationMessage(getApplicationContext(), title, message, resultIntent);
+                    showNotificationMessage(getApplicationContext(), title, message, resultIntent);
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
