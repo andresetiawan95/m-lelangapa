@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,12 +28,14 @@ import com.lelangapa.app.activities.LoginActivity;
 import com.lelangapa.app.apicalls.RegisterAPI;
 import com.lelangapa.app.apicalls.singleton.RequestController;
 import com.lelangapa.app.interfaces.DataReceiver;
+import com.lelangapa.app.preferences.sqlites.SQLiteHandler;
 import com.lelangapa.app.resources.ErrorMessage;
 import com.lelangapa.app.resources.GeoResources;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -55,6 +58,8 @@ public class RegisterFragment extends Fragment {
     private String _namaLengkap, _username, _password, _domain, _email, _address, _city, _province, _telepon;
     private Pattern regexPattern, regexPatternPassword;
     private HashMap<String, String> dataRegister;
+    private ArrayList<String> listProvinces, listCities;
+    private SQLiteHandler dbhandler;
 
     private Response.Listener<String> responseListener;
     private DataReceiver usernameReceiver, domainReceiver;
@@ -77,6 +82,7 @@ public class RegisterFragment extends Fragment {
         setSpinnerProvince();
         setupAllInputValidation();
         setupViewClickListener();
+        initializeContentProviders();
 //        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Register");
         setHasOptionsMenu(true);
         return view;
@@ -105,6 +111,11 @@ public class RegisterFragment extends Fragment {
         dataRegister = new HashMap<>();
         regexPattern = Pattern.compile("[^a-zA-Z0-9-._]");
         loadHandler = new Handler(Looper.getMainLooper());
+        listProvinces = new ArrayList<>();
+    }
+    private void initializeContentProviders() {
+        dbhandler = new SQLiteHandler(getActivity());
+        loadAllProvincesData();
     }
     private void initializeResponseListener() {
         responseListener = new Response.Listener<String>() {
@@ -195,6 +206,12 @@ public class RegisterFragment extends Fragment {
                 }
             }
         });
+    }
+    private void loadAllProvincesData() {
+        listProvinces = dbhandler.getAllProvinceList();
+        listCities = dbhandler.getAllCitiesList();
+        Log.v("Provinsi", listProvinces.toString());
+        Log.v("Kota", listCities.toString());
     }
     // Province dan City masih di hardcode
     private void setSpinnerProvince(){
