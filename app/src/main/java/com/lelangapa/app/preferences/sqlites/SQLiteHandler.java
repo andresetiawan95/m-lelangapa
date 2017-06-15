@@ -6,6 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.lelangapa.app.resources.sqls.Cities;
+import com.lelangapa.app.resources.sqls.GeoStatics;
+import com.lelangapa.app.resources.sqls.Provinces;
+
 import java.util.ArrayList;
 
 /**
@@ -678,30 +682,34 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.execSQL(insertQuery11);
         db.execSQL(insertQuery12);
     }
-    public ArrayList<String> getAllProvinceList() {
-        ArrayList<String> provinceList = new ArrayList<>();
+    public void getAllProvinceList() {
+        GeoStatics.getInstance().getProvincesList().clear();
         SQLiteDatabase db = this.getReadableDatabase();
         String getQuery = "SELECT * FROM provinces";
         Cursor cursor = db.rawQuery(getQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                provinceList.add(cursor.getString(cursor.getColumnIndex(KEY_PROVINCE_NAME)));
+                Provinces provinces = new Provinces();
+                provinces.setProvinceID(cursor.getInt(cursor.getColumnIndex(KEY_PROVINCE_ID)));
+                provinces.setProvinceName(cursor.getString(cursor.getColumnIndex(KEY_PROVINCE_NAME)));
+                GeoStatics.getInstance().getProvincesList().add(provinces);
             } while(cursor.moveToNext());
         }
         cursor.close();
-        return provinceList;
     }
-    public ArrayList<String> getAllCitiesList() {
-        ArrayList<String> citiesList = new ArrayList<>();
+    public void getAllCitiesList(int id_province) {
+        GeoStatics.getInstance().getCitiesList().clear();
         SQLiteDatabase db = this.getReadableDatabase();
-        String getQuery = "SELECT * FROM cities WHERE id = 514";
+        String getQuery = "SELECT * FROM cities WHERE id_province = " + id_province;
         Cursor cursor = db.rawQuery(getQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                citiesList.add(cursor.getString(cursor.getColumnIndex(KEY_CITIES_NAME)));
-            } while(cursor.moveToNext());
+                Cities city = new Cities();
+                city.setCityID(cursor.getInt(cursor.getColumnIndex(KEY_CITIES_ID)));
+                city.setCityName(cursor.getString(cursor.getColumnIndex(KEY_CITIES_NAME)));
+                GeoStatics.getInstance().getCitiesList().add(city);
+            } while (cursor.moveToNext());
         }
         cursor.close();
-        return citiesList;
     }
 }

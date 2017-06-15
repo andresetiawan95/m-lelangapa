@@ -120,45 +120,40 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="0px"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pilih Provinsi"
-                    android:id="@+id/textview_provinsi"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginTop="12dp"/>
-                <Spinner
-                    android:id="@+id/spinner_province"
-                    android:spinnerMode="dialog"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pilih Kota"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginTop="12dp"/>
-                <Spinner
-                    android:id="@+id/spinner_city"
-                    android:spinnerMode="dialog"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
+                android:text="Pilih Provinsi"
+                android:id="@+id/textview_provinsi"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="12dp"/>
+            <Spinner
+                android:id="@+id/spinner_province"
+                android:spinnerMode="dialog"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pilih Kota"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="12dp"/>
+            <Spinner
+                android:id="@+id/spinner_city"
+                android:spinnerMode="dialog"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
         <Button
             android:id="@+id/fragment_register_button"
             android:layout_width="match_parent"

@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +30,7 @@ import com.lelangapa.app.interfaces.DataReceiver;
 import com.lelangapa.app.preferences.sqlites.SQLiteHandler;
 import com.lelangapa.app.resources.ErrorMessage;
 import com.lelangapa.app.resources.GeoResources;
+import com.lelangapa.app.resources.sqls.GeoStatics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +58,7 @@ public class RegisterFragment extends Fragment {
     private String _namaLengkap, _username, _password, _domain, _email, _address, _city, _province, _telepon;
     private Pattern regexPattern, regexPatternPassword;
     private HashMap<String, String> dataRegister;
-    private ArrayList<String> listProvinces, listCities;
+    private static List<String> listProvincesName, listCitiesName;
     private SQLiteHandler dbhandler;
 
     private Response.Listener<String> responseListener;
@@ -76,13 +76,13 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_register_layout, container, false);
         initializeViews(view);
+        initializeContentProviders();
         initializeResponseListener();
         initializeDataReceivers();
         geoResources = new GeoResources();
-        setSpinnerProvince();
+        setSpinnerProperties();
         setupAllInputValidation();
         setupViewClickListener();
-        initializeContentProviders();
 //        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Register");
         setHasOptionsMenu(true);
         return view;
@@ -111,11 +111,11 @@ public class RegisterFragment extends Fragment {
         dataRegister = new HashMap<>();
         regexPattern = Pattern.compile("[^a-zA-Z0-9-._]");
         loadHandler = new Handler(Looper.getMainLooper());
-        listProvinces = new ArrayList<>();
+        listProvincesName = new ArrayList<>();
+        listCitiesName = new ArrayList<>();
     }
     private void initializeContentProviders() {
         dbhandler = new SQLiteHandler(getActivity());
-        loadAllProvincesData();
     }
     private void initializeResponseListener() {
         responseListener = new Response.Listener<String>() {
@@ -207,14 +207,8 @@ public class RegisterFragment extends Fragment {
             }
         });
     }
-    private void loadAllProvincesData() {
-        listProvinces = dbhandler.getAllProvinceList();
-        listCities = dbhandler.getAllCitiesList();
-        Log.v("Provinsi", listProvinces.toString());
-        Log.v("Kota", listCities.toString());
-    }
     // Province dan City masih di hardcode
-    private void setSpinnerProvince(){
+    /*private void setSpinnerProvince(){
         List<String> provinces = geoResources.getProvinces();
         ArrayAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, provinces);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -240,6 +234,43 @@ public class RegisterFragment extends Fragment {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) { }
+        });
+    }*/
+    private void setSpinnerProperties() {
+        dbhandler.getAllProvinceList();
+        listProvincesName.clear();
+        for (int x=0; x< GeoStatics.getInstance().getProvincesList().size(); x++) {
+            listProvincesName.add(GeoStatics.getInstance().getProvincesList().get(x).getProvinceName());
+        }
+        ArrayAdapter provinceAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, listProvincesName);
+        provinceAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinnerProvince.setAdapter(provinceAdapter);
+
+        spinnerProvince.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ProvID = GeoStatics.getInstance().getProvincesList().get(position).getProvinceID();
+                dbhandler.getAllCitiesList(ProvID);
+                listCitiesName.clear();
+                for (int x=0;x<GeoStatics.getInstance().getCitiesList().size();x++) {
+                    listCitiesName.add(GeoStatics.getInstance().getCitiesList().get(x).getCityName());
+                }
+                ArrayAdapter cityAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, listCitiesName);
+                cityAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                spinnerCity.setAdapter(cityAdapter);
+
+                spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        CityID = GeoStatics.getInstance().getCitiesList().get(position).getCityID();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
     private void setupRegularInputValidation(final EditText editText, final TextInputLayout textInputLayout) {
