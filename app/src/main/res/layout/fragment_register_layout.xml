@@ -130,7 +130,6 @@
                 android:layout_marginTop="12dp"/>
             <Spinner
                 android:id="@+id/spinner_province"
-                android:spinnerMode="dialog"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:layout_width="match_parent"
@@ -148,7 +147,6 @@
                 android:layout_marginTop="12dp"/>
             <Spinner
                 android:id="@+id/spinner_city"
-                android:spinnerMode="dialog"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:layout_width="match_parent"

@@ -74,6 +74,26 @@ public class NotificationAPI {
             return dataToken;
         }
     }
+    public static class LogoutInvalidToken extends StringRequest
+    {
+        private HashMap<String, String> dataToken;
+        private static final String LOGOUTTOKENURL = "https://no-api.lelangapa.com/public-apis/v1/jwt/token/invalid/fcm/logout";
+        private LogoutInvalidToken(HashMap<String, String> dataToken, final DataReceiver dataReceiver)
+        {
+            super(Method.POST, LOGOUTTOKENURL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    dataReceiver.dataReceived(response);
+                }
+            }, null);
+            this.dataToken = dataToken;
+        }
+        @Override
+        public HashMap<String, String> getParams()
+        {
+            return dataToken;
+        }
+    }
     public static SendToken getSendTokenInstance(HashMap<String, String> data)
     {
         return new SendToken(data);
@@ -81,5 +101,8 @@ public class NotificationAPI {
     public static Logout getLogoutInstance(HashMap<String, String> data, DataReceiver dataReceiver)
     {
         return new Logout(data, dataReceiver);
+    }
+    public static LogoutInvalidToken getLogoutInvalidTokenInstance(HashMap<String, String> data, DataReceiver dataReceiver) {
+        return new LogoutInvalidToken(data, dataReceiver);
     }
 }

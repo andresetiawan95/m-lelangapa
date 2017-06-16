@@ -3,6 +3,7 @@ package com.lelangapa.app.activities;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -32,6 +34,7 @@ import com.lelangapa.app.activities.feedback.feedbackanda.FeedbackAndaActivity;
 import com.lelangapa.app.activities.gerai.UserLelangBarangActivity;
 import com.lelangapa.app.activities.profile.chat.UserChatActivity;
 import com.lelangapa.app.activities.search.MainSearchActivity;
+import com.lelangapa.app.apicalls.home.HomeAPI;
 import com.lelangapa.app.apicalls.notification.NotificationAPI;
 import com.lelangapa.app.apicalls.singleton.RequestController;
 import com.lelangapa.app.fragments.HomeFragment;
@@ -65,12 +68,14 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<String, String> userInfo = new HashMap<>();
 
     private BroadcastReceiver tokenBroadcastReceiver;
-    private DataReceiver logoutDataReceiver;
+    private DataReceiver logoutDataReceiver, validationTokenDataReceiver, logoutInvalidTokenReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTokenBroadcastReceiver();
+        setLogoutDataReceiver();
+        initializeValidationTokenDataReceiver();
         sessionManager = new SessionManager(MainActivity.this);
         if (sessionManager.isLoggedIn()){
             setContentView(R.layout.activity_main_loggedin);
@@ -91,8 +96,7 @@ public class MainActivity extends AppCompatActivity {
             drawer = (DrawerLayout) findViewById(R.id.activity_main);
             navigationView = (NavigationView) findViewById(R.id.nav_view);
         }
-        setLogoutDataReceiver();
-        sendTokenToServer();
+        sendFCMTokenToServer();
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -258,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(NotifConfig.REGISTRATION_COMPLETE)) {
                     Log.e("ACTION RECEIVED", "INTENT ACTION RECEIVEDz");
-                    sendTokenToServer();
+                    sendFCMTokenToServer();
                     //TokenSaver.tokenSent(getApplicationContext());
                 }
             }
@@ -300,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
         NotificationAPI.Logout logoutAPI = NotificationAPI.getLogoutInstance(data, logoutDataReceiver);
         RequestController.getInstance(this).addToRequestQueue(logoutAPI);
     }
-    private void sendTokenToServer() {
+    private void sendFCMTokenToServer() {
         if (!sessionManager.isLoggedIn()) return;
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(NotifConfig.SHARED_PREF, 0);
         String fcmToken = prefs.getString("fcmToken", null);
@@ -314,6 +318,66 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /* TOKEN VALIDATION */
+    private void initializeValidationTokenDataReceiver() {
+        validationTokenDataReceiver = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                String response = output.toString();
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    if (!jsonResponse.getString("status").equals("valid")) {
+                        buildAlertDialogWhenTokenInvalid();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        logoutInvalidTokenReceiver = new DataReceiver() {
+            @Override
+            public void dataReceived(Object output) {
+                String response = output.toString();
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    if (jsonResponse.getString("status").equals("success")) {
+                        sessionManager.destroySession();
+                        setTokenStatusWhenLogout();
+                        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+    private void validateToken() {
+        if (!sessionManager.isLoggedIn()) return;
+        HomeAPI.VerifyToken verifyTokenAPI = HomeAPI.verifyInstance(validationTokenDataReceiver);
+        RequestController.getInstance(this).addToRequestQueue(verifyTokenAPI);
+    }
+    private void changeLoginStatusWhenTokenInvalid() {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("id_device", TokenSaver.getDeviceID(this));
+        NotificationAPI.LogoutInvalidToken logoutInvalidTokenAPI = NotificationAPI.getLogoutInvalidTokenInstance(data, logoutInvalidTokenReceiver);
+        RequestController.getInstance(this).addToRequestQueue(logoutInvalidTokenAPI);
+    }
+    private void buildAlertDialogWhenTokenInvalid() {
+        AlertDialog.Builder tokenInvalidBuilder = new AlertDialog.Builder(this);
+        tokenInvalidBuilder.setTitle(R.string.INVALID_TOKEN_ALERTDIALOGTITLE)
+                .setMessage(R.string.INVALID_TOKEN_ALERTDIALOGMESSAGE)
+                .setPositiveButton(R.string.INVALID_TOKEN_ALERTDIALOGOKBUTTON, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        changeLoginStatusWhenTokenInvalid();
+                    }
+                });
+        AlertDialog tokenInvalidDialog = tokenInvalidBuilder.create();
+        tokenInvalidDialog.show();
+    }
     @Override
     public void onBackPressed(){
         int count = getFragmentManager().getBackStackEntryCount();
@@ -373,6 +437,7 @@ public class MainActivity extends AppCompatActivity {
         loadUserAvatarOnResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(tokenBroadcastReceiver,
                 new IntentFilter(NotifConfig.REGISTRATION_COMPLETE));
+        validateToken();
 //        Log.v("OnResunme", "on resume started");
     }
     @Override

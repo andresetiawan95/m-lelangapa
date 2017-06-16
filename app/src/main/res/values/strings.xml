@@ -128,6 +128,10 @@
     <string name="BIDDING_DISABLED_NOT_LOGIN">Login terlebih dahulu untuk mengikuti jalannya lelang secara langsung</string>
     <string name="BIDDING_DISABLED_NOT_LOGIN_ASK_LOGIN">Login sekarang!</string>
 
+    <string name="INVALID_TOKEN_ALERTDIALOGTITLE">Sesi telah habis</string>
+    <string name="INVALID_TOKEN_ALERTDIALOGMESSAGE">Sesi anda telah habis. Silahkan lakukan login kembali.</string>
+    <string name="INVALID_TOKEN_ALERTDIALOGOKBUTTON">OK</string>
+
     <!-- String resource for spinner on UserPublicActivity (Fragment Feedback)-->
     <string-array name="spinner_feedback_for_public">
         <item>Sebagai pemenang</item>
