@@ -299,8 +299,10 @@ public class MainActivity extends AppCompatActivity {
     private void changeLoginStatusWhenLogout()
     {
         progressDialog = ProgressDialog.show(this, "Logout", "Harap tunggu");
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(NotifConfig.SHARED_PREF, 0);
+        String fcmToken = prefs.getString("fcmToken", null);
         HashMap<String, String> data = new HashMap<>();
-        data.put("id_device", TokenSaver.getDeviceID(this));
+        data.put("fcm_token", fcmToken);
         NotificationAPI.Logout logoutAPI = NotificationAPI.getLogoutInstance(data, logoutDataReceiver);
         RequestController.getInstance(this).addToRequestQueue(logoutAPI);
     }
@@ -361,7 +363,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void changeLoginStatusWhenTokenInvalid() {
         HashMap<String, String> data = new HashMap<>();
-        data.put("id_device", TokenSaver.getDeviceID(this));
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(NotifConfig.SHARED_PREF, 0);
+        String fcmToken = prefs.getString("fcmToken", null);
+        data.put("fcm_token", fcmToken);
         NotificationAPI.LogoutInvalidToken logoutInvalidTokenAPI = NotificationAPI.getLogoutInvalidTokenInstance(data, logoutInvalidTokenReceiver);
         RequestController.getInstance(this).addToRequestQueue(logoutInvalidTokenAPI);
     }
