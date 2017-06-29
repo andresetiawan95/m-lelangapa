@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_search">Search</string>
-    <string name="search_hint">Cari barang, pengguna...</string>
+    <string name="search_hint">Cari barang...</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_unfavorite">Unfavorite</string>
     <string name="action_chat">Chat</string>

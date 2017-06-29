@@ -359,7 +359,17 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 final String input = s.toString();
-                if (input.contains(" ")) {
+                if (input.length() < ErrorMessage.MAX_UNIQUE_INPUT_SIZE &&
+                        !TextUtils.isEmpty(input)) {
+                    textInputLayout.setErrorEnabled(true);
+                    if (type == TYPE_USERNAME) {
+                        textInputLayout.setError("Username harus mengandung minimal 3 karakter.");
+                    }
+                    else if (type == TYPE_DOMAIN) {
+                        textInputLayout.setError("Domain harus mengandung minimal 3 karakter.");
+                    }
+                }
+                else if (input.contains(" ")) {
                     textInputLayout.setErrorEnabled(true);
                     textInputLayout.setError("Tidak boleh mengandung spasi.");
                 }

@@ -22,10 +22,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lelangapa.app.R;
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     public static ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
+    private LinearLayout linearLayout_searchBar;
     private ProgressDialog progressDialog;
     private TextView userInfoNameNavbar, userInfoEmailNavbar;
     private ImageView imageViewAvatar;
@@ -106,8 +107,10 @@ public class MainActivity extends AppCompatActivity {
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         //toggle.syncState();
+        linearLayout_searchBar = (LinearLayout) findViewById(R.id.toolbar_main_search);
         viewPager = (ViewPager) findViewById(R.id.viewpager_main);
         tabLayout = (TabLayout) findViewById(R.id.tab_main);
+        setupOnClickListener();
         setUpViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -247,6 +250,15 @@ public class MainActivity extends AppCompatActivity {
                 imageViewAvatar.setImageResource(R.drawable.ic_noavatar);
             }
         }
+    }
+    private void setupOnClickListener() {
+        linearLayout_searchBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MainSearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     private void setUpViewPager(ViewPager viewPager){
         HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getSupportFragmentManager());
@@ -397,10 +409,10 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home){
             onBackPressed();
         }
-        if (item.getItemId()==R.id.action_search){
+        /*if (item.getItemId()==R.id.action_search){
             Intent intent = new Intent(MainActivity.this, MainSearchActivity.class);
             startActivity(intent);
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 //    @Override
@@ -451,8 +463,8 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.activity_main_menu, menu);
+        /*MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.activity_main_menu, menu);*/
         /*SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));*/

@@ -12,7 +12,35 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:popupTheme="@style/AppThemeLight.PopupOverlay" />
+        app:popupTheme="@style/AppThemeLight.PopupOverlay">
+        <LinearLayout
+            android:id="@+id/toolbar_main_search"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorSearchMain"
+            android:orientation="horizontal"
+            android:clickable="true">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Cari di lelangapa"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"/>
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_search_main_grey_64dp"/>
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_main"
         android:layout_width="match_parent"

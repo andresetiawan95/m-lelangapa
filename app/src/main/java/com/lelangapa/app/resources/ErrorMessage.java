@@ -13,4 +13,5 @@ public class ErrorMessage {
     public static final String ERROR_HARGA_TARGET = "Harga target harus lebih besar dari harga awal.";
     public static final String USERNAME_EXIST = "Username telah terpakai.";
     public static final String DOMAIN_EXIST = "Domain yang anda pilih telah terpakai.";
+    public static final int MAX_UNIQUE_INPUT_SIZE = 3;
 }

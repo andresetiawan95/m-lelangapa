@@ -371,8 +371,12 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     }
     private void setInitialUniqueIdImage()
     {
-        if (dataImageReceived.size() > 1)
+        //CHINESE BUG FIXED --hopefully
+        if (dataImageReceived.size() > 0) {
             INITIAL_UNIQUE_ID_IMAGE = dataImageReceived.get(0).getUniqueIDImage();
+            //DEBUG CHINESE BUG
+            printInitiateUniqueID();
+        }
     }
     private void initializeAdapter() {
         adapter = new MultipleImageEditItemAdapter(getActivity(), dataImageReceived, imagePicker);
@@ -400,6 +404,7 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
             @Override
             public void dataReceived(Object output) {
                 String response = output.toString();
+                Log.v("Response image", response);
                 if (response.equals("success")) {
                     Log.v("KELAR", "KELARRRR");
                     finishActivity();
@@ -475,6 +480,8 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
                         dataImageReceived.set(position, temp1);
 
                         adapter.updateDataSet(dataImageReceived);
+                        //DEBUG CHINESE BUG
+                        printChangedUniqueID(dataImageReceived.get(MAIN_IMAGE_INDEX).getUniqueIDImage());
                         return true;
                     default:
                         return false;
@@ -674,15 +681,21 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         getActivity().startActivity(intent);*/
         getActivity().finish();
     }
-
+    /* bug gambar 1 doang ga ke update main image nya kayaknya disini */
     private void updateMainImage()
     {
         if (INITIAL_UNIQUE_ID_IMAGE != null && dataImageReceived.size() > 1) {
             String NEW_MAIN_IMAGE = dataImageReceived.get(0).getUniqueIDImage();
             if (NEW_MAIN_IMAGE == null || !NEW_MAIN_IMAGE.equals(INITIAL_UNIQUE_ID_IMAGE)) {
                 Log.v("NEW IMAGE", "NEW IMAGE COYYY");
-                if (NEW_MAIN_IMAGE == null) editMainImageInServer("null");
-                else editMainImageInServer(NEW_MAIN_IMAGE);
+                if (NEW_MAIN_IMAGE == null) {
+                    editMainImageInServer("null");
+                    Log.v("NEW IMAGE NULL", "NEW IMAGE NULL COYYY");
+                }
+                else {
+                    editMainImageInServer(NEW_MAIN_IMAGE);
+                    Log.v("NEW IMAGE NOT NULL", "NEW IMAGE NOT NULL COYYY");
+                }
             }
             else if (NEW_MAIN_IMAGE.equals(INITIAL_UNIQUE_ID_IMAGE) && dataImageReceived.get(0).isImageChanged()) {
                 Log.v("NEW IMAGE", "NEW IMAGE COYYYZZZ");
@@ -700,6 +713,9 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
         editMainImageData.put("old_image_id", INITIAL_UNIQUE_ID_IMAGE);
         editMainImageData.put("new_image_id", newID);
 
+        Log.v("OLDIMAGEID", INITIAL_UNIQUE_ID_IMAGE);
+        Log.v("NEWIMAGEID", newID);
+
         //kirim ke server
         UpdateGambarBarangAPI.UpdateMain updateMainAPI = UpdateGambarBarangAPI.instanceUpdateMain(editMainImageData, whenMainImageAlreadyEdited);
         RequestController.getInstance(getActivity()).addToRequestQueue(updateMainAPI);
@@ -711,4 +727,18 @@ public class UserEditLelangBarangGetDataFragment extends Fragment {
     //jika tidak, cek apakah uniqueID element di index ke 0 berbeda dengan initUniqueID (di declare di global)
     //jika berbeda, maka ada perubahan gambar utama -> request ke server untuk update
     //jika sama, berarti tidak ada perubahan
+
+    //* INI COBA DEBUG CHINESE BUG *//
+    private void printInitiateUniqueID() {
+        Log.v("INITIALUNIQUEIDIMAGE", INITIAL_UNIQUE_ID_IMAGE);
+    }
+    private void printChangedUniqueID(String newID) {
+        Log.v("INITIALUNIQUEIDIMAGE", INITIAL_UNIQUE_ID_IMAGE);
+        if (newID == null) {
+            Log.e("NEWUNIQUEIDIMAGE", "NULL");
+        }
+        else {
+            Log.e("NEWUNIQUEIDIMAGE", newID);
+        }
+    }
 }
