@@ -7,8 +7,8 @@ android {
         applicationId "com.lelangapa.app"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 6
-        versionName "0.5.3.2"
+        versionCode 7
+        versionName "0.5.3.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
