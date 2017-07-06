@@ -11,12 +11,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +43,7 @@ import com.lelangapa.app.asyncs.GetUserAvatarBMP;
 import com.lelangapa.app.interfaces.DataReceiver;
 import com.lelangapa.app.preferences.SessionManager;
 import com.lelangapa.app.resources.AvatarResources;
+import com.lelangapa.app.resources.ErrorMessage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,6 +59,7 @@ import java.util.HashMap;
 
 public class EditProfileFragment extends Fragment {
     private EditText editText_editProfile_Nama, editText_editProfile_Email, editText_editProfile_Telepon;
+    private TextInputLayout textInputLayout_email;
     private String nama, telepon, email;
     private Button editProfile_simpan_btn;
     private SessionManager sessionManager;
@@ -89,6 +96,7 @@ public class EditProfileFragment extends Fragment {
         initializeViews(view);
         initializeDataReceiver();
         initializeViewVisibilities();
+        setupAllInputValidation();
         setViewOnClickListener();
         initializeAlertDialogBuilder();
         sessionManager = new SessionManager(getActivity());
@@ -130,6 +138,7 @@ public class EditProfileFragment extends Fragment {
         editText_editProfile_Nama = (EditText) view.findViewById(R.id.fragment_usereditprofile_name);
         editText_editProfile_Telepon = (EditText) view.findViewById(R.id.fragment_usereditprofile_phone);
         editText_editProfile_Email = (EditText) view.findViewById(R.id.fragment_usereditprofile_email);
+        textInputLayout_email = (TextInputLayout) view.findViewById(R.id.fragment_usereditprofile_email_layout);
         editProfile_simpan_btn = (Button) view.findViewById(R.id.fragment_usereditprofile_simpan_button);
         progressBar_infoakun = (ProgressBar) view.findViewById(R.id.fragment_userprofile_editprofile_progress_bar_informasiakun);
         progressBar_infokontak = (ProgressBar) view.findViewById(R.id.fragment_userprofile_editprofile_progress_bar_informasikontak);
@@ -255,6 +264,9 @@ public class EditProfileFragment extends Fragment {
                 });
         alertDialog = alertDialogBuilder.create();
     }
+    private void setupAllInputValidation() {
+        setupEmailValidation(editText_editProfile_Email, textInputLayout_email);
+    }
     private void showAlertDialog()
     {
         alertDialog.show();
@@ -264,7 +276,9 @@ public class EditProfileFragment extends Fragment {
         editProfile_simpan_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateUserProfileAPI();
+                if (validateInput() && validateEmail()) {
+                    updateUserProfileAPI();
+                }
             }
         });
         imageView_avatar.setOnClickListener(new View.OnClickListener() {
@@ -441,5 +455,55 @@ public class EditProfileFragment extends Fragment {
         else {
             Toast.makeText(getActivity(), "Permission tidak diberikan", Toast.LENGTH_SHORT).show();
         }
+    }
+    private void setupEmailValidation(final EditText editText, final TextInputLayout textInputLayout) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String tempEmail = s.toString();
+                if (TextUtils.isEmpty(tempEmail) || !Patterns.EMAIL_ADDRESS.matcher(tempEmail).matches()) {
+                    textInputLayout.setErrorEnabled(true);
+                    textInputLayout.setError("Email tidak valid.");
+                }
+                else {
+                    textInputLayout.setErrorEnabled(false);
+                    textInputLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+    private boolean validateInput() {
+        if (!textInputLayout_email.isErrorEnabled()) {
+            if (editText_editProfile_Email.getText().toString().trim().equalsIgnoreCase("")) {
+                textInputLayout_email.setErrorEnabled(true);
+                textInputLayout_email.setError(ErrorMessage.EMPTY_ERROR_MESSAGE);
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+    private boolean validateEmail() {
+        if (!textInputLayout_email.isErrorEnabled()) {
+            String _email = editText_editProfile_Email.getText().toString().trim();
+            if (TextUtils.isEmpty(_email) ||
+                    !Patterns.EMAIL_ADDRESS.matcher(_email).matches()) {
+                textInputLayout_email.setErrorEnabled(true);
+                textInputLayout_email.setError("Alamat email tidak valid.");
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 }
